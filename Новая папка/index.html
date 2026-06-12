@@ -372,16 +372,16 @@ td.pct { color: var(--neon-yellow); }
   .formula-coef-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* RED NEON GLOW — TEXT */
-@keyframes flicker-glow-text {
-  0%, 82% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3); }
-  86% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3), 0 0 30px rgba(255, 16, 48, 0.6), 0 0 60px rgba(255, 16, 48, 0.3); }
-  90% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3); }
-  94% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3), 0 0 30px rgba(255, 16, 48, 0.6), 0 0 60px rgba(255, 16, 48, 0.3); }
-  98% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3); }
-  100% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3); }
+/* RED NEON FLICKER — TEXT */
+@keyframes flicker-text {
+  0%, 82% { -webkit-text-stroke: 0 transparent; }
+  86% { -webkit-text-stroke: 1.5px #ff1030; }
+  90% { -webkit-text-stroke: 0 transparent; }
+  94% { -webkit-text-stroke: 1.5px #ff1030; }
+  98% { -webkit-text-stroke: 0 transparent; }
+  100% { -webkit-text-stroke: 0 transparent; }
 }
-.flicker-glow-text { animation: flicker-glow-text 4s infinite; }
+.flicker-text { animation: flicker-text 4s infinite; }
 
 /* RED NEON FLICKER — GLOW */
 @keyframes flicker-glow {
@@ -393,35 +393,6 @@ td.pct { color: var(--neon-yellow); }
   100% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
 }
 .flicker-glow { animation: flicker-glow 4s infinite; }
-
-/* LANG SWITCHER */
-.lang-switch {
-  position: fixed;
-  top: 4px; right: 8px;
-  display: flex;
-  gap: 2px;
-  z-index: 10;
-}
-.lang-btn {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  padding: 3px 8px;
-  background: var(--input-bg);
-  border: 1px solid rgba(255, 230, 0, 0.2);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.2s;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.lang-btn:first-child { border-radius: 3px 0 0 3px; }
-.lang-btn:last-child { border-radius: 0 3px 3px 0; }
-.lang-btn.active {
-  background: var(--neon-yellow);
-  color: #000;
-  border-color: var(--neon-yellow);
-}
-.lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
 /* CYBER BANNER (Small Logo) */
 .cyber-banner-small {
@@ -597,18 +568,12 @@ td.pct { color: var(--neon-yellow); }
 </style>
 </head>
 <body>
-<div class="lang-switch">
-  <button class="lang-btn" data-lang="ru">RU</button>
-  <button class="lang-btn" data-lang="en">EN</button>
-</div>
+
 <div class="app" id="app">
   <!-- HEADER -->
   <header class="header">
-    <div style="text-align:left;margin-bottom:4px;">
-      <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
-    </div>
-    <h1 class="flicker-glow-text">ADAMANTIZATOR</h1>
-    <div class="subtitle flicker-glow-text" data-i18n="subtitle">Cyber DKP Analysis System</div>
+    <h1 class="flicker-text">ADAMANTIZATOR</h1>
+    <div class="subtitle flicker-text">Cyber DKP Analysis System</div>
     <div class="glitch-line"></div>
   </header>
 
@@ -619,18 +584,18 @@ td.pct { color: var(--neon-yellow); }
 
     <!-- LOADER -->
     <div class="panel" id="loader-panel">
-      <div class="panel-title" data-i18n="file">Файл</div>
+      <div class="panel-title">Файл</div>
       <div class="row">
-        <button class="btn btn-primary" id="loadBtn" data-i18n="open_excel">[ ОТКРЫТЬ EXCEL ]</button>
-        <span id="fileLabel" style="color:var(--text-dim);font-size:0.9rem;" data-i18n="no_file">Файл не выбран</span>
+        <button class="btn btn-primary" id="loadBtn">[ ОТКРЫТЬ EXCEL ]</button>
+        <span id="fileLabel" style="color:var(--text-dim);font-size:0.9rem;">Файл не выбран</span>
         <span id="fileInfo" style="color:var(--text-dim);font-size:0.85rem;font-family:var(--font-mono);"></span>
         <div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;">
-          <span style="font-family:var(--font-display);font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;" data-i18n="lilith_link">Официальный сайт со статистикой Lilith</span>
+          <span style="font-family:var(--font-display);font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Официальный сайт со статистикой Lilith</span>
           <div style="display:flex;align-items:center;gap:8px;">
             <a href="https://rok-game-tools-global.lilith.com" target="_blank" class="btn btn-outline btn-small" style="padding:4px 12px;font-size:0.7rem;">Rok Tools ↗</a>
             <div class="help-tip">
               <span class="help-icon">?</span>
-              <div class="help-tooltip" data-i18n="help_tip">
+              <div class="help-tooltip">
                 <b>Как получить таблицу:</b><br><br>
                 1. Выберите "Показать сведения об участниках"<br>
                 2. Выберите период, за который нужна статистика<br>
@@ -646,35 +611,35 @@ td.pct { color: var(--neon-yellow); }
 
     <!-- PRELOADED FILES -->
     <div class="panel" id="preloadPanel">
-      <div class="panel-title" data-i18n="preloaded">Предзагруженные данные</div>
+      <div class="panel-title">Предзагруженные данные</div>
       <div id="preloadList" class="row" style="gap:8px;min-height:30px;"></div>
       <div id="preloadMsg" class="hidden"></div>
     </div>
 
    <div class="panel" id="formulaPanel">
-    <div class="panel-title" data-i18n="formula_title">Редактор формулы ДКП</div>
+    <div class="panel-title">Редактор формулы ДКП</div>
     <div class="formula-editor">
-      <div class="formula-preview" id="formulaPreview" data-i18n="formula_init">(Смерти T4 + Смерти T5) × 30 + Убийства T4 × 10 + Убийства T5 × 20</div>
+      <div class="formula-preview" id="formulaPreview">(Смерти T4 + Смерти T5) &times; 30 + Убийства T4 &times; 10 + Убийства T5 &times; 20</div>
       <div class="formula-coef-grid">
       <div class="coef-group">
-        <label style="color:var(--neon-yellow);" data-i18n="death4">Смерти T4</label>
+        <label style="color:var(--neon-yellow);">Смерти T4</label>
         <input type="number" id="coefDeathT4" value="30" step="1" min="0">
       </div>
       <div class="coef-group">
-        <label style="color:var(--neon-yellow);" data-i18n="death5">Смерти T5</label>
+        <label style="color:var(--neon-yellow);">Смерти T5</label>
         <input type="number" id="coefDeathT5" value="30" step="1" min="0">
       </div>
           <div class="coef-group">
-            <label style="color:var(--neon-gold);" data-i18n="kill4">Убийства T4</label>
+            <label style="color:var(--neon-gold);">Убийства T4</label>
             <input type="number" id="coefKillT4" value="10" step="1" min="0">
           </div>
           <div class="coef-group">
-            <label style="color:var(--neon-gold);" data-i18n="kill5">Убийства T5</label>
+            <label style="color:var(--neon-gold);">Убийства T5</label>
             <input type="number" id="coefKillT5" value="20" step="1" min="0">
           </div>
       </div>
       <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <span style="color:var(--text-dim);font-size:0.75rem;font-family:var(--font-display);letter-spacing:1px;" data-i18n="formula_text">Формула:</span>
+        <span style="color:var(--text-dim);font-size:0.75rem;font-family:var(--font-display);letter-spacing:1px;">Формула:</span>
         <span id="formulaText" style="font-family:var(--font-mono);color:var(--neon-yellow);font-size:0.85rem;"></span>
       </div>
       <div style="margin-top:10px;">
@@ -685,49 +650,45 @@ td.pct { color: var(--neon-yellow); }
 
   <!-- ФИЛЬТРЫ -->
   <div class="panel">
-    <div class="panel-title" data-i18n="filters_title">Фильтры и опции</div>
+    <div class="panel-title">Фильтры и опции</div>
     <div class="row row-gap" style="margin-bottom:12px;">
       <div class="col" style="min-width:100px;">
-        <label data-i18n="sort">Сортировка</label>
+        <label>Сортировка</label>
         <select id="sortMode">
-          <option value="desc" data-i18n="sort_desc">По убыванию</option>
-          <option value="asc" data-i18n="sort_asc">По возрастанию</option>
-          <option value="none" data-i18n="sort_none">Без сортировки</option>
+          <option value="desc">По убыванию</option>
+          <option value="asc">По возрастанию</option>
+          <option value="none">Без сортировки</option>
         </select>
       </div>
       <div class="col" style="min-width:80px;">
-        <label data-i18n="multiplier">Множитель нормы</label>
+        <label>Множитель нормы</label>
         <input type="number" id="multiplier" value="1" min="1" max="99" style="width:70px;text-align:center;">
       </div>
     </div>
     <div class="row row-gap">
       <div class="col" style="min-width:80px;">
-        <label data-i18n="from_place">С места</label>
+        <label>С места</label>
         <input type="number" id="fromPlace" value="" min="1" style="width:90px;">
       </div>
       <div class="col" style="min-width:80px;">
-        <label data-i18n="to_place">По место</label>
+        <label>По место</label>
         <input type="number" id="toPlace" value="" min="1" style="width:90px;">
       </div>
       <div class="col" style="min-width:100px;">
-        <label data-i18n="min_val">Нижняя граница (≥)</label>
+        <label>Нижняя граница (≥)</label>
         <input type="number" id="minVal" value="" style="width:120px;">
       </div>
       <div class="col" style="min-width:100px;">
-        <label data-i18n="max_val">Верхняя граница (≤)</label>
+        <label>Верхняя граница (≤)</label>
         <input type="number" id="maxVal" value="" style="width:120px;">
-      </div>
-      <div class="col" style="min-width:140px;margin-left:auto;">
-        <label data-i18n="search_nick">Поиск по нику</label>
-        <input type="text" id="searchNick" placeholder="Введите ник..." style="width:100%;">
       </div>
     </div>
     <div class="row" style="margin-top:14px;justify-content:space-between;">
-      <button class="btn btn-crimson" id="calcBtn" data-i18n="calc_btn">[ РАССЧИТАТЬ ]</button>
+      <button class="btn btn-crimson" id="calcBtn">[ РАССЧИТАТЬ </button>
     </div>
     
     <div style="margin-top:16px;text-align:center;">
-      <button class="btn btn-outline btn-small" id="downloadBtn" data-i18n="download_btn">[ СКАЧАТЬ EXCEL ]</button>
+      <button class="btn btn-outline btn-small" id="downloadBtn">[ СКАЧАТЬ EXCEL ]</button>
     </div>
   </div>
 
@@ -742,16 +703,16 @@ td.pct { color: var(--neon-yellow); }
         <thead>
           <tr>
             <th style="width:35px;text-align:center;">#</th>
-            <th style="text-align:left;" data-i18n="th_name">Имя</th>
-            <th style="text-align:right;" data-i18n="th_power">Мощь (акт.)</th>
-            <th style="text-align:right;" data-i18n="th_maxpower">Макс. мощь</th>
-            <th style="text-align:right;" data-i18n="th_kill4">Убийства T4</th>
-            <th style="text-align:right;" data-i18n="th_kill5">Убийства T5</th>
-            <th style="text-align:right;" data-i18n="th_death4">Смерти T4</th>
-            <th style="text-align:right;" data-i18n="th_death5">Смерти T5</th>
-            <th style="text-align:right;" data-i18n="th_dkp">Текущий ДКП</th>
-            <th style="text-align:right;" data-i18n="th_goal">Цель ДКП</th>
-            <th style="text-align:right;" data-i18n="th_pct">Выполнение цели %</th>
+            <th style="text-align:left;">Имя</th>
+            <th style="text-align:right;">Мощь (акт.)</th>
+            <th style="text-align:right;">Макс. мощь</th>
+            <th style="text-align:right;">Убийства T4</th>
+            <th style="text-align:right;">Убийства T5</th>
+            <th style="text-align:right;">Смерти T4</th>
+            <th style="text-align:right;">Смерти T5</th>
+            <th style="text-align:right;">Текущий ДКП</th>
+            <th style="text-align:right;">Цель ДКП</th>
+            <th style="text-align:right;">Выполнение цели %</th>
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -762,90 +723,7 @@ td.pct { color: var(--neon-yellow); }
 </div>
 
 <script>
-// ===== I18N =====
-const LANG = {
-  ru: {
-    back: '← Главная', subtitle: 'Cyber DKP Analysis System',
-    file: 'Файл', open_excel: '[ ОТКРЫТЬ EXCEL ]', no_file: 'Файл не выбран',
-    lilith_link: 'Официальный сайт со статистикой Lilith',
-    help_tip: '<b>Как получить таблицу:</b><br><br>1. Выберите "Показать сведения об участниках"<br>2. Выберите период, за который нужна статистика<br>3. В настройке данных таблицы нажмите галочку на "Все"<br>4. Скачайте таблицу и загрузите ее<br><br><b>Важно:</b> исходный файл с сайта Rok Tools должен быть на <u>русском или английском</u> языке',
-    preloaded: 'Предзагруженные данные',
-    formula_title: 'Редактор формулы ДКП', formula_text: 'Формула:',
-    formula_init: '(Смерти T4 + Смерти T5) × 30 + Убийства T4 × 10 + Убийства T5 × 20',
-    death4: 'Смерти T4', death5: 'Смерти T5', kill4: 'Убийства T4', kill5: 'Убийства T5',
-    filters_title: 'Фильтры и опции',
-    sort: 'Сортировка', sort_desc: 'По убыванию', sort_asc: 'По возрастанию', sort_none: 'Без сортировки',
-    multiplier: 'Множитель нормы',
-    from_place: 'С места', to_place: 'По место',
-    min_val: 'Нижняя граница (≥)', max_val: 'Верхняя граница (≤)',
-    search_nick: 'Поиск по нику', search_placeholder: 'Введите ник...',
-    calc_btn: '[ РАССЧИТАТЬ ]', download_btn: '[ СКАЧАТЬ EXCEL ]', err_missing_cols: 'Отсутствуют столбцы',
-    th_name: 'Имя', th_power: 'Мощь (акт.)', th_maxpower: 'Макс. мощь',
-    th_kill4: 'Убийства T4', th_kill5: 'Убийства T5',
-    th_death4: 'Смерти T4', th_death5: 'Смерти T5',
-    th_dkp: 'Текущий ДКП', th_goal: 'Цель ДКП', th_pct: 'Выполнение цели %',
-    sum_dkp: 'Сумма ДКП:', total_players: 'Всего игроков:',
-    players_filtered: 'Игроков:', of: '/',
-  },
-  en: {
-    back: '← Home', subtitle: 'Cyber DKP Analysis System',
-    file: 'File', open_excel: '[ OPEN EXCEL ]', no_file: 'No file selected',
-    lilith_link: 'Lilith official stats website',
-    help_tip: '<b>How to get the table:</b><br><br>1. Select "Show member details"<br>2. Select the period you need stats for<br>3. In table data settings, check "All"<br>4. Download the table and upload it<br><br><b>Important:</b> the source file from Rok Tools must be in <u>Russian or English</u> language',
-    preloaded: 'Preloaded Data',
-    formula_title: 'DKP Formula Editor', formula_text: 'Formula:',
-    formula_init: '(Deaths T4 + Deaths T5) × 30 + Kills T4 × 10 + Kills T5 × 20',
-    death4: 'Deaths T4', death5: 'Deaths T5', kill4: 'Kills T4', kill5: 'Kills T5',
-    filters_title: 'Filters & Options',
-    sort: 'Sort', sort_desc: 'Descending', sort_asc: 'Ascending', sort_none: 'No sort',
-    multiplier: 'Norm multiplier',
-    from_place: 'From place', to_place: 'To place',
-    min_val: 'Min value (≥)', max_val: 'Max value (≤)',
-    search_nick: 'Search nickname', search_placeholder: 'Enter nickname...',
-    calc_btn: '[ CALCULATE ]', download_btn: '[ DOWNLOAD EXCEL ]', err_missing_cols: 'Missing columns',
-    th_name: 'Name', th_power: 'Power (act.)', th_maxpower: 'Max power',
-    th_kill4: 'Kills T4', th_kill5: 'Kills T5',
-    th_death4: 'Deaths T4', th_death5: 'Deaths T5',
-    th_dkp: 'Current DKP', th_goal: 'DKP Goal', th_pct: 'Goal %',
-    sum_dkp: 'DKP Sum:', total_players: 'Total players:',
-    players_filtered: 'Players:', of: '/',
-  },
-};
-
-const detected = navigator.language.startsWith('ru') ? 'ru' : 'en';
-let lang = localStorage.getItem('lang') || detected;
-
-function t(key) { return LANG[lang][key] || key; }
-
-function applyLang() {
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.dataset.i18n;
-    if (LANG[lang][key]) {
-      if (key === 'help_tip') el.innerHTML = LANG[lang][key];
-      else el.textContent = LANG[lang][key];
-    }
-  });
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.lang === lang);
-  });
-  document.documentElement.lang = lang;
-  // Update placeholder for search
-  const sn = document.getElementById('searchNick');
-  if (sn) sn.placeholder = t('search_placeholder');
-}
-
-document.querySelectorAll('.lang-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    lang = btn.dataset.lang;
-    localStorage.setItem('lang', lang);
-    applyLang();
-    // Re-run calculate to update dynamic text
-    if (typeof calculate === 'function') calculate();
-    updateFormulaDisplay();
-  });
-});
-
-applyLang();
+// ===== STATE =====
 let df = null;
 let headers = [];
 
@@ -875,7 +753,8 @@ const preloadMsg = $('preloadMsg');
 
 // ===== PRELOADED FILES =====
 const PRELOADED_FILES = [
-  '06-07_3901.xlsx'
+  '3901_20260606_20260607_statsExport.xlsx',
+  'пример.xlsx'
 ];
 
 function preloadLabel(filename) {
@@ -896,7 +775,6 @@ function loadExcelFromBuffer(arrayBuffer, fileName) {
     if (!json || json.length === 0) return false;
     df = json;
     headers = Object.keys(df[0]);
-    buildColMap();
     fileLabel.textContent = fileName;
     fileInfo.textContent = `| Строк данных: ${df.length} | Столбцов: ${headers.length}`;
     fileLabel.style.color = 'var(--neon-green)';
@@ -957,12 +835,12 @@ function updateFormulaDisplay() {
   const parts = [];
   if (c.deathT4 > 0 || c.deathT5 > 0) {
     const inner = [];
-    if (c.deathT4 > 0) inner.push(`${t('death4')} × ${c.deathT4}`);
-    if (c.deathT5 > 0) inner.push(`${t('death5')} × ${c.deathT5}`);
+    if (c.deathT4 > 0) inner.push(`Смерти T4 × ${c.deathT4}`);
+    if (c.deathT5 > 0) inner.push(`Смерти T5 × ${c.deathT5}`);
     if (inner.length > 0) parts.push(`(${inner.join(' + ')})`);
   }
-  if (c.killT4 > 0) parts.push(`${t('kill4')} × ${c.killT4}`);
-  if (c.killT5 > 0) parts.push(`${t('kill5')} × ${c.killT5}`);
+  if (c.killT4 > 0) parts.push(`Убийства T4 × ${c.killT4}`);
+  if (c.killT5 > 0) parts.push(`Убийства T5 × ${c.killT5}`);
 
   let formulaStr = parts.join(' + ');
   if (!formulaStr) formulaStr = '0';
@@ -970,13 +848,12 @@ function updateFormulaDisplay() {
   formulaText.textContent = formulaStr;
 
   // HTML preview
-  const d4 = t('death4'), d5 = t('death5'), k4 = t('kill4'), k5 = t('kill5');
   let html = formulaStr
     .replace(/×/g, '&times;')
-    .replace(new RegExp(d4.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '<span style="color:var(--neon-yellow)">$&</span>')
-    .replace(new RegExp(d5.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '<span style="color:var(--neon-yellow)">$&</span>')
-    .replace(new RegExp(k4.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '<span style="color:var(--neon-gold)">$&</span>')
-    .replace(new RegExp(k5.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '<span style="color:var(--neon-gold)">$&</span>');
+    .replace(/(Смерти T4)/g, '<span style="color:var(--neon-yellow)">$1</span>')
+    .replace(/(Смерти T5)/g, '<span style="color:var(--neon-yellow)">$1</span>')
+    .replace(/(Убийства T4)/g, '<span style="color:var(--neon-gold)">$1</span>')
+    .replace(/(Убийства T5)/g, '<span style="color:var(--neon-gold)">$1</span>');
   formulaPreview.innerHTML = html || '0';
 }
 
@@ -1024,30 +901,9 @@ function showMsg(type, text) {
   setTimeout(() => { loadMsg.className = 'hidden'; }, 4000);
 }
 
-// ===== COLUMN NAME ALIASES (RU/EN) =====
-const COL_ALIASES = {
-  'Смерти T4': 'T4 Deaths',
-  'Смерти T5': 'T5 Deaths',
-  'Убийства T4': 'T4 Kills',
-  'Убийства T5': 'T5 Kills',
-  'Мощь': 'Power',
-  'Макс. мощь': 'Highest Power',
-};
-let colMap = {};
-
-function buildColMap() {
-  colMap = {};
-  for (const [ru, en] of Object.entries(COL_ALIASES)) {
-    if (headers.includes(ru)) colMap[ru] = ru;
-    else if (headers.includes(en)) colMap[ru] = en;
-    else colMap[ru] = ru;
-  }
-}
-function col(ru) { return colMap[ru] || ru; }
-
 // ===== GET PLAYER NAME =====
 function getPlayerName(row) {
-  const names = ['Имя пользователя', 'Ник', 'Игрок', 'Username', 'Nick', 'Player', 'Name', 'Имя'];
+  const names = ['Имя пользователя', 'Ник', 'Игрок', 'Nick', 'Player', 'Name', 'Имя'];
   for (const n of names) {
     if (row[n] !== undefined && row[n] !== null && String(row[n]).trim() !== '') return String(row[n]).trim();
   }
@@ -1063,18 +919,15 @@ function fmtNum(n) {
 // ===== CALCULATE DKP FORMULA =====
 function calculateFormulaColumn(data) {
   const required = ['Смерти T4', 'Смерти T5', 'Убийства T4', 'Убийства T5'];
-  const missing = required.filter(c => !headers.includes(c) && !headers.includes(COL_ALIASES[c]));
-  if (missing.length > 0) {
-    const missingLabels = missing.map(c => `${c} / ${COL_ALIASES[c]}`);
-    throw new Error(`${t('err_missing_cols')}: ${missingLabels.join(', ')}`);
-  }
+  const missing = required.filter(c => !headers.includes(c));
+  if (missing.length > 0) throw new Error(`Отсутствуют столбцы: ${missing.join(', ')}`);
 
   const c = getFormulaCoefficients();
   return data.map(row => {
-    const d4 = parseFloat(row[col('Смерти T4')]) || 0;
-    const d5 = parseFloat(row[col('Смерти T5')]) || 0;
-    const k4 = parseFloat(row[col('Убийства T4')]) || 0;
-    const k5 = parseFloat(row[col('Убийства T5')]) || 0;
+    const d4 = parseFloat(row['Смерти T4']) || 0;
+    const d5 = parseFloat(row['Смерти T5']) || 0;
+    const k4 = parseFloat(row['Убийства T4']) || 0;
+    const k5 = parseFloat(row['Убийства T5']) || 0;
     return d4 * c.deathT4 + d5 * c.deathT5 + k4 * c.killT4 + k5 * c.killT5;
   });
 }
@@ -1091,10 +944,7 @@ calcBtn.addEventListener('click', async () => {
     let column;
 
     const formulaValues = calculateFormulaColumn(data);
-    const useEn = headers.includes('T4 Deaths') || headers.includes('T4 Kills');
-    const formulaColName = useEn
-      ? 'DKP (Deaths T4×30 + Deaths T5×30 + Kills T4×10 + Kills T5×20)'
-      : 'ДКП (Смерти T4×30 + Смерти T5×30 + Убийства T4×10 + Убийства T5×20)';
+    const formulaColName = 'ДКП (Смерти T4×30 + Смерти T5×30 + Убийства T4×10 + Убийства T5×20)';
     data.forEach((row, i) => { row[formulaColName] = formulaValues[i]; });
     column = formulaColName;
 
@@ -1141,14 +991,14 @@ calcBtn.addEventListener('click', async () => {
     if (filtered.length === 0) {
       showMsg('info', 'Нет данных в выбранном диапазоне');
       tableBody.innerHTML = '';
-      sumDisplay.textContent = t('sum_dkp') + ' 0';
-      countDisplay.textContent = t('total_players') + ' 0';
+      sumDisplay.textContent = 'Сумма ДКП: 0';
+      countDisplay.textContent = 'Всего игроков: 0';
       return;
     }
 
     // Build table
     const mult = parseInt(multiplier.value) || 1;
-    const hasPower = headers.includes('Мощь') || headers.includes('Power');
+    const hasPower = headers.includes('Мощь');
     const totalSum = filtered.reduce((s, r) => s + (r[column] || 0), 0);
 
     tableBody.innerHTML = '';
@@ -1156,14 +1006,14 @@ calcBtn.addEventListener('click', async () => {
       const place = idx + 1;
       const name = getPlayerName(row);
       const dkpVal = parseInt(row[column]) || 0;
-      const powerVal = hasPower ? (parseInt(row[col('Мощь')]) || 0) : 0;
-      const maxPowerVal = hasPower && (headers.includes('Макс. мощь') || headers.includes('Highest Power')) ? (parseInt(row[col('Макс. мощь')]) || 0) : powerVal;
+      const powerVal = hasPower ? (parseInt(row['Мощь']) || 0) : 0;
+      const maxPowerVal = hasPower && headers.includes('Макс. мощь') ? (parseInt(row['Макс. мощь']) || 0) : powerVal;
       const normVal = powerVal * mult;
       const pct = normVal > 0 ? (dkpVal / normVal * 100) : 0;
-      const killsT4 = parseInt(row[col('Убийства T4')]) || 0;
-      const killsT5 = parseInt(row[col('Убийства T5')]) || 0;
-      const deathsT4 = parseInt(row[col('Смерти T4')]) || 0;
-      const deathsT5 = parseInt(row[col('Смерти T5')]) || 0;
+      const killsT4 = parseInt(row['Убийства T4']) || 0;
+      const killsT5 = parseInt(row['Убийства T5']) || 0;
+      const deathsT4 = parseInt(row['Смерти T4']) || 0;
+      const deathsT5 = parseInt(row['Смерти T5']) || 0;
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -1186,8 +1036,8 @@ calcBtn.addEventListener('click', async () => {
     currentData = [...filtered];
     currentColumn = column;
 
-    sumDisplay.textContent = `${t('sum_dkp')} ${fmtNum(totalSum)}`;
-    countDisplay.textContent = `${t('total_players')} ${filtered.length}`;
+    sumDisplay.textContent = `Сумма ДКП: ${fmtNum(totalSum)}`;
+    countDisplay.textContent = `Всего игроков: ${filtered.length}`;
 
   } catch (err) {
     showMsg('error', `Ошибка при расчете: ${err.message}`);
@@ -1206,22 +1056,22 @@ downloadBtn.addEventListener('click', () => {
 
   try {
     const mult = parseInt(multiplier.value) || 1;
-    const hasPower = headers.includes('Мощь') || headers.includes('Power');
-    const hasMaxPower = headers.includes('Макс. мощь') || headers.includes('Highest Power');
-    const goalLabel = t('th_goal') + ` (${t('th_power').replace(/ \(.*\)/, '')} x${mult})`;
+    const hasPower = headers.includes('Мощь');
+    const hasMaxPower = headers.includes('Макс. мощь');
+    const goalLabel = `Цель ДКП (Мощь x${mult})`;
 
     const exportData = currentData.map(row => ({
       'Имя': getPlayerName(row),
-      'Мощь (акт.)': hasPower ? (parseInt(row[col('Мощь')]) || 0) : 0,
-      'Макс. мощь': hasMaxPower ? (parseInt(row[col('Макс. мощь')]) || 0) : (hasPower ? (parseInt(row[col('Мощь')]) || 0) : 0),
-      'Убийства T4': parseInt(row[col('Убийства T4')]) || 0,
-      'Убийства T5': parseInt(row[col('Убийства T5')]) || 0,
-      'Смерти T4': parseInt(row[col('Смерти T4')]) || 0,
-      'Смерти T5': parseInt(row[col('Смерти T5')]) || 0,
+      'Мощь (акт.)': hasPower ? (parseInt(row['Мощь']) || 0) : 0,
+      'Макс. мощь': hasMaxPower ? (parseInt(row['Макс. мощь']) || 0) : (hasPower ? (parseInt(row['Мощь']) || 0) : 0),
+      'Убийства T4': parseInt(row['Убийства T4']) || 0,
+      'Убийства T5': parseInt(row['Убийства T5']) || 0,
+      'Смерти T4': parseInt(row['Смерти T4']) || 0,
+      'Смерти T5': parseInt(row['Смерти T5']) || 0,
       'Текущий ДКП': parseInt(row[currentColumn]) || 0,
-      [goalLabel]: hasPower ? ((parseInt(row[col('Мощь')]) || 0) * mult) : 0,
+      [goalLabel]: hasPower ? ((parseInt(row['Мощь']) || 0) * mult) : 0,
       'Выполнение цели %': (() => {
-        const power = hasPower ? (parseInt(row[col('Мощь')]) || 0) : 0;
+        const power = hasPower ? (parseInt(row['Мощь']) || 0) : 0;
         const dkp = parseInt(row[currentColumn]) || 0;
         return power > 0 ? (dkp / (power * mult)) * 100 : 0;
       })()
@@ -1252,25 +1102,6 @@ downloadBtn.addEventListener('click', () => {
   } catch (err) {
     showMsg('error', `Не удалось скачать Excel файл: ${err.message}`);
   }
-});
-
-// ===== SEARCH BY NICK =====
-const searchNick = $('searchNick');
-searchNick.addEventListener('input', () => {
-  const q = searchNick.value.trim().toLowerCase();
-  const rows = tableBody.querySelectorAll('tr');
-  let visibleCount = 0;
-  rows.forEach(tr => {
-    const nameCell = tr.querySelector('td.player');
-    if (!nameCell) return;
-    const match = !q || nameCell.textContent.toLowerCase().includes(q);
-    tr.style.display = match ? '' : 'none';
-    if (match) visibleCount++;
-  });
-  const total = rows.length;
-  countDisplay.textContent = total > 0
-    ? `${t('players_filtered')} ${visibleCount} ${t('of')} ${total}`
-    : `${t('total_players')} 0`;
 });
 
 </script>
