@@ -87,8 +87,8 @@ body::after {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: none;
+  filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4));
 }
-
 .header h1::after {
   content: 'v2.0';
   font-size: 0.7rem;
@@ -375,12 +375,12 @@ td.pct { color: var(--neon-yellow); }
 /* RED NEON GLITCH FLICKER */
 @keyframes flicker {
   0%, 88%, 92%, 96%, 100% {
-    filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4));
     -webkit-text-stroke: 0 transparent;
+    box-shadow: none;
   }
   90%, 94% {
-    filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4));
     -webkit-text-stroke: 1.5px #ff1030;
+    box-shadow: 0 0 12px rgba(255, 16, 48, 0.5), 0 0 30px rgba(255, 16, 48, 0.2);
   }
 }
 .flicker { animation: flicker 4s infinite; }
@@ -564,8 +564,10 @@ td.pct { color: var(--neon-yellow); }
   <!-- HEADER -->
   <header class="header">
     <h1 class="flicker">ADAMANTIZATOR</h1>
-    <div class="subtitle">Cyber DKP Analysis System</div>
-    <div class="glitch-line"></div>
+    <div class="flicker subtitle-group">
+      <div class="subtitle flicker">Cyber DKP Analysis System</div>
+      <div class="glitch-line"></div>
+    </div>
   </header>
 
    <!-- CYBER BANNER (Small Logo) -->
