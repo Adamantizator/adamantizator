@@ -775,7 +775,7 @@ function calculateFormulaColumn(data) {
     const d5 = parseFloat(row['Смерти T5']) || 0;
     const k4 = parseFloat(row['Убийства T4']) || 0;
     const k5 = parseFloat(row['Убийства T5']) || 0;
-    return (d4 + d5) * c.deathT4 + k4 * c.killT4 + k5 * c.killT5;
+    return d4 * c.deathT4 + d5 * c.deathT5 + k4 * c.killT4 + k5 * c.killT5;
   });
 }
 
