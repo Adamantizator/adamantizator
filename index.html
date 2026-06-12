@@ -609,6 +609,13 @@ td.pct { color: var(--neon-yellow); }
       <div id="loadMsg" class="hidden"></div>
     </div>
 
+    <!-- PRELOADED FILES -->
+    <div class="panel" id="preloadPanel">
+      <div class="panel-title">Предзагруженные данные</div>
+      <div id="preloadList" class="row" style="gap:8px;min-height:30px;"></div>
+      <div id="preloadMsg" class="hidden"></div>
+    </div>
+
    <div class="panel" id="formulaPanel">
     <div class="panel-title">Редактор формулы ДКП</div>
     <div class="formula-editor">
@@ -741,6 +748,70 @@ const tableBody = $('tableBody');
 const downloadBtn = $('downloadBtn');
 const sumDisplay = $('sumDisplay');
 const countDisplay = $('countDisplay');
+const preloadList = $('preloadList');
+const preloadMsg = $('preloadMsg');
+
+// ===== PRELOADED FILES =====
+const PRELOADED_FILES = [
+  '3901_20260606_20260607_statsExport.xlsx',
+  'пример.xlsx'
+];
+
+function preloadLabel(filename) {
+  return filename.replace(/\.[^.]+$/, '').replace(/_/g, ' ');
+}
+
+function showPreloadMsg(type, text) {
+  preloadMsg.className = `msg-${type}`;
+  preloadMsg.textContent = text;
+  setTimeout(() => { preloadMsg.className = 'hidden'; }, 4000);
+}
+
+function loadExcelFromBuffer(arrayBuffer, fileName) {
+  try {
+    const wb = XLSX.read(arrayBuffer, { type: 'array' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+    if (!json || json.length === 0) return false;
+    df = json;
+    headers = Object.keys(df[0]);
+    fileLabel.textContent = fileName;
+    fileInfo.textContent = `| Строк данных: ${df.length} | Столбцов: ${headers.length}`;
+    fileLabel.style.color = 'var(--neon-green)';
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+async function loadPreloadedFile(filename) {
+  try {
+    const resp = await fetch(`data/${encodeURIComponent(filename)}`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const arrayBuffer = await resp.arrayBuffer();
+    const ok = loadExcelFromBuffer(arrayBuffer, filename);
+    if (!ok) { showPreloadMsg('error', `Файл "${preloadLabel(filename)}" пуст или поврежден`); return; }
+    showPreloadMsg('info', `"${preloadLabel(filename)}" загружен`);
+  } catch (err) {
+    const hint = window.location.protocol === 'file:'
+      ? ' (откройте сайт через http://localhost:8080, а не через file://)'
+      : '';
+    showPreloadMsg('error', `Ошибка загрузки "${preloadLabel(filename)}": ${err.message}${hint}`);
+  }
+}
+
+function renderPreloadedFiles() {
+  preloadList.innerHTML = '';
+  PRELOADED_FILES.forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-outline btn-small';
+    btn.textContent = preloadLabel(f);
+    btn.addEventListener('click', () => loadPreloadedFile(f));
+    preloadList.appendChild(btn);
+  });
+}
+
+renderPreloadedFiles();
 
 // ===== FORMULA COEF REFS =====
 const coefDeathT4 = $('coefDeathT4');
@@ -811,23 +882,12 @@ loadBtn.addEventListener('click', () => {
     loadMsg.className = 'hidden';
     try {
       const data = await file.arrayBuffer();
-      workbook = XLSX.read(data, { type: 'array' });
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
-
-      if (!json || json.length === 0) {
-        showMsg('error', 'Excel файл пуст.');
-        return;
+      const ok = loadExcelFromBuffer(data, file.name);
+      if (ok) {
+        showMsg('info', `Файл "${file.name}" загружен.\n\nСтрок: ${df.length}\nСтолбцов: ${headers.length}`);
+      } else {
+        showMsg('error', 'Не удалось прочитать файл. Возможно он пуст или поврежден.');
       }
-
-      df = json;
-      headers = Object.keys(df[0]);
-
-      fileLabel.textContent = file.name;
-      fileInfo.textContent = `| Строк данных: ${df.length} | Столбцов: ${headers.length}`;
-      fileLabel.style.color = 'var(--neon-green)';
-
-      showMsg('info', `Файл успешно загружен.\n\nНайдены столбцы:\n${headers.slice(0, 10).join(', ')}${headers.length > 10 ? ` и еще ${headers.length - 10}` : ''}`);
     } catch (err) {
       showMsg('error', `Не удалось загрузить файл: ${err.message}`);
     }
