@@ -655,7 +655,7 @@ td.pct { color: var(--neon-yellow); }
    <div class="panel" id="formulaPanel">
     <div class="panel-title" data-i18n="formula_title">Редактор формулы ДКП</div>
     <div class="formula-editor">
-      <div class="formula-preview" id="formulaPreview">(Смерти T4 + Смерти T5) &times; 30 + Убийства T4 &times; 10 + Убийства T5 &times; 20</div>
+      <div class="formula-preview" id="formulaPreview" data-i18n="formula_init">(Смерти T4 + Смерти T5) × 30 + Убийства T4 × 10 + Убийства T5 × 20</div>
       <div class="formula-coef-grid">
       <div class="coef-group">
         <label style="color:var(--neon-yellow);" data-i18n="death4">Смерти T4</label>
@@ -735,8 +735,8 @@ td.pct { color: var(--neon-yellow); }
   <!-- ТАБЛИЦА -->
   <div class="panel" style="padding:0;overflow:hidden;">
     <div class="status-bar" style="border-radius:0;border:none;border-bottom:1px solid var(--neon-yellow);margin-top:0;">
-      <span class="sum" id="sumDisplay" data-i18n-dynamic>Сумма ДКП: 0</span>
-      <span class="count" id="countDisplay" data-i18n-dynamic>Всего игроков: 0</span>
+      <span class="sum" id="sumDisplay">Сумма ДКП: 0</span>
+      <span class="count" id="countDisplay">Всего игроков: 0</span>
     </div>
     <div class="table-wrap" id="tableWrap">
       <table>
@@ -769,9 +769,10 @@ const LANG = {
     back: '← Главная', subtitle: 'Cyber DKP Analysis System',
     file: 'Файл', open_excel: '[ ОТКРЫТЬ EXCEL ]', no_file: 'Файл не выбран',
     lilith_link: 'Официальный сайт со статистикой Lilith',
-    help_tip: '<b>Как получить таблицу:</b><br><br>1. Выберите "Показать сведения об участниках"<br>2. Выберите период, за который нужна статистика<br>3. В настройке данных таблицы нажмите галочку на "Все"<br>4. Скачайте таблицу и загрузите ее',
+    help_tip: '<b>Как получить таблицу:</b><br><br>1. Выберите "Показать сведения об участниках"<br>2. Выберите период, за который нужна статистика<br>3. В настройке данных таблицы нажмите галочку на "Все"<br>4. Скачайте таблицу и загрузите ее<br><br><b>Важно:</b> исходный файл с сайта Rok Tools должен быть на <u>русском</u> языке',
     preloaded: 'Предзагруженные данные',
     formula_title: 'Редактор формулы ДКП', formula_text: 'Формула:',
+    formula_init: '(Смерти T4 + Смерти T5) × 30 + Убийства T4 × 10 + Убийства T5 × 20',
     death4: 'Смерти T4', death5: 'Смерти T5', kill4: 'Убийства T4', kill5: 'Убийства T5',
     filters_title: 'Фильтры и опции',
     sort: 'Сортировка', sort_desc: 'По убыванию', sort_asc: 'По возрастанию', sort_none: 'Без сортировки',
@@ -791,9 +792,10 @@ const LANG = {
     back: '← Home', subtitle: 'Cyber DKP Analysis System',
     file: 'File', open_excel: '[ OPEN EXCEL ]', no_file: 'No file selected',
     lilith_link: 'Lilith official stats website',
-    help_tip: '<b>How to get the table:</b><br><br>1. Select "Show member details"<br>2. Select the period you need stats for<br>3. In table data settings, check "All"<br>4. Download the table and upload it',
+    help_tip: '<b>How to get the table:</b><br><br>1. Select "Show member details"<br>2. Select the period you need stats for<br>3. In table data settings, check "All"<br>4. Download the table and upload it<br><br><b>Important:</b> the source file from Rok Tools must be in <u>Russian</u> language',
     preloaded: 'Preloaded Data',
     formula_title: 'DKP Formula Editor', formula_text: 'Formula:',
+    formula_init: '(Deaths T4 + Deaths T5) × 30 + Kills T4 × 10 + Kills T5 × 20',
     death4: 'Deaths T4', death5: 'Deaths T5', kill4: 'Kills T4', kill5: 'Kills T5',
     filters_title: 'Filters & Options',
     sort: 'Sort', sort_desc: 'Descending', sort_asc: 'Ascending', sort_none: 'No sort',
@@ -840,6 +842,7 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
     applyLang();
     // Re-run calculate to update dynamic text
     if (typeof calculate === 'function') calculate();
+    updateFormulaDisplay();
   });
 });
 
@@ -954,12 +957,12 @@ function updateFormulaDisplay() {
   const parts = [];
   if (c.deathT4 > 0 || c.deathT5 > 0) {
     const inner = [];
-    if (c.deathT4 > 0) inner.push(`Смерти T4 × ${c.deathT4}`);
-    if (c.deathT5 > 0) inner.push(`Смерти T5 × ${c.deathT5}`);
+    if (c.deathT4 > 0) inner.push(`${t('death4')} × ${c.deathT4}`);
+    if (c.deathT5 > 0) inner.push(`${t('death5')} × ${c.deathT5}`);
     if (inner.length > 0) parts.push(`(${inner.join(' + ')})`);
   }
-  if (c.killT4 > 0) parts.push(`Убийства T4 × ${c.killT4}`);
-  if (c.killT5 > 0) parts.push(`Убийства T5 × ${c.killT5}`);
+  if (c.killT4 > 0) parts.push(`${t('kill4')} × ${c.killT4}`);
+  if (c.killT5 > 0) parts.push(`${t('kill5')} × ${c.killT5}`);
 
   let formulaStr = parts.join(' + ');
   if (!formulaStr) formulaStr = '0';
@@ -967,12 +970,13 @@ function updateFormulaDisplay() {
   formulaText.textContent = formulaStr;
 
   // HTML preview
+  const d4 = t('death4'), d5 = t('death5'), k4 = t('kill4'), k5 = t('kill5');
   let html = formulaStr
     .replace(/×/g, '&times;')
-    .replace(/(Смерти T4)/g, '<span style="color:var(--neon-yellow)">$1</span>')
-    .replace(/(Смерти T5)/g, '<span style="color:var(--neon-yellow)">$1</span>')
-    .replace(/(Убийства T4)/g, '<span style="color:var(--neon-gold)">$1</span>')
-    .replace(/(Убийства T5)/g, '<span style="color:var(--neon-gold)">$1</span>');
+    .replace(new RegExp(d4.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '<span style="color:var(--neon-yellow)">$&</span>')
+    .replace(new RegExp(d5.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '<span style="color:var(--neon-yellow)">$&</span>')
+    .replace(new RegExp(k4.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '<span style="color:var(--neon-gold)">$&</span>')
+    .replace(new RegExp(k5.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), '<span style="color:var(--neon-gold)">$&</span>');
   formulaPreview.innerHTML = html || '0';
 }
 
