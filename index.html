@@ -198,10 +198,10 @@ body::after {
 /* LANG SWITCHER */
 .lang-switch {
   position: absolute;
-  top: 20px; right: 20px;
+  top: 12px; right: 12px;
   display: flex;
   gap: 2px;
-  z-index: 10;
+  z-index: 20;
 }
 .lang-btn {
   font-family: var(--font-mono);
@@ -283,12 +283,12 @@ body::after {
 </style>
 </head>
 <body>
-<div class="app">
-  <header class="header flicker" style="position:relative;">
-    <div class="lang-switch">
-      <button class="lang-btn" data-lang="ru">RU</button>
-      <button class="lang-btn" data-lang="en">EN</button>
-    </div>
+<div class="app" style="position:relative;">
+  <div class="lang-switch">
+    <button class="lang-btn" data-lang="ru">RU</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+  <header class="header flicker">
     <h1>ADAMANTIZATOR</h1>
     <div class="subtitle" data-i18n="subtitle">Tools for Rise of Kingdoms</div>
     <div class="glitch-line"></div>
