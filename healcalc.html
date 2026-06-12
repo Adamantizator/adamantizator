@@ -268,8 +268,8 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* LANG SWITCHER */
 .lang-switch {
-  position: absolute;
-  top: 12px; right: 12px;
+  position: fixed;
+  top: 4px; right: 8px;
   display: flex;
   gap: 2px;
   z-index: 10;
@@ -356,12 +356,11 @@ input[type="range"]::-webkit-slider-thumb {
 </style>
 </head>
 <body>
-
-<div class="app" id="app" style="position:relative;">
-  <div class="lang-switch">
-    <button class="lang-btn" data-lang="ru">RU</button>
-    <button class="lang-btn" data-lang="en">EN</button>
-  </div>
+<div class="lang-switch">
+  <button class="lang-btn" data-lang="ru">RU</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
+<div class="app" id="app">
   <header class="header">
     <div style="text-align:left;margin-bottom:4px;">
       <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
