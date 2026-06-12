@@ -495,14 +495,16 @@ function fmtNum(n) { return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d
 
 function fmtTime(totalSec) {
   if (totalSec <= 0) return '0 ' + t('sec');
-  const d = Math.floor(totalSec / 86400); totalSec %= 86400;
-  const h = Math.floor(totalSec / 3600); totalSec %= 3600;
-  const m = Math.floor(totalSec / 60); const s = Math.round(totalSec % 60);
+  let remaining = totalSec;
+  const d = Math.floor(remaining / 86400); remaining %= 86400;
+  const h = Math.floor(remaining / 3600); remaining %= 3600;
+  const m = Math.floor(remaining / 60); const s = remaining % 60;
   let parts = [];
   if (d > 0) parts.push(d + ' ' + t('day'));
   if (h > 0) parts.push(h + ' ' + t('hr'));
   if (m > 0) parts.push(m + ' ' + t('min'));
-  if (s > 0 || parts.length === 0) parts.push(s + ' ' + t('sec'));
+  const sStr = Number.isInteger(s) ? s.toString() : s.toFixed(1);
+  if (s > 0 || parts.length === 0) parts.push(sStr + ' ' + t('sec'));
   return parts.join(' ');
 }
 
@@ -561,7 +563,7 @@ function calculate() {
 
   // Apply speed bonus
   const speedMultiplier = 1 + speed / 100;
-  let finalSec = Math.ceil(totalSec / speedMultiplier);
+  let finalSec = totalSec / speedMultiplier;
 
   // Build detail rows
   const typeMap = { infantry: 0, archers: 1, cavalry: 2, siege: 3 };
@@ -578,15 +580,15 @@ function calculate() {
   detailBody.innerHTML = '';
   for (const t of TYPES) {
     if (train5[t] > 0) {
-      const sec = Math.ceil(T5[t].sec * train5[t] / speedMultiplier);
+      const sec = T5[t].sec * train5[t] / speedMultiplier;
       detailBody.innerHTML += `<tr><td>${typeLabels[t]}</td><td>${fmtNum(train5[t])}</td><td>${fmtTime(sec)}</td></tr>`;
     }
     if (retrain[t] > 0) {
-      const sec = Math.ceil(40 * retrain[t] / speedMultiplier);
+      const sec = 40 * retrain[t] / speedMultiplier;
       detailBody.innerHTML += `<tr><td>→ ${typeLabelsRt[t]}</td><td>${fmtNum(retrain[t])}</td><td>${fmtTime(sec)}</td></tr>`;
     }
     if (train4[t] > 0) {
-      const sec = Math.ceil(T4[t].sec * train4[t] / speedMultiplier);
+      const sec = T4[t].sec * train4[t] / speedMultiplier;
       detailBody.innerHTML += `<tr><td>${typeLabels4[t]}</td><td>${fmtNum(train4[t])}</td><td>${fmtTime(sec)}</td></tr>`;
     }
   }
