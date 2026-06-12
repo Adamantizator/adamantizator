@@ -226,6 +226,7 @@ select option { background: var(--card-bg); }
 }
 .msg.info { display: block; background: rgba(255, 230, 0, 0.08); border: 1px solid rgba(255, 230, 0, 0.2); color: var(--neon-yellow); }
 .msg.error { display: block; background: rgba(255, 16, 48, 0.1); border: 1px solid rgba(255, 16, 48, 0.3); color: var(--neon-red); }
+.hidden { display: none !important; }
 
 @keyframes flicker {
   0%, 88%, 92%, 96%, 100% { opacity: 1; }
@@ -264,6 +265,13 @@ select option { background: var(--card-bg); }
       <span id="fileInfo" style="color:var(--text-dim);font-size:0.85rem;font-family:var(--font-mono);"></span>
     </div>
     <div id="loadMsg" class="msg"></div>
+  </div>
+
+  <!-- PRELOADED FILES -->
+  <div class="panel" id="preloadPanel">
+    <div class="panel-title">Предзагруженные данные</div>
+    <div id="preloadList" class="row" style="gap:8px;min-height:30px;"></div>
+    <div id="preloadMsg" class="hidden"></div>
   </div>
 
   <!-- FILTERS -->
@@ -379,6 +387,85 @@ function showMsg(el, type, text) {
   el.className = 'msg ' + type;
   el.textContent = text;
 }
+
+// ===== PRELOADED FILES =====
+const preloadList = $('preloadList');
+const preloadMsg = $('preloadMsg');
+
+const PRELOADED_FILES = [
+  '06-07_3901.xlsx'
+];
+
+function preloadLabel(filename) {
+  return filename.replace(/\.[^.]+$/, '').replace(/_/g, ' ');
+}
+
+function showPreloadMsg(type, text) {
+  preloadMsg.className = `msg ${type}`;
+  preloadMsg.textContent = text;
+  setTimeout(() => { preloadMsg.className = 'hidden'; }, 4000);
+}
+
+function loadExcelFromBuffer(arrayBuffer, fileName) {
+  try {
+    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    if (json.length < 2) return false;
+    headers = json[0].map(h => String(h).trim());
+    rawData = json.slice(1).filter(row => row.some(cell => cell !== undefined && cell !== null && cell !== ''));
+    if (rawData.length === 0) return false;
+    // Build column select
+    columnSelect.innerHTML = headers.map((h, i) =>
+      `<option value="${i}">${h}</option>`
+    ).join('');
+    // Auto-select first numeric column
+    let autoIdx = -1;
+    for (let i = 0; i < headers.length; i++) {
+      const vals = rawData.map(r => Number(r[i])).filter(v => !isNaN(v));
+      if (vals.length > rawData.length * 0.5) { autoIdx = i; break; }
+    }
+    if (autoIdx === -1) autoIdx = 0;
+    columnSelect.value = autoIdx;
+    column = headers[autoIdx];
+    thColumn.textContent = column;
+    fileLabel.textContent = fileName;
+    fileInfo.textContent = `Строк: ${rawData.length}, Столбцов: ${headers.length}`;
+    showMsg(loadMsg, 'info', `Файл "${fileName}" загружен. Строк: ${rawData.length}`);
+    applyFilters();
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+async function loadPreloadedFile(filename) {
+  try {
+    const resp = await fetch(`data/${encodeURIComponent(filename)}`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const arrayBuffer = await resp.arrayBuffer();
+    const ok = loadExcelFromBuffer(arrayBuffer, filename);
+    if (!ok) { showPreloadMsg('error', `Файл "${preloadLabel(filename)}" пуст или поврежден`); return; }
+    showPreloadMsg('info', `"${preloadLabel(filename)}" загружен`);
+  } catch (err) {
+    const hint = window.location.protocol === 'file:'
+      ? ' (откройте сайт через http://localhost:8080, а не через file://)'
+      : '';
+    showPreloadMsg('error', `Ошибка загрузки "${preloadLabel(filename)}": ${err.message}${hint}`);
+  }
+}
+
+function renderPreloadedFiles() {
+  preloadList.innerHTML = '';
+  PRELOADED_FILES.forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-outline btn-small';
+    btn.textContent = preloadLabel(f);
+    btn.addEventListener('click', () => loadPreloadedFile(f));
+    preloadList.appendChild(btn);
+  });
+}
+renderPreloadedFiles();
 
 // ===== LOAD FILE =====
 loadBtn.addEventListener('click', () => {
