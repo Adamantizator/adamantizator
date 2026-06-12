@@ -373,6 +373,16 @@ td.pct { color: var(--neon-yellow); }
 }
 
 /* RED NEON GLOW — TEXT */
+@keyframes flicker {
+  0%, 82% { opacity: 1; }
+  86% { opacity: 1; }
+  90% { opacity: 0.85; }
+  94% { opacity: 1; }
+  98% { opacity: 0.85; }
+  100% { opacity: 1; }
+}
+.flicker { animation: flicker 4s infinite; }
+
 @keyframes flicker-glow-text {
   0%, 82% { -webkit-text-stroke: 0 transparent; }
   86% { -webkit-text-stroke: 1.5px #ff1030; }
@@ -603,7 +613,7 @@ td.pct { color: var(--neon-yellow); }
 </div>
 <div class="app" id="app">
   <!-- HEADER -->
-  <header class="header">
+  <header class="header flicker">
     <div style="text-align:left;margin-bottom:4px;">
       <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
     </div>
