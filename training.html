@@ -403,6 +403,17 @@ input:focus {
       <tfoot id="costFoot"></tfoot>
     </table>
 
+    <div class="row" style="justify-content:center;gap:40px;margin-top:16px;">
+      <div>
+        <div class="result-label" data-i18n="smp_title">СМП очки</div>
+        <div class="result-main" id="smpPoints" style="font-size:1.5rem;">0</div>
+      </div>
+      <div>
+        <div class="result-label" data-i18n="kvk_title">KvK очки</div>
+        <div class="result-main" id="kvkPoints" style="font-size:1.5rem;">0</div>
+      </div>
+    </div>
+
     <table class="result-table" id="detailTable">
       <thead>
         <tr>
@@ -431,6 +442,7 @@ const LANG = {
     type: 'Тип', count: 'Кол-во', time_col: 'Время',
     food: '🍖 Пища', wood: '🪵 Дерево', stone: '🪨 Камень', gold: '🪙 Золото',
     total: 'ИТОГО', sec: 'с', min: 'м', hr: 'ч', day: 'д',
+    smp_title: 'СМП очки', kvk_title: 'KvK очки',
   },
   en: {
     back: '← Home', subtitle: 'T4 / T5 Troop Training',
@@ -445,6 +457,7 @@ const LANG = {
     type: 'Type', count: 'Count', time_col: 'Time',
     food: '🍖 Food', wood: '🪵 Wood', stone: '🪨 Stone', gold: '🪙 Gold',
     total: 'TOTAL', sec: 's', min: 'm', hr: 'h', day: 'd',
+    smp_title: 'SMP Points', kvk_title: 'KvK Points',
   },
 };
 
@@ -560,6 +573,15 @@ function calculate() {
       totalSec += d.sec * train4[t];
     }
   }
+
+  // Calculate SMP and KvK points
+  let smp = 0, kvk = 0;
+  for (const t of TYPES) {
+    smp += train5[t] * 100 + train4[t] * 40 + retrain[t] * 60;
+    kvk += train5[t] * 20 + train4[t] * 8 + retrain[t] * 12;
+  }
+  document.getElementById('smpPoints').textContent = fmtNum(smp);
+  document.getElementById('kvkPoints').textContent = fmtNum(kvk);
 
   // Apply speed bonus
   const speedMultiplier = 1 + speed / 100;
