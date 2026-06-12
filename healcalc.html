@@ -264,6 +264,36 @@ input[type="range"]::-webkit-slider-thumb {
   90%, 94% { opacity: 0.85; }
 }
 .flicker { animation: flicker 4s infinite; }
+.flicker-glow { animation: flicker-glow 4s infinite; }
+
+/* LANG SWITCHER */
+.lang-switch {
+  position: absolute;
+  top: 20px; right: 20px;
+  display: flex;
+  gap: 2px;
+  z-index: 10;
+}
+.lang-btn {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.lang-btn:first-child { border-radius: 3px 0 0 3px; }
+.lang-btn:last-child { border-radius: 0 3px 3px 0; }
+.lang-btn.active {
+  background: var(--neon-yellow);
+  color: #000;
+  border-color: var(--neon-yellow);
+}
+.lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
 /* CYBER BANNER (Small Logo) */
 .cyber-banner-small {
@@ -329,11 +359,15 @@ input[type="range"]::-webkit-slider-thumb {
 
 <div class="app" id="app">
   <header class="header">
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="ru">RU</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
     <div style="text-align:left;margin-bottom:4px;">
-      <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;">← Главная</a>
+      <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
     </div>
     <h1 class="flicker">HEAL CALCULATOR</h1>
-    <div class="subtitle">Troop Healing Time Calculator</div>
+    <div class="subtitle" data-i18n="subtitle">Troop Healing Time Calculator</div>
     <div class="glitch-line"></div>
   </header>
 
@@ -344,42 +378,42 @@ input[type="range"]::-webkit-slider-thumb {
 
   <!-- TROOP COUNTS -->
   <div class="panel">
-    <div class="panel-title">Количество войск</div>
+    <div class="panel-title" data-i18n="troops">Количество войск</div>
 
     <div class="troop-inputs" style="margin-bottom:8px;">
       <div class="troop-input-group">
-        <label>⚔️ Пехота T4</label>
+        <label data-i18n="inf4">⚔️ Пехота T4</label>
         <input type="number" id="countInfantry4" value="0" min="0">
       </div>
       <div class="troop-input-group">
-        <label>🏹 Луки T4</label>
+        <label data-i18n="arc4">🏹 Луки T4</label>
         <input type="number" id="countArchers4" value="0" min="0">
       </div>
       <div class="troop-input-group">
-        <label>🐴 Кони T4</label>
+        <label data-i18n="cav4">🐴 Кони T4</label>
         <input type="number" id="countCavalry4" value="0" min="0">
       </div>
       <div class="troop-input-group">
-        <label>💥 Осада T4</label>
+        <label data-i18n="sie4">💥 Осада T4</label>
         <input type="number" id="countSiege4" value="0" min="0">
       </div>
     </div>
 
     <div class="troop-inputs">
       <div class="troop-input-group">
-        <label>⚔️ Пехота T5</label>
+        <label data-i18n="inf5">⚔️ Пехота T5</label>
         <input type="number" id="countInfantry5" value="0" min="0">
       </div>
       <div class="troop-input-group">
-        <label>🏹 Луки T5</label>
+        <label data-i18n="arc5">🏹 Луки T5</label>
         <input type="number" id="countArchers5" value="0" min="0">
       </div>
       <div class="troop-input-group">
-        <label>🐴 Кони T5</label>
+        <label data-i18n="cav5">🐴 Кони T5</label>
         <input type="number" id="countCavalry5" value="0" min="0">
       </div>
       <div class="troop-input-group">
-        <label>💥 Осада T5</label>
+        <label data-i18n="sie5">💥 Осада T5</label>
         <input type="number" id="countSiege5" value="0" min="0">
       </div>
     </div>
@@ -387,26 +421,26 @@ input[type="range"]::-webkit-slider-thumb {
 
   <!-- BONUSES -->
   <div class="panel">
-    <div class="panel-title">Бонусы</div>
+    <div class="panel-title" data-i18n="bonuses">Бонусы</div>
     <div class="row" style="gap:24px;">
       <div class="col" style="min-width:140px;">
-        <label>Скорость лечения</label>
+        <label data-i18n="speed_label">Скорость лечения</label>
         <input type="number" id="speedBonus" value="0" min="0" max="100" style="width:100px;text-align:center;">
-        <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);">% ускорения</span>
+        <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);" data-i18n="speed_unit">% ускорения</span>
       </div>
       <div class="col" style="min-width:140px;">
-        <label>Потребление ресурсов</label>
+        <label data-i18n="resource_label">Потребление ресурсов</label>
         <input type="number" id="resourceBonus" value="0" min="0" max="100" style="width:100px;text-align:center;">
-        <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);">% экономии</span>
+        <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);" data-i18n="resource_unit">% экономии</span>
       </div>
       <div class="col" style="flex:1;min-width:200px;">
-        <label>Ручки лечения</label>
+        <label data-i18n="handles_label">Ручки лечения</label>
         <div class="handles-row">
           <span style="font-size:0.8rem;color:var(--text-muted);">0</span>
           <input type="range" id="handlesSlider" min="0" max="30" value="0">
           <span style="font-size:0.8rem;color:var(--text-muted);">30</span>
           <span class="handles-value" id="handlesDisplay">0</span>
-          <span class="handles-pct" id="handlesPct">− 0 мин</span>
+          <span class="handles-pct" id="handlesPct" data-i18n-dynamic>− 0 мин</span>
         </div>
       </div>
     </div>
@@ -414,16 +448,16 @@ input[type="range"]::-webkit-slider-thumb {
 
   <!-- RESULT -->
   <div class="panel result-panel" id="resultPanel">
-    <div class="result-label">Общее время лечения</div>
+    <div class="result-label" data-i18n="result_label">Общее время лечения</div>
     <div class="result-time" id="resultTime">—</div>
     <div class="result-detail" id="resultDetail"></div>
 
     <table class="result-table" id="resultTable">
       <thead>
         <tr>
-          <th>Тип</th>
-          <th>Воинов</th>
-          <th>Время</th>
+          <th data-i18n="type">Тип</th>
+          <th data-i18n="troops_count">Воинов</th>
+          <th data-i18n="time">Время</th>
         </tr>
       </thead>
       <tbody id="resultBody"></tbody>
@@ -432,15 +466,15 @@ input[type="range"]::-webkit-slider-thumb {
 
   <!-- RESOURCE COST -->
   <div class="panel" id="costPanel">
-    <div class="panel-title">Стоимость лечения</div>
+    <div class="panel-title" data-i18n="cost_title">Стоимость лечения</div>
     <table class="result-table" id="costTable">
       <thead>
         <tr>
-          <th>Тип</th>
-          <th>🍖 Пища</th>
-          <th>🪵 Дерево</th>
-          <th>🪨 Камень</th>
-          <th>🪙 Золото</th>
+          <th data-i18n="type">Тип</th>
+          <th data-i18n="food">🍖 Пища</th>
+          <th data-i18n="wood">🪵 Дерево</th>
+          <th data-i18n="stone">🪨 Камень</th>
+          <th data-i18n="gold">🪙 Золото</th>
         </tr>
       </thead>
       <tbody id="costBody"></tbody>
@@ -450,17 +484,80 @@ input[type="range"]::-webkit-slider-thumb {
 </div>
 
 <script>
+const LANG = {
+  ru: {
+    back: '← Главная', subtitle: 'Troop Healing Time Calculator',
+    troops: 'Количество войск', bonuses: 'Бонусы',
+    speed_label: 'Скорость лечения', speed_unit: '% ускорения',
+    resource_label: 'Потребление ресурсов', resource_unit: '% экономии',
+    handles_label: 'Ручки лечения',
+    inf4: '⚔️ Пехота T4', arc4: '🏹 Луки T4', cav4: '🐴 Кони T4', sie4: '💥 Осада T4',
+    inf5: '⚔️ Пехота T5', arc5: '🏹 Луки T5', cav5: '🐴 Кони T5', sie5: '💥 Осада T5',
+    result_label: 'Общее время лечения',
+    type: 'Тип', troops_count: 'Воинов', time: 'Время',
+    cost_title: 'Стоимость лечения',
+    food: '🍖 Пища', wood: '🪵 Дерево', stone: '🪨 Камень', gold: '🪙 Золото',
+    total: 'ИТОГО',
+    zero_min: '− 0 мин', floor_hint: ' (есть 180с)',
+    total_troops: 'Всего воинов', speed_prefix: 'Скорость +', speed_suffix: '%',
+    no_handles: 'Без ручек', with_handles: 'С ручками',
+  },
+  en: {
+    back: '← Home', subtitle: 'Troop Healing Time Calculator',
+    troops: 'Troop Count', bonuses: 'Bonuses',
+    speed_label: 'Healing Speed', speed_unit: '% speed',
+    resource_label: 'Resource Consumption', resource_unit: '% saving',
+    handles_label: 'Healing Handles',
+    inf4: '⚔️ Infantry T4', arc4: '🏹 Archers T4', cav4: '🐴 Cavalry T4', sie4: '💥 Siege T4',
+    inf5: '⚔️ Infantry T5', arc5: '🏹 Archers T5', cav5: '🐴 Cavalry T5', sie5: '💥 Siege T5',
+    result_label: 'Total Healing Time',
+    type: 'Type', troops_count: 'Troops', time: 'Time',
+    cost_title: 'Healing Cost',
+    food: '🍖 Food', wood: '🪵 Wood', stone: '🪨 Stone', gold: '🪙 Gold',
+    total: 'TOTAL',
+    zero_min: '− 0 min', floor_hint: ' (180s floor)',
+    total_troops: 'Total troops', speed_prefix: 'Speed +', speed_suffix: '%',
+    no_handles: 'No handles', with_handles: 'With handles',
+  },
+};
+
+const detected = navigator.language.startsWith('ru') ? 'ru' : 'en';
+let lang = localStorage.getItem('lang') || detected;
+
+function t(key) { return LANG[lang][key] || key; }
+
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (LANG[lang][key]) el.textContent = LANG[lang][key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.documentElement.lang = lang;
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    lang = btn.dataset.lang;
+    localStorage.setItem('lang', lang);
+    applyLang();
+    calculate();
+  });
+});
+
+applyLang();
 const FREE_SECONDS_PER_HANDLE = 180;
 
 const TROOPS = [
-  { id: 'Infantry4', label: 'Пехота T4',  icon: '⚔️', tier: 4, countEl: null, seconds: 3, cost: { food: 120, wood: 120, stone: 0, gold: 8 } },
-  { id: 'Archers4',  label: 'Луки T4',    icon: '🏹', tier: 4, countEl: null, seconds: 3, cost: { food: 0,   wood: 120, stone: 90, gold: 8 } },
-  { id: 'Cavalry4',  label: 'Кони T4',    icon: '🐴', tier: 4, countEl: null, seconds: 3, cost: { food: 120, wood: 0,   stone: 90, gold: 8 } },
-  { id: 'Siege4',    label: 'Осада T4',   icon: '💥', tier: 4, countEl: null, seconds: 3, cost: { food: 80,  wood: 80,  stone: 60, gold: 8 } },
-  { id: 'Infantry5', label: 'Пехота T5',  icon: '⚔️', tier: 5, countEl: null, seconds: 4, cost: { food: 320, wood: 320, stone: 0,   gold: 160 } },
-  { id: 'Archers5',  label: 'Луки T5',    icon: '🏹', tier: 5, countEl: null, seconds: 4, cost: { food: 0,   wood: 320, stone: 240, gold: 160 } },
-  { id: 'Cavalry5',  label: 'Кони T5',    icon: '🐴', tier: 5, countEl: null, seconds: 4, cost: { food: 320, wood: 0,   stone: 240, gold: 160 } },
-  { id: 'Siege5',    label: 'Осада T5',   icon: '💥', tier: 5, countEl: null, seconds: 4, cost: { food: 200, wood: 200, stone: 160, gold: 160 } },
+  { id: 'Infantry4', labelKey: 'inf4', icon: '⚔️', tier: 4, countEl: null, seconds: 3, cost: { food: 120, wood: 120, stone: 0, gold: 8 } },
+  { id: 'Archers4',  labelKey: 'arc4', icon: '🏹', tier: 4, countEl: null, seconds: 3, cost: { food: 0,   wood: 120, stone: 90, gold: 8 } },
+  { id: 'Cavalry4',  labelKey: 'cav4', icon: '🐴', tier: 4, countEl: null, seconds: 3, cost: { food: 120, wood: 0,   stone: 90, gold: 8 } },
+  { id: 'Siege4',    labelKey: 'sie4', icon: '💥', tier: 4, countEl: null, seconds: 3, cost: { food: 80,  wood: 80,  stone: 60, gold: 8 } },
+  { id: 'Infantry5', labelKey: 'inf5', icon: '⚔️', tier: 5, countEl: null, seconds: 4, cost: { food: 320, wood: 320, stone: 0,   gold: 160 } },
+  { id: 'Archers5',  labelKey: 'arc5', icon: '🏹', tier: 5, countEl: null, seconds: 4, cost: { food: 0,   wood: 320, stone: 240, gold: 160 } },
+  { id: 'Cavalry5',  labelKey: 'cav5', icon: '🐴', tier: 5, countEl: null, seconds: 4, cost: { food: 320, wood: 0,   stone: 240, gold: 160 } },
+  { id: 'Siege5',    labelKey: 'sie5', icon: '💥', tier: 5, countEl: null, seconds: 4, cost: { food: 200, wood: 200, stone: 160, gold: 160 } },
 ];
 
 const handlesSlider = document.getElementById('handlesSlider');
@@ -520,7 +617,7 @@ function calculate() {
   if (totalTroops === 0) {
     costBody.innerHTML = '';
     costFoot.innerHTML = '';
-    handlesPct.textContent = '− 0 мин';
+    handlesPct.textContent = t('zero_min');
     resultBody.innerHTML = '';
     resultDetail.innerHTML = '';
     resultTime.textContent = '0 сек.';
@@ -548,19 +645,19 @@ function calculate() {
   // Determine if any handle hit the 180s floor
   const anyFloor = handles > 0 && (baseSeconds * 0.01) < FREE_SECONDS_PER_HANDLE;
   handlesPct.textContent = handles > 0
-    ? `− ${fmtTimeShort(actualCuts)}${anyFloor ? ' (есть 180с)' : ''}`
-    : '− 0 мин';
+    ? `− ${fmtTimeShort(actualCuts)}${anyFloor ? t('floor_hint') : ''}`
+    : t('zero_min');
 
   resultTime.textContent = fmtTime(resultSeconds);
 
-  const row1 = [`Всего воинов: <span>${totalTroops.toLocaleString('ru-RU')}</span>`];
+  const row1 = [`${t('total_troops')}: <span>${totalTroops.toLocaleString('ru-RU')}</span>`];
   if (bonusPct > 0) {
-    row1.push(`Скорость +${bonusPct}%: <span>${fmtTime(baseSeconds)}</span>`);
+    row1.push(`${t('speed_prefix')}${bonusPct}${t('speed_suffix')}: <span>${fmtTime(baseSeconds)}</span>`);
   }
 
   resultDetail.innerHTML = row1.join(' &nbsp;|&nbsp; ')
     + '<br>'
-    + [`Без ручек: <span>${fmtTime(rawSeconds)}</span>`, `С ручками: <span>${fmtTimeShort(savedSeconds)}</span>`].join(' &nbsp;|&nbsp; ');
+    + [`${t('no_handles')}: <span>${fmtTime(rawSeconds)}</span>`, `${t('with_handles')}: <span>${fmtTimeShort(savedSeconds)}</span>`].join(' &nbsp;|&nbsp; ');
 
   // Time table per troop
   resultBody.innerHTML = TROOPS.map((t, i) => {
@@ -568,7 +665,7 @@ function calculate() {
     if (cnt === 0) return '';
     const troopTime = cnt * t.seconds;
     return `<tr>
-      <td>${t.icon} ${t.label}</td>
+      <td>${t.icon} ${t(t.labelKey)}</td>
       <td>${cnt.toLocaleString('ru-RU')}</td>
       <td>${troopTime > 0 ? fmtTime(troopTime) : '—'}</td>
     </tr>`;
@@ -584,11 +681,11 @@ function calculate() {
     if (cnt === 0) return '';
     resources.forEach(r => { totals[r] += cnt * t.cost[r] * resourceMult; });
     const row = resources.map(r => fmtNum(cnt * t.cost[r] * resourceMult));
-    return `<tr><td>${t.icon} ${t.label}</td><td>${row.join('</td><td>')}</td></tr>`;
+    return `<tr><td>${t.icon} ${t(t.labelKey)}</td><td>${row.join('</td><td>')}</td></tr>`;
   }).join('');
 
   costFoot.innerHTML = `<tr style="border-top:1px solid rgba(255,230,0,0.25);font-weight:700;color:var(--neon-yellow);">
-    <td>ИТОГО</td><td>${resources.map(r => fmtNum(totals[r])).join('</td><td>')}</td>
+    <td>${t('total')}</td><td>${resources.map(r => fmtNum(totals[r])).join('</td><td>')}</td>
   </tr>`;
 }
 
