@@ -509,7 +509,7 @@ function applyLang() {
   document.documentElement.lang = lang;
   const sn = document.getElementById('searchNick');
   if (sn) sn.placeholder = t('search_placeholder');
-  if (typeof applyFilters === 'function') applyFilters();
+  if (typeof columnSelect !== 'undefined' && typeof applyFilters === 'function') applyFilters();
 }
 
 applyLang();
