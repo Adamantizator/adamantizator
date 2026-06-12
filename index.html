@@ -374,8 +374,14 @@ td.pct { color: var(--neon-yellow); }
 
 /* RED NEON GLITCH FLICKER */
 @keyframes flicker {
-  0%, 88%, 92%, 96%, 100% { filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4)); }
-  90%, 94% { filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4)) drop-shadow(0 0 15px rgba(255, 16, 48, 0.6)) drop-shadow(0 0 40px rgba(255, 16, 48, 0.3)) drop-shadow(0 0 80px rgba(255, 16, 48, 0.1)); }
+  0%, 88%, 92%, 96%, 100% {
+    filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4));
+    -webkit-text-stroke: 0 transparent;
+  }
+  90%, 94% {
+    filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4));
+    -webkit-text-stroke: 1.5px #ff1030;
+  }
 }
 .flicker { animation: flicker 4s infinite; }
 
