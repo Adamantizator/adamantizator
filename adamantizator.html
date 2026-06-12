@@ -433,6 +433,16 @@ td.pct { color: var(--neon-yellow); }
 }
 .lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
+.cal-btn {
+  font-family: var(--font-display); font-size: 0.6rem;
+  padding: 3px 8px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer; text-decoration: none;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.cal-btn:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); }
+
 /* CYBER BANNER (Small Logo) */
 .cyber-banner-small {
   width: 100%;
@@ -608,6 +618,7 @@ td.pct { color: var(--neon-yellow); }
 </head>
 <body>
 <div class="lang-switch">
+  <a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
@@ -796,6 +807,7 @@ const LANG = {
     th_dkp: 'Текущий ДКП', th_goal: 'Цель ДКП', th_pct: 'Выполнение цели %',
     sum_dkp: 'Сумма ДКП:', total_players: 'Всего игроков:',
     players_filtered: 'Игроков:', of: '/',
+    calendar_btn: '📅 Календарь',
   },
   en: {
     back: '← Home', subtitle: 'Cyber DKP Analysis System',
@@ -819,6 +831,7 @@ const LANG = {
     th_dkp: 'Current DKP', th_goal: 'DKP Goal', th_pct: 'Goal %',
     sum_dkp: 'DKP Sum:', total_players: 'Total players:',
     players_filtered: 'Players:', of: '/',
+    calendar_btn: '📅 Calendar',
   },
 };
 

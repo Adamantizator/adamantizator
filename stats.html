@@ -287,6 +287,16 @@ select option { background: var(--card-bg); }
 }
 .lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
+.cal-btn {
+  font-family: var(--font-display); font-size: 0.6rem;
+  padding: 3px 8px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer; text-decoration: none;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.cal-btn:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); }
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--dark-bg); }
 ::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
@@ -338,6 +348,7 @@ select option { background: var(--card-bg); }
 </head>
 <body>
 <div class="lang-switch">
+  <a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
@@ -474,6 +485,7 @@ const LANG = {
     err_http: 'Ошибка загрузки',
     err_parse: 'Ошибка чтения',
     empty_no_data: 'Нет данных для экспорта.',
+    calendar_btn: '📅 Календарь',
   },
   en: {
     back: '← Home', title: 'PARTICIPANT STATISTICS', subtitle: 'Excel Table Analyzer', page_title: 'Participant Statistics — Excel Analyzer',
@@ -495,6 +507,7 @@ const LANG = {
     err_http: 'Load error',
     err_parse: 'Read error',
     empty_no_data: 'No data to export.',
+    calendar_btn: '📅 Calendar',
   },
 };
 

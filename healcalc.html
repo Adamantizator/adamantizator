@@ -319,6 +319,16 @@ input[type="range"]::-webkit-slider-thumb {
 }
 .lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
+.cal-btn {
+  font-family: var(--font-display); font-size: 0.6rem;
+  padding: 3px 8px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer; text-decoration: none;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.cal-btn:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); }
+
 /* CYBER BANNER (Small Logo) */
 .cyber-banner-small {
   width: 100%;
@@ -381,6 +391,7 @@ input[type="range"]::-webkit-slider-thumb {
 </head>
 <body>
 <div class="lang-switch">
+  <a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
@@ -526,6 +537,7 @@ const LANG = {
     no_handles: 'Без ручек', with_handles: 'С ручками',
     sec: 'с', min: 'м', hr: 'ч', day: 'д',
     short_sec: 'сек.', short_min: 'мин.', short_hr: 'ч.', short_day: 'д.',
+    calendar_btn: '📅 Календарь',
   },
   en: {
     back: '← Home', subtitle: 'Troop Healing Time Calculator',
@@ -545,6 +557,7 @@ const LANG = {
     no_handles: 'No handles', with_handles: 'With handles',
     sec: 's', min: 'm', hr: 'h', day: 'd',
     short_sec: 's', short_min: 'm', short_hr: 'h', short_day: 'd',
+    calendar_btn: '📅 Calendar',
   },
 };
 

@@ -248,6 +248,16 @@ input:focus {
 .lang-btn.active { background: var(--neon-yellow); color: #000; border-color: var(--neon-yellow); }
 .lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
+.cal-btn {
+  font-family: var(--font-display); font-size: 0.6rem;
+  padding: 3px 8px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer; text-decoration: none;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.cal-btn:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); }
+
 .cyber-banner-small {
   width: 100%; max-width: 160px;
   margin: 0 auto 20px; border-radius: 50%; overflow: hidden;
@@ -289,6 +299,7 @@ input:focus {
 </head>
 <body>
 <div class="lang-switch">
+  <a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
@@ -443,6 +454,7 @@ const LANG = {
     food: '🍖 Пища', wood: '🪵 Дерево', stone: '🪨 Камень', gold: '🪙 Золото',
     total: 'ИТОГО', sec: 'с', min: 'м', hr: 'ч', day: 'д',
     smp_title: 'СМП очки', kvk_title: 'KvK очки',
+    calendar_btn: '📅 Календарь',
   },
   en: {
     back: '← Home', subtitle: 'T4 / T5 Troop Training',
@@ -458,6 +470,7 @@ const LANG = {
     food: '🍖 Food', wood: '🪵 Wood', stone: '🪨 Stone', gold: '🪙 Gold',
     total: 'TOTAL', sec: 's', min: 'm', hr: 'h', day: 'd',
     smp_title: 'SMP Points', kvk_title: 'KvK Points',
+    calendar_btn: '📅 Calendar',
   },
 };
 

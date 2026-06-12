@@ -261,6 +261,29 @@ body::after {
 }
 .lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
+.cal-btn {
+  position: fixed;
+  top: 4px; right: 68px;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 3px;
+  z-index: 20;
+  transition: all 0.2s;
+}
+.cal-btn:hover {
+  border-color: var(--neon-yellow);
+  color: var(--neon-yellow);
+  box-shadow: 0 0 15px rgba(255, 230, 0, 0.1);
+}
+
 /* CYBER BANNER (Small Logo) */
 .cyber-banner-small {
   width: 100%;
@@ -325,6 +348,7 @@ body::after {
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
+<a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
 <div class="app">
   <header class="header flicker">
     <h1 class="flicker-glow-text">ADAMANTIZATOR</h1>
@@ -395,6 +419,7 @@ const LANG = {
     card4_title: 'Training Calculator',
     card4_desc: 'Расчёт стоимости и времени обучения T4 / T5, переобучение T4→T5',
     card4_tag: 'T4 · T5 · Ресурсы · Время',
+    calendar_btn: '📅 Календарь',
   },
   en: {
     subtitle: 'Tools for Rise of Kingdoms', page_title: 'Adamantizator — Home',
@@ -410,6 +435,7 @@ const LANG = {
     card4_title: 'Training Calculator',
     card4_desc: 'T4 / T5 training cost and time, T4→T5 retraining',
     card4_tag: 'T4 · T5 · Resources · Time',
+    calendar_btn: '📅 Calendar',
   },
 };
 
