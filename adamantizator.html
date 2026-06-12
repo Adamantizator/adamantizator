@@ -768,7 +768,7 @@ const LANG = {
     back: '← Главная', subtitle: 'Cyber DKP Analysis System',
     file: 'Файл', open_excel: '[ ОТКРЫТЬ EXCEL ]', no_file: 'Файл не выбран',
     lilith_link: 'Официальный сайт со статистикой Lilith',
-    help_tip: '<b>Как получить таблицу:</b><br><br>1. Выберите "Показать сведения об участниках"<br>2. Выберите период, за который нужна статистика<br>3. В настройке данных таблицы нажмите галочку на "Все"<br>4. Скачайте таблицу и загрузите ее<br><br><b>Важно:</b> исходный файл с сайта Rok Tools должен быть на <u>русском</u> языке',
+    help_tip: '<b>Как получить таблицу:</b><br><br>1. Выберите "Показать сведения об участниках"<br>2. Выберите период, за который нужна статистика<br>3. В настройке данных таблицы нажмите галочку на "Все"<br>4. Скачайте таблицу и загрузите ее<br><br><b>Важно:</b> исходный файл с сайта Rok Tools должен быть на <u>русском или английском</u> языке',
     preloaded: 'Предзагруженные данные',
     formula_title: 'Редактор формулы ДКП', formula_text: 'Формула:',
     formula_init: '(Смерти T4 + Смерти T5) × 30 + Убийства T4 × 10 + Убийства T5 × 20',
@@ -779,7 +779,7 @@ const LANG = {
     from_place: 'С места', to_place: 'По место',
     min_val: 'Нижняя граница (≥)', max_val: 'Верхняя граница (≤)',
     search_nick: 'Поиск по нику', search_placeholder: 'Введите ник...',
-    calc_btn: '[ РАССЧИТАТЬ ]', download_btn: '[ СКАЧАТЬ EXCEL ]',
+    calc_btn: '[ РАССЧИТАТЬ ]', download_btn: '[ СКАЧАТЬ EXCEL ]', err_missing_cols: 'Отсутствуют столбцы',
     th_name: 'Имя', th_power: 'Мощь (акт.)', th_maxpower: 'Макс. мощь',
     th_kill4: 'Убийства T4', th_kill5: 'Убийства T5',
     th_death4: 'Смерти T4', th_death5: 'Смерти T5',
@@ -791,7 +791,7 @@ const LANG = {
     back: '← Home', subtitle: 'Cyber DKP Analysis System',
     file: 'File', open_excel: '[ OPEN EXCEL ]', no_file: 'No file selected',
     lilith_link: 'Lilith official stats website',
-    help_tip: '<b>How to get the table:</b><br><br>1. Select "Show member details"<br>2. Select the period you need stats for<br>3. In table data settings, check "All"<br>4. Download the table and upload it<br><br><b>Important:</b> the source file from Rok Tools must be in <u>Russian</u> language',
+    help_tip: '<b>How to get the table:</b><br><br>1. Select "Show member details"<br>2. Select the period you need stats for<br>3. In table data settings, check "All"<br>4. Download the table and upload it<br><br><b>Important:</b> the source file from Rok Tools must be in <u>Russian or English</u> language',
     preloaded: 'Preloaded Data',
     formula_title: 'DKP Formula Editor', formula_text: 'Formula:',
     formula_init: '(Deaths T4 + Deaths T5) × 30 + Kills T4 × 10 + Kills T5 × 20',
@@ -802,7 +802,7 @@ const LANG = {
     from_place: 'From place', to_place: 'To place',
     min_val: 'Min value (≥)', max_val: 'Max value (≤)',
     search_nick: 'Search nickname', search_placeholder: 'Enter nickname...',
-    calc_btn: '[ CALCULATE ]', download_btn: '[ DOWNLOAD EXCEL ]',
+    calc_btn: '[ CALCULATE ]', download_btn: '[ DOWNLOAD EXCEL ]', err_missing_cols: 'Missing columns',
     th_name: 'Name', th_power: 'Power (act.)', th_maxpower: 'Max power',
     th_kill4: 'Kills T4', th_kill5: 'Kills T5',
     th_death4: 'Deaths T4', th_death5: 'Deaths T5',
@@ -896,6 +896,7 @@ function loadExcelFromBuffer(arrayBuffer, fileName) {
     if (!json || json.length === 0) return false;
     df = json;
     headers = Object.keys(df[0]);
+    buildColMap();
     fileLabel.textContent = fileName;
     fileInfo.textContent = `| Строк данных: ${df.length} | Столбцов: ${headers.length}`;
     fileLabel.style.color = 'var(--neon-green)';
@@ -1023,9 +1024,30 @@ function showMsg(type, text) {
   setTimeout(() => { loadMsg.className = 'hidden'; }, 4000);
 }
 
+// ===== COLUMN NAME ALIASES (RU/EN) =====
+const COL_ALIASES = {
+  'Смерти T4': 'T4 Deaths',
+  'Смерти T5': 'T5 Deaths',
+  'Убийства T4': 'T4 Kills',
+  'Убийства T5': 'T5 Kills',
+  'Мощь': 'Power',
+  'Макс. мощь': 'Highest Power',
+};
+let colMap = {};
+
+function buildColMap() {
+  colMap = {};
+  for (const [ru, en] of Object.entries(COL_ALIASES)) {
+    if (headers.includes(ru)) colMap[ru] = ru;
+    else if (headers.includes(en)) colMap[ru] = en;
+    else colMap[ru] = ru;
+  }
+}
+function col(ru) { return colMap[ru] || ru; }
+
 // ===== GET PLAYER NAME =====
 function getPlayerName(row) {
-  const names = ['Имя пользователя', 'Ник', 'Игрок', 'Nick', 'Player', 'Name', 'Имя'];
+  const names = ['Имя пользователя', 'Ник', 'Игрок', 'Username', 'Nick', 'Player', 'Name', 'Имя'];
   for (const n of names) {
     if (row[n] !== undefined && row[n] !== null && String(row[n]).trim() !== '') return String(row[n]).trim();
   }
@@ -1041,15 +1063,18 @@ function fmtNum(n) {
 // ===== CALCULATE DKP FORMULA =====
 function calculateFormulaColumn(data) {
   const required = ['Смерти T4', 'Смерти T5', 'Убийства T4', 'Убийства T5'];
-  const missing = required.filter(c => !headers.includes(c));
-  if (missing.length > 0) throw new Error(`Отсутствуют столбцы: ${missing.join(', ')}`);
+  const missing = required.filter(c => !headers.includes(c) && !headers.includes(COL_ALIASES[c]));
+  if (missing.length > 0) {
+    const missingLabels = missing.map(c => `${c} / ${COL_ALIASES[c]}`);
+    throw new Error(`${t('err_missing_cols')}: ${missingLabels.join(', ')}`);
+  }
 
   const c = getFormulaCoefficients();
   return data.map(row => {
-    const d4 = parseFloat(row['Смерти T4']) || 0;
-    const d5 = parseFloat(row['Смерти T5']) || 0;
-    const k4 = parseFloat(row['Убийства T4']) || 0;
-    const k5 = parseFloat(row['Убийства T5']) || 0;
+    const d4 = parseFloat(row[col('Смерти T4')]) || 0;
+    const d5 = parseFloat(row[col('Смерти T5')]) || 0;
+    const k4 = parseFloat(row[col('Убийства T4')]) || 0;
+    const k5 = parseFloat(row[col('Убийства T5')]) || 0;
     return d4 * c.deathT4 + d5 * c.deathT5 + k4 * c.killT4 + k5 * c.killT5;
   });
 }
@@ -1066,7 +1091,10 @@ calcBtn.addEventListener('click', async () => {
     let column;
 
     const formulaValues = calculateFormulaColumn(data);
-    const formulaColName = 'ДКП (Смерти T4×30 + Смерти T5×30 + Убийства T4×10 + Убийства T5×20)';
+    const useEn = headers.includes('T4 Deaths') || headers.includes('T4 Kills');
+    const formulaColName = useEn
+      ? 'DKP (Deaths T4×30 + Deaths T5×30 + Kills T4×10 + Kills T5×20)'
+      : 'ДКП (Смерти T4×30 + Смерти T5×30 + Убийства T4×10 + Убийства T5×20)';
     data.forEach((row, i) => { row[formulaColName] = formulaValues[i]; });
     column = formulaColName;
 
@@ -1120,7 +1148,7 @@ calcBtn.addEventListener('click', async () => {
 
     // Build table
     const mult = parseInt(multiplier.value) || 1;
-    const hasPower = headers.includes('Мощь');
+    const hasPower = headers.includes('Мощь') || headers.includes('Power');
     const totalSum = filtered.reduce((s, r) => s + (r[column] || 0), 0);
 
     tableBody.innerHTML = '';
@@ -1128,14 +1156,14 @@ calcBtn.addEventListener('click', async () => {
       const place = idx + 1;
       const name = getPlayerName(row);
       const dkpVal = parseInt(row[column]) || 0;
-      const powerVal = hasPower ? (parseInt(row['Мощь']) || 0) : 0;
-      const maxPowerVal = hasPower && headers.includes('Макс. мощь') ? (parseInt(row['Макс. мощь']) || 0) : powerVal;
+      const powerVal = hasPower ? (parseInt(row[col('Мощь')]) || 0) : 0;
+      const maxPowerVal = hasPower && (headers.includes('Макс. мощь') || headers.includes('Highest Power')) ? (parseInt(row[col('Макс. мощь')]) || 0) : powerVal;
       const normVal = powerVal * mult;
       const pct = normVal > 0 ? (dkpVal / normVal * 100) : 0;
-      const killsT4 = parseInt(row['Убийства T4']) || 0;
-      const killsT5 = parseInt(row['Убийства T5']) || 0;
-      const deathsT4 = parseInt(row['Смерти T4']) || 0;
-      const deathsT5 = parseInt(row['Смерти T5']) || 0;
+      const killsT4 = parseInt(row[col('Убийства T4')]) || 0;
+      const killsT5 = parseInt(row[col('Убийства T5')]) || 0;
+      const deathsT4 = parseInt(row[col('Смерти T4')]) || 0;
+      const deathsT5 = parseInt(row[col('Смерти T5')]) || 0;
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -1178,22 +1206,22 @@ downloadBtn.addEventListener('click', () => {
 
   try {
     const mult = parseInt(multiplier.value) || 1;
-    const hasPower = headers.includes('Мощь');
-    const hasMaxPower = headers.includes('Макс. мощь');
-    const goalLabel = `Цель ДКП (Мощь x${mult})`;
+    const hasPower = headers.includes('Мощь') || headers.includes('Power');
+    const hasMaxPower = headers.includes('Макс. мощь') || headers.includes('Highest Power');
+    const goalLabel = t('th_goal') + ` (${t('th_power').replace(/ \(.*\)/, '')} x${mult})`;
 
     const exportData = currentData.map(row => ({
       'Имя': getPlayerName(row),
-      'Мощь (акт.)': hasPower ? (parseInt(row['Мощь']) || 0) : 0,
-      'Макс. мощь': hasMaxPower ? (parseInt(row['Макс. мощь']) || 0) : (hasPower ? (parseInt(row['Мощь']) || 0) : 0),
-      'Убийства T4': parseInt(row['Убийства T4']) || 0,
-      'Убийства T5': parseInt(row['Убийства T5']) || 0,
-      'Смерти T4': parseInt(row['Смерти T4']) || 0,
-      'Смерти T5': parseInt(row['Смерти T5']) || 0,
+      'Мощь (акт.)': hasPower ? (parseInt(row[col('Мощь')]) || 0) : 0,
+      'Макс. мощь': hasMaxPower ? (parseInt(row[col('Макс. мощь')]) || 0) : (hasPower ? (parseInt(row[col('Мощь')]) || 0) : 0),
+      'Убийства T4': parseInt(row[col('Убийства T4')]) || 0,
+      'Убийства T5': parseInt(row[col('Убийства T5')]) || 0,
+      'Смерти T4': parseInt(row[col('Смерти T4')]) || 0,
+      'Смерти T5': parseInt(row[col('Смерти T5')]) || 0,
       'Текущий ДКП': parseInt(row[currentColumn]) || 0,
-      [goalLabel]: hasPower ? ((parseInt(row['Мощь']) || 0) * mult) : 0,
+      [goalLabel]: hasPower ? ((parseInt(row[col('Мощь')]) || 0) * mult) : 0,
       'Выполнение цели %': (() => {
-        const power = hasPower ? (parseInt(row['Мощь']) || 0) : 0;
+        const power = hasPower ? (parseInt(row[col('Мощь')]) || 0) : 0;
         const dkp = parseInt(row[currentColumn]) || 0;
         return power > 0 ? (dkp / (power * mult)) * 100 : 0;
       })()

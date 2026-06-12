@@ -228,11 +228,25 @@ select option { background: var(--card-bg); }
 .msg.error { display: block; background: rgba(255, 16, 48, 0.1); border: 1px solid rgba(255, 16, 48, 0.3); color: var(--neon-red); }
 .hidden { display: none !important; }
 
-@keyframes flicker {
-  0%, 88%, 92%, 96%, 100% { opacity: 1; }
-  90%, 94% { opacity: 0.85; }
+@keyframes flicker-text {
+  0%, 82% { -webkit-text-stroke: 0 transparent; }
+  86% { -webkit-text-stroke: 1.5px #ff1030; }
+  90% { -webkit-text-stroke: 0 transparent; }
+  94% { -webkit-text-stroke: 1.5px #ff1030; }
+  98% { -webkit-text-stroke: 0 transparent; }
+  100% { -webkit-text-stroke: 0 transparent; }
 }
-.flicker { animation: flicker 4s infinite; }
+.flicker { animation: flicker-text 4s infinite; }
+
+@keyframes flicker-glow {
+  0%, 82% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  86% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
+  90% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  94% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
+  98% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  100% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+}
+.flicker-glow { animation: flicker-glow 4s infinite; }
 
 /* LANG SWITCHER */
 .lang-switch {
@@ -274,15 +288,15 @@ select option { background: var(--card-bg); }
 
 .cyber-banner-small {
   width: 100%;
-  max-width: 120px;
-  margin: 0 auto 16px;
+  max-width: 160px;
+  margin: 0 auto 20px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(255, 230, 0, 0.3);
   box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05);
   position: relative;
   background: var(--panel-bg);
-  padding: 8px;
+  padding: 10px;
 }
 .cyber-banner-small::before {
   content: '';
@@ -304,19 +318,11 @@ select option { background: var(--card-bg); }
 .cyber-banner-small::after {
   content: '';
   position: absolute;
-  top: 8px; left: 8px; right: 8px; bottom: 8px;
+  top: 10px; left: 10px; right: 10px; bottom: 10px;
   border-radius: 50%;
   background: linear-gradient(135deg, rgba(255, 230, 0, 0.1), transparent 45%, transparent 55%, rgba(255, 230, 0, 0.03));
   pointer-events: none;
   z-index: 2;
-}
-.flicker-glow {
-  animation: flicker 3s ease-in-out infinite alternate;
-}
-@keyframes flicker {
-  0% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
-  50% { box-shadow: 0 0 40px rgba(255, 230, 0, 0.35), inset 0 0 50px rgba(255, 230, 0, 0.1); }
-  100% { box-shadow: 0 0 25px rgba(255, 230, 0, 0.15), inset 0 0 30px rgba(255, 230, 0, 0.03); }
 }
 </style>
 </head>
@@ -336,7 +342,7 @@ select option { background: var(--card-bg); }
   </header>
 
   <!-- CYBER BANNER (Small Logo) -->
-  <div class="cyber-banner-small flicker-glow" style="margin-top:10px;">
+  <div class="cyber-banner-small flicker-glow">
     <img src="logo.png" alt="ADAMANTIZATOR Logo" loading="lazy" onerror="this.style.display='none'">
   </div>
 
@@ -538,7 +544,7 @@ const tableBody = $('tableBody');
 function fmtNum(n) { return Math.floor(n).toLocaleString('ru-RU'); }
 
 function getPlayerName(row) {
-  const nameCols = ['Имя пользователя', 'Ник', 'Игрок', 'Nick', 'Player', 'Name', 'Имя'];
+  const nameCols = ['Имя пользователя', 'Ник', 'Игрок', 'Username', 'Nick', 'Player', 'Name', 'Имя'];
   for (const c of nameCols) {
     const idx = headers.indexOf(c);
     if (idx !== -1 && row[idx] && String(row[idx]).trim()) return String(row[idx]).trim();
