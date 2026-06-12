@@ -265,6 +265,54 @@ input[type="range"]::-webkit-slider-thumb {
 }
 .flicker { animation: flicker 4s infinite; }
 
+/* CYBER BANNER (Small Logo) */
+.cyber-banner-small {
+  width: 100%;
+  max-width: 160px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 230, 0, 0.3);
+  box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05);
+  position: relative;
+  background: var(--panel-bg);
+  padding: 10px;
+}
+.cyber-banner-small::before {
+  content: '';
+  position: absolute;
+  top: -5px; left: -5px; right: -5px; bottom: -5px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(255, 230, 0, 0.1), transparent, rgba(255, 230, 0, 0.1));
+  animation: rotate 8s linear infinite;
+  pointer-events: none;
+}
+.cyber-banner-small img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+}
+.cyber-banner-small::after {
+  content: '';
+  position: absolute;
+  top: 10px; left: 10px; right: 10px; bottom: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 230, 0, 0.1), transparent 45%, transparent 55%, rgba(255, 230, 0, 0.03));
+  animation: shimmer 6s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes shimmer {
+  to { transform: rotate(360deg); }
+}
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--dark-bg); }
 ::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
@@ -288,6 +336,11 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="subtitle">Troop Healing Time Calculator</div>
     <div class="glitch-line"></div>
   </header>
+
+   <!-- CYBER BANNER (Small Logo) -->
+   <div class="cyber-banner-small flicker-glow">
+     <img src="logo.png" alt="HEAL CALCULATOR" loading="lazy" onerror="this.style.display='none'">
+   </div>
 
   <!-- TROOP COUNTS -->
   <div class="panel">
