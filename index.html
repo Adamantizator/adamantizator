@@ -414,6 +414,22 @@ td.pct { color: var(--neon-yellow); }
   position: relative;
   z-index: 1;
 }
+.cyber-banner-small::after {
+  content: '';
+  position: absolute;
+  top: 10px; left: 10px; right: 10px; bottom: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 230, 0, 0.08), transparent 40%, rgba(255, 230, 0, 0.04) 70%, transparent);
+  animation: shimmer 4s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes shimmer {
+  0% { background: linear-gradient(135deg, rgba(255, 230, 0, 0.08), transparent 40%, rgba(255, 230, 0, 0.04) 70%, transparent); }
+  50% { background: linear-gradient(225deg, rgba(255, 230, 0, 0.06), transparent 40%, rgba(255, 230, 0, 0.08) 70%, transparent); }
+  100% { background: linear-gradient(315deg, rgba(255, 230, 0, 0.08), transparent 40%, rgba(255, 230, 0, 0.04) 70%, transparent); }
+}
 
 /* Legacy banner styles */
 .cyber-banner {
@@ -566,7 +582,7 @@ td.pct { color: var(--neon-yellow); }
         <span id="fileLabel" style="color:var(--text-dim);font-size:0.9rem;">Файл не выбран</span>
         <span id="fileInfo" style="color:var(--text-dim);font-size:0.85rem;font-family:var(--font-mono);"></span>
         <div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;">
-          <span style="font-family:var(--font-display);font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);">Официальный сайт со статистикой Lilith</span>
+          <span style="font-family:var(--font-display);font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Официальный сайт со статистикой Lilith</span>
           <div style="display:flex;align-items:center;gap:8px;">
             <a href="https://rok-game-tools-global.lilith.com" target="_blank" class="btn btn-outline btn-small" style="padding:4px 12px;font-size:0.7rem;">Rok Tools ↗</a>
             <div class="help-tip">
