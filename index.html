@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adamantizator — Главная</title>
+<title data-i18n="page_title">Adamantizator — Главная</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap');
 
@@ -100,16 +100,19 @@ body::after {
 }
 
 .cards {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
-  align-items: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.card-wrap {
+  display: contents;
 }
 
 .card {
   display: block;
-  width: 100%;
-  max-width: 480px;
   background: var(--panel-bg);
   border: 1px solid var(--border-glow);
   border-radius: 6px;
@@ -278,6 +281,7 @@ body::after {
 
 @media (max-width: 480px) {
   .header h1 { font-size: 1.6rem; letter-spacing: 3px; }
+  .cards { grid-template-columns: 1fr; }
   .card { padding: 20px 16px; }
 }
 </style>
@@ -300,26 +304,32 @@ body::after {
   </div>
 
   <div class="cards">
-    <a class="card card-adamantizator" href="adamantizator.html">
-      <div class="card-icon">📊</div>
-      <div class="card-title">Adamantizator</div>
-      <div class="card-desc" data-i18n="card1_desc">Расчёт ДКП по загруженной Excel-таблице из игры</div>
-      <div class="tag" data-i18n="card1_tag">Загрузка .xlsx · Фильтр · Поиск</div>
-    </a>
-
-    <a class="card card-healcalc" href="healcalc.html">
-      <div class="card-icon">⏳</div>
-      <div class="card-title">Heal Calculator</div>
-      <div class="card-desc" data-i18n="card2_desc">Расчёт времени лечения войск T4 / T5 с учётом бонусов и ручек</div>
-      <div class="tag" data-i18n="card2_tag">T4 · T5 · Скорость · Ресурсы</div>
-    </a>
-
-    <a class="card card-healcalc" href="stats.html" style="border-color:rgba(255,16,48,0.3);">
-      <div class="card-icon">📋</div>
-      <div class="card-title" style="color:var(--neon-red);">Статистика участников</div>
-      <div class="card-desc" data-i18n="card3_desc">Анализ Excel-таблиц: загрузка, сортировка, фильтры, поиск, экспорт</div>
-      <div class="tag" data-i18n="card3_tag">Загрузка .xlsx · Фильтр · Экспорт</div>
-    </a>
+    <div class="card-wrap">
+      <a class="card card-healcalc" href="healcalc.html">
+        <div class="card-icon">💊</div>
+        <div class="card-title" data-i18n="card2_title">Heal Calculator</div>
+        <div class="card-desc" data-i18n="card2_desc">Расчёт времени лечения войск T4 / T5 с учётом бонусов и ручек</div>
+        <div class="tag" data-i18n="card2_tag">T4 · T5 · Скорость · Ресурсы</div>
+      </a>
+    </div>
+    <div class="card-wrap">
+      <a class="card" href="stats.html" style="border-color:rgba(255,16,48,0.3);">
+        <div class="card-icon">📋</div>
+        <div class="card-title" style="color:var(--neon-red);" data-i18n="card3_title">Статистика участников</div>
+        <div class="card-desc" data-i18n="card3_desc">Анализ Excel-таблиц: загрузка, сортировка, фильтры, поиск, экспорт</div>
+        <div class="tag" data-i18n="card3_tag">Загрузка .xlsx · Фильтр · Экспорт</div>
+      </a>
+    </div>
+    <div class="card-wrap">
+      <a class="card card-adamantizator" href="adamantizator.html">
+        <div class="card-icon">⚔️</div>
+        <div class="card-title" data-i18n="card1_title">Adamantizator</div>
+        <div class="card-desc" data-i18n="card1_desc">Расчёт ДКП по загруженной Excel-таблице из игры</div>
+        <div class="tag" data-i18n="card1_tag">Загрузка .xlsx · Фильтр · Поиск</div>
+      </a>
+    </div>
+    <!-- empty 4th cell -->
+    <div></div>
   </div>
 
   <div class="footer">
@@ -332,20 +342,26 @@ body::after {
 <script>
 const LANG = {
   ru: {
-    subtitle: 'Tools for Rise of Kingdoms',
+    subtitle: 'Tools for Rise of Kingdoms', page_title: 'Adamantizator — Главная',
+    card1_title: 'Adamantizator',
     card1_desc: 'Расчёт ДКП по загруженной Excel-таблице из игры',
     card1_tag: 'Загрузка .xlsx · Фильтр · Поиск',
+    card2_title: 'Heal Calculator',
     card2_desc: 'Расчёт времени лечения войск T4 / T5 с учётом бонусов и ручек',
     card2_tag: 'T4 · T5 · Скорость · Ресурсы',
+    card3_title: 'Статистика участников',
     card3_desc: 'Анализ Excel-таблиц: загрузка, сортировка, фильтры, поиск, экспорт',
     card3_tag: 'Загрузка .xlsx · Фильтр · Экспорт',
   },
   en: {
-    subtitle: 'Tools for Rise of Kingdoms',
+    subtitle: 'Tools for Rise of Kingdoms', page_title: 'Adamantizator — Home',
+    card1_title: 'Adamantizator',
     card1_desc: 'DKP calculation from in-game Excel export',
     card1_tag: 'Load .xlsx · Filter · Search',
+    card2_title: 'Heal Calculator',
     card2_desc: 'T4 / T5 troop healing time with bonuses and handles',
     card2_tag: 'T4 · T5 · Speed · Resources',
+    card3_title: 'Participant Statistics',
     card3_desc: 'Excel analysis: load, sort, filters, search, export',
     card3_tag: 'Load .xlsx · Filter · Export',
   },
