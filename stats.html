@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Статистика участников — Excel Analyzer</title>
+<title data-i18n="page_title">Статистика участников — Excel Analyzer</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap');
 
@@ -234,6 +234,35 @@ select option { background: var(--card-bg); }
 }
 .flicker { animation: flicker 4s infinite; }
 
+/* LANG SWITCHER */
+.lang-switch {
+  position: fixed;
+  top: 4px; right: 8px;
+  display: flex;
+  gap: 2px;
+  z-index: 100;
+}
+.lang-btn {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.lang-btn:first-child { border-radius: 3px 0 0 3px; }
+.lang-btn:last-child { border-radius: 0 3px 3px 0; }
+.lang-btn.active {
+  background: var(--neon-yellow);
+  color: #000;
+  border-color: var(--neon-yellow);
+}
+.lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--dark-bg); }
 ::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
@@ -242,26 +271,81 @@ select option { background: var(--card-bg); }
   .header h1 { font-size: 1.2rem; letter-spacing: 2px; }
   .row { gap: 10px; }
 }
+
+.cyber-banner-small {
+  width: 100%;
+  max-width: 120px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 230, 0, 0.3);
+  box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05);
+  position: relative;
+  background: var(--panel-bg);
+  padding: 8px;
+}
+.cyber-banner-small::before {
+  content: '';
+  position: absolute;
+  top: -5px; left: -5px; right: -5px; bottom: -5px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(255, 230, 0, 0.1), transparent, rgba(255, 230, 0, 0.1));
+  animation: rotate 8s linear infinite;
+  pointer-events: none;
+}
+.cyber-banner-small img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+}
+.cyber-banner-small::after {
+  content: '';
+  position: absolute;
+  top: 8px; left: 8px; right: 8px; bottom: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 230, 0, 0.1), transparent 45%, transparent 55%, rgba(255, 230, 0, 0.03));
+  pointer-events: none;
+  z-index: 2;
+}
+.flicker-glow {
+  animation: flicker 3s ease-in-out infinite alternate;
+}
+@keyframes flicker {
+  0% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  50% { box-shadow: 0 0 40px rgba(255, 230, 0, 0.35), inset 0 0 50px rgba(255, 230, 0, 0.1); }
+  100% { box-shadow: 0 0 25px rgba(255, 230, 0, 0.15), inset 0 0 30px rgba(255, 230, 0, 0.03); }
+}
 </style>
 </head>
 <body>
-
+<div class="lang-switch">
+  <button class="lang-btn" data-lang="ru">RU</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
 <div class="app" id="app">
   <header class="header flicker">
-    <h1>СТАТИСТИКА УЧАСТНИКОВ</h1>
-    <div class="subtitle">Excel Table Analyzer</div>
+    <h1 data-i18n="title">СТАТИСТИКА УЧАСТНИКОВ</h1>
+    <div class="subtitle" data-i18n="subtitle">Excel Table Analyzer</div>
     <div class="glitch-line"></div>
     <div style="text-align:left;margin-top:8px;">
-      <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;">← Главная</a>
+      <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
     </div>
   </header>
 
+  <!-- CYBER BANNER (Small Logo) -->
+  <div class="cyber-banner-small flicker-glow" style="margin-top:10px;">
+    <img src="logo.png" alt="ADAMANTIZATOR Logo" loading="lazy" onerror="this.style.display='none'">
+  </div>
+
   <!-- FILE -->
   <div class="panel">
-    <div class="panel-title">Файл</div>
+    <div class="panel-title" data-i18n="file">Файл</div>
     <div class="row">
-      <button class="btn btn-primary" id="loadBtn">[ ОТКРЫТЬ EXCEL ]</button>
-      <span id="fileLabel" style="color:var(--text-dim);font-size:0.9rem;">Файл не выбран</span>
+      <button class="btn btn-primary" id="loadBtn" data-i18n="open_excel">[ ОТКРЫТЬ EXCEL ]</button>
+      <span id="fileLabel" style="color:var(--text-dim);font-size:0.9rem;" data-i18n="no_file">Файл не выбран</span>
       <span id="fileInfo" style="color:var(--text-dim);font-size:0.85rem;font-family:var(--font-mono);"></span>
     </div>
     <div id="loadMsg" class="msg"></div>
@@ -269,17 +353,17 @@ select option { background: var(--card-bg); }
 
   <!-- PRELOADED FILES -->
   <div class="panel" id="preloadPanel">
-    <div class="panel-title">Предзагруженные данные</div>
+    <div class="panel-title" data-i18n="preloaded">Предзагруженные данные</div>
     <div id="preloadList" class="row" style="gap:8px;min-height:30px;"></div>
     <div id="preloadMsg" class="hidden"></div>
   </div>
 
   <!-- FILTERS -->
   <div class="panel">
-    <div class="panel-title">Фильтры и опции</div>
+    <div class="panel-title" data-i18n="filters">Фильтры и опции</div>
     <div class="row" style="margin-bottom:12px;">
       <div class="col" style="min-width:180px;flex:1;">
-        <label>Столбец для анализа</label>
+        <label data-i18n="column_label">Столбец для анализа</label>
         <select id="columnSelect" style="width:100%;">
           <option value="">— загрузите файл —</option>
         </select>
@@ -295,45 +379,53 @@ select option { background: var(--card-bg); }
     </div>
     <div class="row" style="margin-bottom:12px;">
       <div class="col" style="min-width:80px;">
-        <label>С места</label>
+        <label data-i18n="sort">Сортировка</label>
+        <select id="sortMode">
+          <option value="desc" data-i18n="sort_desc">По убыванию</option>
+          <option value="asc" data-i18n="sort_asc">По возрастанию</option>
+          <option value="none" data-i18n="sort_none">Без сортировки</option>
+        </select>
+      </div>
+      <div class="col" style="min-width:80px;">
+        <label data-i18n="from_place">С места</label>
         <input type="number" id="fromPlace" value="" min="1" style="width:90px;">
       </div>
       <div class="col" style="min-width:80px;">
-        <label>По место</label>
+        <label data-i18n="to_place">По место</label>
         <input type="number" id="toPlace" value="" min="1" style="width:90px;">
       </div>
       <div class="col" style="min-width:100px;">
-        <label>Нижняя граница (≥)</label>
+        <label data-i18n="min_val">Нижняя граница (≥)</label>
         <input type="number" id="minVal" value="" style="width:120px;">
       </div>
       <div class="col" style="min-width:100px;">
-        <label>Верхняя граница (≤)</label>
+        <label data-i18n="max_val">Верхняя граница (≤)</label>
         <input type="number" id="maxVal" value="" style="width:120px;">
       </div>
       <div class="col" style="min-width:140px;margin-left:auto;">
-        <label>Поиск по нику</label>
+        <label data-i18n="search_nick">Поиск по нику</label>
         <input type="text" id="searchNick" placeholder="Введите ник..." style="width:100%;">
       </div>
     </div>
     <div class="row">
-      <button class="btn btn-primary" id="calcBtn">[ ПРИМЕНИТЬ ]</button>
-      <button class="btn btn-outline btn-small" id="exportBtn">[ СКАЧАТЬ TXT ]</button>
+      <button class="btn btn-primary" id="calcBtn" data-i18n="apply_btn">[ ПРИМЕНИТЬ ]</button>
+      <button class="btn btn-outline btn-small" id="exportBtn" data-i18n="export_btn">[ СКАЧАТЬ TXT ]</button>
     </div>
   </div>
 
   <!-- TABLE -->
   <div class="panel" style="padding:0;overflow:hidden;">
     <div class="status-bar">
-      <span class="sum" id="sumDisplay">Сумма: 0</span>
-      <span class="count" id="countDisplay">Всего записей: 0</span>
+      <span class="sum" id="sumDisplay" data-i18n-dynamic>Сумма: 0</span>
+      <span class="count" id="countDisplay" data-i18n-dynamic>Всего записей: 0</span>
     </div>
     <div class="table-wrap" id="tableWrap">
       <table>
         <thead>
           <tr>
             <th style="width:40px;text-align:center;">#</th>
-            <th style="text-align:left;">Игрок</th>
-            <th id="thColumn" style="text-align:right;">Значение</th>
+            <th style="text-align:left;" data-i18n="th_player">Игрок</th>
+            <th id="thColumn" style="text-align:right;width:100px;">—</th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -344,6 +436,77 @@ select option { background: var(--card-bg); }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
+// ===== I18N =====
+const LANG = {
+  ru: {
+    back: '← Главная', title: 'СТАТИСТИКА УЧАСТНИКОВ', subtitle: 'Excel Table Analyzer', page_title: 'Статистика участников — Excel Analyzer',
+    file: 'Файл', open_excel: '[ ОТКРЫТЬ EXCEL ]', no_file: 'Файл не выбран',
+    preloaded: 'Предзагруженные данные',
+    filters: 'Фильтры и опции',
+    column_label: 'Столбец для анализа',
+    sort: 'Сортировка', sort_desc: 'По убыванию', sort_asc: 'По возрастанию', sort_none: 'Без сортировки',
+    from_place: 'С места', to_place: 'По место',
+    min_val: 'Нижняя граница (≥)', max_val: 'Верхняя граница (≤)',
+    search_nick: 'Поиск по нику', search_placeholder: 'Введите ник...',
+    apply_btn: '[ ПРИМЕНИТЬ ]', export_btn: '[ СКАЧАТЬ TXT ]',
+    th_player: 'Игрок', th_value: 'Значение',
+    sum_label: 'Сумма:', count_label: 'Всего записей:', unknown: 'Неизвестный',
+    loaded: 'загружен', rows: 'Строк:', cols: 'Столбцов:',
+    err_empty: 'Файл пуст или не содержит данных.', err_no_data: 'Нет строк с данными.',
+    err_no_file: 'Выберите столбец.', ok_loaded: 'загружен.',
+    hint_file: ' (откройте сайт через http://localhost:8080, а не через file://)',
+    err_http: 'Ошибка загрузки',
+    err_parse: 'Ошибка чтения',
+    empty_no_data: 'Нет данных для экспорта.',
+  },
+  en: {
+    back: '← Home', title: 'PARTICIPANT STATISTICS', subtitle: 'Excel Table Analyzer', page_title: 'Participant Statistics — Excel Analyzer',
+    file: 'File', open_excel: '[ OPEN EXCEL ]', no_file: 'No file selected',
+    preloaded: 'Preloaded Data',
+    filters: 'Filters & Options',
+    column_label: 'Analysis column',
+    sort: 'Sort', sort_desc: 'Descending', sort_asc: 'Ascending', sort_none: 'No sort',
+    from_place: 'From place', to_place: 'To place',
+    min_val: 'Min value (≥)', max_val: 'Max value (≤)',
+    search_nick: 'Search nickname', search_placeholder: 'Enter nickname...',
+    apply_btn: '[ APPLY ]', export_btn: '[ DOWNLOAD TXT ]',
+    th_player: 'Player', th_value: 'Value',
+    sum_label: 'Sum:', count_label: 'Total records:', unknown: 'Unknown',
+    loaded: 'loaded', rows: 'Rows:', cols: 'Columns:',
+    err_empty: 'The file is empty or contains no data.', err_no_data: 'No data rows.',
+    err_no_file: 'Select a column.', ok_loaded: 'loaded.',
+    hint_file: ' (open the site via http://localhost:8080, not file://)',
+    err_http: 'Load error',
+    err_parse: 'Read error',
+    empty_no_data: 'No data to export.',
+  },
+};
+
+const detected = navigator.language.startsWith('ru') ? 'ru' : 'en';
+let lang = localStorage.getItem('lang') || detected;
+
+function t(key) { return LANG[lang][key] || key; }
+
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (LANG[lang][key]) el.textContent = LANG[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-dynamic]').forEach(el => {
+    const key = el.dataset.i18nDynamic;
+    if (key === 'sum_label') el.textContent = `${t('sum_label')} 0`;
+    else if (key === 'count_label') el.textContent = `${t('count_label')} 0`;
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.documentElement.lang = lang;
+  const sn = document.getElementById('searchNick');
+  if (sn) sn.placeholder = t('search_placeholder');
+  if (typeof applyFilters === 'function') applyFilters();
+}
+
+applyLang();
 // ===== STATE =====
 let df = null;
 let headers = [];
@@ -380,7 +543,7 @@ function getPlayerName(row) {
     const idx = headers.indexOf(c);
     if (idx !== -1 && row[idx] && String(row[idx]).trim()) return String(row[idx]).trim();
   }
-  return 'Неизвестный';
+  return t('unknown');
 }
 
 function showMsg(el, type, text) {
@@ -430,8 +593,8 @@ function loadExcelFromBuffer(arrayBuffer, fileName) {
     column = headers[autoIdx];
     thColumn.textContent = column;
     fileLabel.textContent = fileName;
-    fileInfo.textContent = `Строк: ${rawData.length}, Столбцов: ${headers.length}`;
-    showMsg(loadMsg, 'info', `Файл "${fileName}" загружен. Строк: ${rawData.length}`);
+    fileInfo.textContent = `${t('rows')} ${rawData.length}, ${t('cols')} ${headers.length}`;
+    showMsg(loadMsg, 'info', `${t('ok_loaded')}`);
     applyFilters();
     return true;
   } catch (err) {
@@ -445,13 +608,13 @@ async function loadPreloadedFile(filename) {
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const arrayBuffer = await resp.arrayBuffer();
     const ok = loadExcelFromBuffer(arrayBuffer, filename);
-    if (!ok) { showPreloadMsg('error', `Файл "${preloadLabel(filename)}" пуст или поврежден`); return; }
-    showPreloadMsg('info', `"${preloadLabel(filename)}" загружен`);
+    if (!ok) { showPreloadMsg('error', `${t('err_empty')}`); return; }
+    showPreloadMsg('info', `"${preloadLabel(filename)}" ${t('loaded')}`);
   } catch (err) {
     const hint = window.location.protocol === 'file:'
-      ? ' (откройте сайт через http://localhost:8080, а не через file://)'
+      ? t('hint_file')
       : '';
-    showPreloadMsg('error', `Ошибка загрузки "${preloadLabel(filename)}": ${err.message}${hint}`);
+    showPreloadMsg('error', `${t('err_http')} "${preloadLabel(filename)}": ${err.message}${hint}`);
   }
 }
 
@@ -485,7 +648,7 @@ loadBtn.addEventListener('click', () => {
         const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
         if (json.length < 2) {
-          showMsg(loadMsg, 'error', 'Файл пуст или не содержит данных.');
+          showMsg(loadMsg, 'error', t('err_empty'));
           return;
         }
 
@@ -493,7 +656,7 @@ loadBtn.addEventListener('click', () => {
         rawData = json.slice(1).filter(row => row.some(cell => cell !== undefined && cell !== null && cell !== ''));
 
         if (rawData.length === 0) {
-          showMsg(loadMsg, 'error', 'Нет строк с данными.');
+          showMsg(loadMsg, 'error', t('err_no_data'));
           return;
         }
 
@@ -515,13 +678,13 @@ loadBtn.addEventListener('click', () => {
         thColumn.textContent = column;
 
         fileLabel.textContent = file.name;
-        fileInfo.textContent = `Строк: ${rawData.length}, Столбцов: ${headers.length}`;
-        showMsg(loadMsg, 'info', `Файл "${file.name}" загружен. Строк: ${rawData.length}`);
+        fileInfo.textContent = `${t('rows')} ${rawData.length}, ${t('cols')} ${headers.length}`;
+        showMsg(loadMsg, 'info', `${t('ok_loaded')}`);
 
         applyFilters();
 
       } catch (err) {
-        showMsg(loadMsg, 'error', `Ошибка чтения: ${err.message}`);
+        showMsg(loadMsg, 'error', `${t('err_parse')}: ${err.message}`);
       }
     };
     reader.readAsArrayBuffer(file);
@@ -535,7 +698,7 @@ function applyFilters() {
 
   const colIdx = parseInt(columnSelect.value);
   if (isNaN(colIdx) || colIdx < 0 || colIdx >= headers.length) {
-    showMsg(loadMsg, 'error', 'Выберите столбец.');
+    showMsg(loadMsg, 'error', t('err_no_file'));
     return;
   }
 
@@ -591,10 +754,10 @@ function applyFilters() {
     </tr>`;
   }).join('');
 
-  sumDisplay.textContent = `Сумма: ${fmtNum(sum)}`;
-  countDisplay.textContent = `Всего записей: ${data.length}`;
+  sumDisplay.textContent = `${t('sum_label')} ${fmtNum(sum)}`;
+  countDisplay.textContent = `${t('count_label')} ${data.length}`;
 
-  showMsg(loadMsg, 'info', `Отфильтровано: ${data.length} записей, сумма: ${fmtNum(sum)}`);
+  showMsg(loadMsg, 'info', `${t('count_label')} ${data.length}, ${t('sum_label')} ${fmtNum(sum)}`);
 }
 
 // ===== EVENTS =====
@@ -606,15 +769,16 @@ calcBtn.addEventListener('click', applyFilters);
 // ===== EXPORT =====
 exportBtn.addEventListener('click', () => {
   if (!lastFiltered.length) {
-    showMsg(loadMsg, 'error', 'Нет данных для экспорта.');
+    showMsg(loadMsg, 'error', t('empty_no_data'));
     return;
   }
 
+  const langSuffix = lang === 'ru' ? 'ru-RU' : 'en-US';
   const lines = [];
-  lines.push(`=== ЭКСПОРТ СТАТИСТИКИ | ${new Date().toLocaleString('ru-RU')} ===`);
-  lines.push(`Столбец: ${column}`);
-  lines.push(`Всего записей: ${lastFiltered.length}`);
-  lines.push(`Сумма: ${fmtNum(lastFiltered.reduce((s, d) => s + (d.val === -Infinity ? 0 : d.val), 0))}`);
+  lines.push(`=== EXPORT | ${new Date().toLocaleString(langSuffix)} ===`);
+  lines.push(`${t('th_value')}: ${column}`);
+  lines.push(`${t('count_label')} ${lastFiltered.length}`);
+  lines.push(`${t('sum_label')} ${fmtNum(lastFiltered.reduce((s, d) => s + (d.val === -Infinity ? 0 : d.val), 0))}`);
   lines.push('='.repeat(120));
   lines.push('');
 
@@ -622,18 +786,18 @@ exportBtn.addEventListener('click', () => {
   lastFiltered.forEach((d, i) => {
     const val = d.val === -Infinity ? 0 : d.val;
     sum += val;
-    lines.push(`# ${i + 1} | Ник: ${d.name} | ${column}: ${fmtNum(val)}`);
+    lines.push(`# ${i + 1} | ${t('th_player')}: ${d.name} | ${column}: ${fmtNum(val)}`);
   });
 
   lines.push('');
   lines.push('='.repeat(120));
-  lines.push(`Итоговая сумма: ${fmtNum(sum)}`);
+  lines.push(`${t('sum_label')} ${fmtNum(sum)}`);
 
   const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `Статистика_${new Date().toISOString().slice(0, 10)}.txt`;
+  a.download = `Stats_${new Date().toISOString().slice(0, 10)}.txt`;
   a.click();
   URL.revokeObjectURL(url);
 });
