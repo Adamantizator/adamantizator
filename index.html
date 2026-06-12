@@ -181,7 +181,14 @@ body::after {
 }
 
 .card-adamantizator .card-title { color: var(--neon-yellow); }
-.card-healcalc .card-title { color: var(--neon-cyan); }
+.card-adamantizator { border-color: rgba(255, 230, 0, 0.3); }
+
+.card-healcalc .card-title { color: var(--neon-red); }
+.card-healcalc { border-color: rgba(255, 16, 48, 0.3); }
+.card-healcalc:hover { border-color: var(--neon-red) !important; }
+
+.card-stats .card-title { color: var(--neon-yellow); }
+.card-stats { border-color: rgba(255, 230, 0, 0.3); }
 
 .footer {
   margin-top: 40px;
@@ -328,6 +335,14 @@ body::after {
 
   <div class="cards">
     <div class="card-wrap">
+      <a class="card card-adamantizator" href="adamantizator.html">
+        <div class="card-icon">⚔️</div>
+        <div class="card-title" data-i18n="card1_title">Adamantizator</div>
+        <div class="card-desc" data-i18n="card1_desc">Расчёт ДКП по загруженной Excel-таблице из игры</div>
+        <div class="tag" data-i18n="card1_tag">Загрузка .xlsx · Фильтр · Поиск</div>
+      </a>
+    </div>
+    <div class="card-wrap">
       <a class="card card-healcalc" href="healcalc.html">
         <div class="card-icon">💊</div>
         <div class="card-title" data-i18n="card2_title">Heal Calculator</div>
@@ -336,19 +351,11 @@ body::after {
       </a>
     </div>
     <div class="card-wrap">
-      <a class="card" href="stats.html" style="border-color:rgba(255,16,48,0.3);">
+      <a class="card card-stats" href="stats.html">
         <div class="card-icon">📋</div>
-        <div class="card-title" style="color:var(--neon-red);" data-i18n="card3_title">Статистика участников</div>
+        <div class="card-title" data-i18n="card3_title">Статистика участников</div>
         <div class="card-desc" data-i18n="card3_desc">Анализ Excel-таблиц: загрузка, сортировка, фильтры, поиск, экспорт</div>
         <div class="tag" data-i18n="card3_tag">Загрузка .xlsx · Фильтр · Экспорт</div>
-      </a>
-    </div>
-    <div class="card-wrap">
-      <a class="card card-adamantizator" href="adamantizator.html">
-        <div class="card-icon">⚔️</div>
-        <div class="card-title" data-i18n="card1_title">Adamantizator</div>
-        <div class="card-desc" data-i18n="card1_desc">Расчёт ДКП по загруженной Excel-таблице из игры</div>
-        <div class="tag" data-i18n="card1_tag">Загрузка .xlsx · Фильтр · Поиск</div>
       </a>
     </div>
     <!-- empty 4th cell -->
