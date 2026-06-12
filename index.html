@@ -374,25 +374,25 @@ td.pct { color: var(--neon-yellow); }
 
 /* RED NEON FLICKER — TEXT */
 @keyframes flicker-text {
-  0%, 92% { -webkit-text-stroke: 0 transparent; }
-  93% { -webkit-text-stroke: 1.5px #ff1030; }
-  94% { -webkit-text-stroke: 0 transparent; }
-  96% { -webkit-text-stroke: 1.5px #ff1030; }
-  97% { -webkit-text-stroke: 0 transparent; }
+  0%, 82% { -webkit-text-stroke: 0 transparent; }
+  86% { -webkit-text-stroke: 1.5px #ff1030; }
+  90% { -webkit-text-stroke: 0 transparent; }
+  94% { -webkit-text-stroke: 1.5px #ff1030; }
+  98% { -webkit-text-stroke: 0 transparent; }
   100% { -webkit-text-stroke: 0 transparent; }
 }
-.flicker-text { animation: flicker-text 8s infinite; }
+.flicker-text { animation: flicker-text 4s infinite; }
 
 /* RED NEON FLICKER — GLOW */
 @keyframes flicker-glow {
-  0%, 92% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
-  93% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
-  94% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
-  96% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
-  97% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  0%, 82% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  86% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
+  90% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  94% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
+  98% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
   100% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
 }
-.flicker-glow { animation: flicker-glow 8s infinite; }
+.flicker-glow { animation: flicker-glow 4s infinite; }
 
 /* CYBER BANNER (Small Logo) */
 .cyber-banner-small {
