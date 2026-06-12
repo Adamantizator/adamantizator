@@ -396,8 +396,8 @@ td.pct { color: var(--neon-yellow); }
 
 /* LANG SWITCHER */
 .lang-switch {
-  position: absolute;
-  top: 12px; right: 12px;
+  position: fixed;
+  top: 4px; right: 8px;
   display: flex;
   gap: 2px;
   z-index: 10;
@@ -597,12 +597,11 @@ td.pct { color: var(--neon-yellow); }
 </style>
 </head>
 <body>
-
-<div class="app" id="app" style="position:relative;">
-  <div class="lang-switch">
-    <button class="lang-btn" data-lang="ru">RU</button>
-    <button class="lang-btn" data-lang="en">EN</button>
-  </div>
+<div class="lang-switch">
+  <button class="lang-btn" data-lang="ru">RU</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
+<div class="app" id="app">
   <!-- HEADER -->
   <header class="header">
     <div style="text-align:left;margin-bottom:4px;">
