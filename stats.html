@@ -228,15 +228,25 @@ select option { background: var(--card-bg); }
 .msg.error { display: block; background: rgba(255, 16, 48, 0.1); border: 1px solid rgba(255, 16, 48, 0.3); color: var(--neon-red); }
 .hidden { display: none !important; }
 
-@keyframes flicker-text {
-  0%, 82% { -webkit-text-stroke: 0 transparent; }
-  86% { -webkit-text-stroke: 1.5px #ff1030; }
-  90% { -webkit-text-stroke: 0 transparent; }
-  94% { -webkit-text-stroke: 1.5px #ff1030; }
-  98% { -webkit-text-stroke: 0 transparent; }
-  100% { -webkit-text-stroke: 0 transparent; }
+@keyframes flicker {
+  0%, 82% { opacity: 1; }
+  86% { opacity: 1; }
+  90% { opacity: 0.85; }
+  94% { opacity: 1; }
+  98% { opacity: 0.85; }
+  100% { opacity: 1; }
 }
-.flicker { animation: flicker-text 4s infinite; }
+.flicker { animation: flicker 4s infinite; }
+
+@keyframes flicker-glow-text {
+  0%, 82% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3); }
+  86% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3), 0 0 30px rgba(255, 16, 48, 0.6), 0 0 60px rgba(255, 16, 48, 0.3); }
+  90% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3); }
+  94% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3), 0 0 30px rgba(255, 16, 48, 0.6), 0 0 60px rgba(255, 16, 48, 0.3); }
+  98% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3); }
+  100% { text-shadow: 0 0 20px rgba(255, 230, 0, 0.3); }
+}
+.flicker-glow-text { animation: flicker-glow-text 4s infinite; }
 
 @keyframes flicker-glow {
   0%, 82% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
@@ -333,7 +343,7 @@ select option { background: var(--card-bg); }
 </div>
 <div class="app" id="app">
   <header class="header flicker">
-    <h1 data-i18n="title">СТАТИСТИКА УЧАСТНИКОВ</h1>
+    <h1 class="flicker-glow-text" data-i18n="title">СТАТИСТИКА УЧАСТНИКОВ</h1>
     <div class="subtitle" data-i18n="subtitle">Excel Table Analyzer</div>
     <div class="glitch-line"></div>
     <div style="text-align:left;margin-top:8px;">
