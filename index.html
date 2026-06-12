@@ -372,18 +372,19 @@ td.pct { color: var(--neon-yellow); }
   .formula-coef-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* RED NEON GLITCH FLICKER */
-@keyframes flicker {
-  0%, 88%, 92%, 96%, 100% {
-    -webkit-text-stroke: 0 transparent;
-    box-shadow: none;
-  }
-  90%, 94% {
-    -webkit-text-stroke: 1.5px #ff1030;
-    box-shadow: 0 0 12px rgba(255, 16, 48, 0.5), 0 0 30px rgba(255, 16, 48, 0.2);
-  }
+/* RED NEON FLICKER — TEXT */
+@keyframes flicker-text {
+  0%, 88%, 92%, 96%, 100% { -webkit-text-stroke: 0 transparent; }
+  90%, 94% { -webkit-text-stroke: 1.5px #ff1030; }
 }
-.flicker { animation: flicker 4s infinite; }
+.flicker-text { animation: flicker-text 4s infinite; }
+
+/* RED NEON FLICKER — GLOW */
+@keyframes flicker-glow {
+  0%, 88%, 92%, 96%, 100% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  90%, 94% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
+}
+.flicker-glow { animation: flicker-glow 4s infinite; }
 
 /* CYBER BANNER (Small Logo) */
 .cyber-banner-small {
@@ -563,15 +564,13 @@ td.pct { color: var(--neon-yellow); }
 <div class="app" id="app">
   <!-- HEADER -->
   <header class="header">
-    <h1 class="flicker">ADAMANTIZATOR</h1>
-    <div class="flicker subtitle-group">
-      <div class="subtitle flicker">Cyber DKP Analysis System</div>
-      <div class="glitch-line"></div>
-    </div>
+    <h1 class="flicker-text">ADAMANTIZATOR</h1>
+    <div class="subtitle flicker-text">Cyber DKP Analysis System</div>
+    <div class="glitch-line"></div>
   </header>
 
    <!-- CYBER BANNER (Small Logo) -->
-   <div class="cyber-banner-small">
+   <div class="cyber-banner-small flicker-glow">
      <img src="logo.png" alt="ADAMANTIZATOR Logo" loading="lazy" onerror="this.style.display='none'">
    </div>
 
