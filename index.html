@@ -87,7 +87,6 @@ body::after {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: none;
-  filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4));
 }
 
 .header h1::after {
@@ -375,11 +374,8 @@ td.pct { color: var(--neon-yellow); }
 
 /* RED NEON GLITCH FLICKER */
 @keyframes flicker {
-  0%, 88%, 100% { box-shadow: none; }
-  90% { box-shadow: 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.25), 0 0 80px rgba(255, 16, 48, 0.1); }
-  92% { box-shadow: none; }
-  94% { box-shadow: 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.25), 0 0 80px rgba(255, 16, 48, 0.1); }
-  96% { box-shadow: none; }
+  0%, 88%, 92%, 96%, 100% { filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4)); }
+  90%, 94% { filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4)) drop-shadow(0 0 15px rgba(255, 16, 48, 0.6)) drop-shadow(0 0 40px rgba(255, 16, 48, 0.3)) drop-shadow(0 0 80px rgba(255, 16, 48, 0.1)); }
 }
 .flicker { animation: flicker 4s infinite; }
 
@@ -560,8 +556,8 @@ td.pct { color: var(--neon-yellow); }
 
 <div class="app" id="app">
   <!-- HEADER -->
-  <header class="header flicker">
-    <h1>ADAMANTIZATOR</h1>
+  <header class="header">
+    <h1 class="flicker">ADAMANTIZATOR</h1>
     <div class="subtitle">Cyber DKP Analysis System</div>
     <div class="glitch-line"></div>
   </header>
