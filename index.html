@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADAMANTIZATOR v2.0 — CYBER DKP</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<title>Adamantizator — Главная</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap');
 
@@ -14,14 +13,11 @@
   --neon-yellow: #ffe600;
   --neon-gold: #ffdd00;
   --neon-amber: #ffb300;
+  --neon-cyan: #00f0ff;
   --neon-red: #ff1030;
-  --neon-crimson: #cc0033;
-  --neon-white: #ffffff;
-  --neon-cream: #fff8dc;
   --dark-bg: #0a0a0f;
   --panel-bg: #12121a;
   --card-bg: #1a1a2e;
-  --input-bg: #0d0d1a;
   --border-glow: rgba(255, 230, 0, 0.3);
   --text-primary: #fff8dc;
   --text-dim: #e0d8b0;
@@ -36,10 +32,13 @@ body {
   color: var(--text-primary);
   font-family: var(--font-body);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow-x: hidden;
 }
 
-/* CYBER GRID BG */
 body::before {
   content: '';
   position: fixed;
@@ -52,1080 +51,188 @@ body::before {
   z-index: 0;
 }
 
-/* SCANLINE */
 body::after {
   content: '';
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.12) 2px,
-    rgba(0, 0, 0, 0.12) 4px
-  );
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px);
   pointer-events: none;
   z-index: 1;
 }
 
-.app { position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; padding: 20px; }
-
-/* HEADER */
-.header {
-  text-align: center;
-  padding: 30px 0 20px;
+.app {
   position: relative;
+  z-index: 2;
+  max-width: 700px;
+  width: 90%;
+  text-align: center;
+  padding: 20px;
 }
 
+.header {
+  margin-bottom: 40px;
+}
 .header h1 {
   font-family: var(--font-display);
-  font-size: 2.6rem;
+  font-size: 2.2rem;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 6px;
   background: linear-gradient(135deg, var(--neon-yellow), var(--neon-amber));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: none;
-  filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4));
+  filter: drop-shadow(0 0 40px rgba(255, 230, 0, 0.5));
 }
-.header h1::after {
-  content: 'v2.0';
-  font-size: 0.7rem;
-  letter-spacing: 2px;
-  -webkit-text-fill-color: var(--neon-yellow);
-  filter: drop-shadow(0 0 10px rgba(255, 230, 0, 0.5));
-  vertical-align: super;
-  margin-left: 8px;
-}
-
 .header .subtitle {
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 8px;
   color: var(--text-dim);
   margin-top: 8px;
   text-transform: uppercase;
 }
-
 .glitch-line {
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--neon-yellow), var(--neon-gold), transparent);
-  margin: 10px 0 0;
+  margin: 16px auto 0;
+  max-width: 400px;
   box-shadow: 0 0 20px rgba(255, 230, 0, 0.4);
 }
 
-/* PANELS */
-.panel {
-  background: var(--panel-bg);
-  border: 1px solid var(--border-glow);
-  border-radius: 4px;
-  padding: 20px;
-  margin-bottom: 16px;
-  position: relative;
-  box-shadow: 0 0 20px rgba(255, 230, 0, 0.06), inset 0 0 30px rgba(255, 230, 0, 0.03);
-}
-
-.panel-title {
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--neon-yellow);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.panel-title::before {
-  content: '>';
-  color: var(--neon-gold);
-  font-weight: 700;
-}
-
-/* BUTTONS */
-.btn {
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 0.95rem;
-  padding: 10px 24px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--neon-yellow), var(--neon-amber));
-  color: #000;
-  box-shadow: 0 0 20px rgba(255, 230, 0, 0.3);
-}
-.btn-primary:hover {
-  box-shadow: 0 0 40px rgba(255, 230, 0, 0.5);
-  transform: translateY(-1px);
-}
-
-.btn-crimson {
-  background: linear-gradient(135deg, var(--neon-yellow), var(--neon-amber));
-  color: #000;
-  box-shadow: 0 0 20px rgba(255, 230, 0, 0.3);
-}
-.btn-crimson:hover {
-  box-shadow: 0 0 40px rgba(255, 230, 0, 0.5);
-  transform: translateY(-1px);
-}
-
-.btn-small {
-  font-size: 0.75rem;
-  padding: 6px 14px;
-  letter-spacing: 1px;
-}
-
-.btn-outline {
-  background: transparent;
-  border: 1px solid var(--neon-yellow);
-  color: var(--neon-yellow);
-}
-.btn-outline:hover {
-  background: rgba(255, 230, 0, 0.1);
-  box-shadow: 0 0 20px rgba(255, 230, 0, 0.2);
-}
-
-/* FORM ELEMENTS */
-select, input {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  padding: 8px 12px;
-  background: var(--input-bg);
-  border: 1px solid rgba(255, 230, 0, 0.25);
-  color: var(--text-primary);
-  border-radius: 3px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-select:focus, input:focus {
-  border-color: var(--neon-yellow);
-  box-shadow: 0 0 15px rgba(255, 230, 0, 0.15);
-}
-select { cursor: pointer; }
-
-label {
-  font-family: var(--font-display);
-  font-size: 0.65rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  display: block;
-  margin-bottom: 4px;
-}
-
-.checkbox-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
-.checkbox-wrap input[type="checkbox"] {
-  width: 18px; height: 18px;
-  accent-color: var(--neon-yellow);
-  cursor: pointer;
-}
-
-/* ROWS */
-.row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
-.row-gap { gap: 20px; }
-.col { display: flex; flex-direction: column; gap: 6px; }
-.col-grow { flex: 1; min-width: 140px; }
-
-/* FORMULA EDITOR */
-.formula-editor {
-  background: rgba(255, 230, 0, 0.03);
-  border: 1px solid rgba(255, 230, 0, 0.12);
-  border-radius: 3px;
-  padding: 16px;
-  margin-top: 10px;
-}
-
-.formula-preview {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  padding: 12px 16px;
-  background: var(--dark-bg);
-  border: 1px solid rgba(0, 240, 255, 0.15);
-  border-radius: 3px;
-  color: var(--neon-yellow);
-  margin-bottom: 12px;
-  word-break: break-all;
-  min-height: 40px;
-}
-
-.formula-coef-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
-}
-
-.coef-group {
+.cards {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-.coef-group label {
-  font-size: 0.6rem;
-}
-.coef-group input {
-  width: 100%;
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  padding: 6px 10px;
-  text-align: center;
-}
-
-/* TABLE */
-.table-wrap {
-  overflow-x: auto;
-  border: 1px solid rgba(0, 240, 255, 0.15);
-  border-radius: 3px;
-  background: var(--dark-bg);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-}
-
-thead th {
-  background: linear-gradient(180deg, rgba(255, 230, 0, 0.2), rgba(255, 230, 0, 0.05));
-  color: var(--text-primary);
-  font-family: var(--font-display);
-  font-size: 0.65rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 12px 14px;
-  text-align: left;
-  border-bottom: 2px solid var(--neon-yellow);
-  white-space: nowrap;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-tbody tr {
-  border-bottom: 1px solid rgba(255, 230, 0, 0.06);
-  transition: background 0.15s;
-}
-tbody tr:hover { background: rgba(255, 230, 0, 0.04); }
-tbody tr:nth-child(even) { background: rgba(255, 230, 0, 0.02); }
-tbody tr:nth-child(even):hover { background: rgba(255, 230, 0, 0.04); }
-
-tbody td {
-  padding: 10px 14px;
-  white-space: nowrap;
-}
-
-td.num { text-align: right; font-family: var(--font-mono); font-size: 0.85rem; }
-td.center { text-align: center; }
-td.player { color: var(--neon-yellow); font-weight: 600; }
-td.pct { color: var(--neon-yellow); }
-
-/* STATUS BAR */
-.status-bar {
-  display: flex;
-  justify-content: space-between;
+  gap: 20px;
   align-items: center;
-  padding: 10px 16px;
-  background: rgba(255, 230, 0, 0.04);
-  border: 1px solid rgba(255, 230, 0, 0.1);
-  border-radius: 3px;
-  margin-top: 12px;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
 }
 
-.status-bar .sum {
-  color: var(--neon-green);
-  font-weight: 600;
-}
-
-.status-bar .count {
-  color: var(--text-dim);
-}
-
-/* SCROLLBAR */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--dark-bg); }
-::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #ffdd00; }
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .header h1 { font-size: 1.6rem; letter-spacing: 3px; }
-  .row { flex-direction: column; align-items: stretch; }
-  .col-grow { min-width: unset; }
-  .formula-coef-grid { grid-template-columns: 1fr 1fr; }
-}
-
-/* RED NEON FLICKER — TEXT */
-@keyframes flicker-text {
-  0%, 82% { -webkit-text-stroke: 0 transparent; }
-  86% { -webkit-text-stroke: 1.5px #ff1030; }
-  90% { -webkit-text-stroke: 0 transparent; }
-  94% { -webkit-text-stroke: 1.5px #ff1030; }
-  98% { -webkit-text-stroke: 0 transparent; }
-  100% { -webkit-text-stroke: 0 transparent; }
-}
-.flicker-text { animation: flicker-text 4s infinite; }
-
-/* RED NEON FLICKER — GLOW */
-@keyframes flicker-glow {
-  0%, 82% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
-  86% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
-  90% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
-  94% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
-  98% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
-  100% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
-}
-.flicker-glow { animation: flicker-glow 4s infinite; }
-
-/* CYBER BANNER (Small Logo) */
-.cyber-banner-small {
-  width: 100%;
-  max-width: 200px;
-  margin: 0 auto 20px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid rgba(255, 230, 0, 0.3);
-  box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05);
-  position: relative;
-  background: var(--panel-bg);
-  padding: 10px;
-}
-.cyber-banner-small::before {
-  content: '';
-  position: absolute;
-  top: -5px; left: -5px; right: -5px; bottom: -5px;
-  border-radius: 50%;
-  background: linear-gradient(45deg, rgba(255, 230, 0, 0.1), transparent, rgba(255, 230, 0, 0.1));
-  animation: rotate 8s linear infinite;
-  pointer-events: none;
-}
-.cyber-banner-small img {
+.card {
   display: block;
   width: 100%;
-  height: auto;
-  border-radius: 50%;
+  max-width: 480px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 6px;
+  padding: 28px 24px;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all 0.25s ease;
+  box-shadow: 0 0 20px rgba(255, 230, 0, 0.06), inset 0 0 30px rgba(255, 230, 0, 0.03);
+  cursor: pointer;
   position: relative;
-  z-index: 1;
-}
-.cyber-banner-small::after {
-  content: '';
-  position: absolute;
-  top: 10px; left: 10px; right: 10px; bottom: 10px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 230, 0, 0.1), transparent 45%, transparent 55%, rgba(255, 230, 0, 0.03));
-  animation: shimmer 6s linear infinite;
-  pointer-events: none;
-  z-index: 2;
-}
-
-@keyframes shimmer {
-  to { transform: rotate(360deg); }
-}
-
-/* Legacy banner styles */
-.cyber-banner {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto 20px;
-  border-radius: 4px;
   overflow: hidden;
-  border: 1px solid rgba(255, 230, 0, 0.2);
-  box-shadow: 0 0 40px rgba(255, 230, 0, 0.15), inset 0 0 60px rgba(255, 230, 0, 0.05);
-  position: relative;
 }
-.cyber-banner::before {
+
+.card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(180deg, rgba(255, 230, 0, 0.1), transparent 50%, rgba(255, 230, 0, 0.1));
-  pointer-events: none;
-}
-.cyber-banner img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 300px;
-  object-fit: cover;
-}
-
-@keyframes rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* TOOLTIP / STATUS MESSAGES */
-.msg-info {
-  padding: 10px 16px;
-  background: rgba(255, 230, 0, 0.08);
-  border-left: 3px solid var(--neon-yellow);
-  color: var(--neon-yellow);
-  border-radius: 2px;
-  margin: 8px 0;
-  font-size: 0.9rem;
-}
-.msg-error {
-  padding: 10px 16px;
-  background: rgba(255, 16, 48, 0.08);
-  border-left: 3px solid var(--neon-red);
-  color: var(--neon-red);
-  border-radius: 2px;
-  margin: 8px 0;
-  font-size: 0.9rem;
-}
-.msg-error {
-  padding: 10px 16px;
-  background: rgba(255, 45, 149, 0.08);
-  border-left: 3px solid var(--neon-pink);
-  color: var(--neon-pink);
-  border-radius: 2px;
-  margin: 8px 0;
-  font-size: 0.9rem;
-}
-
-.hidden { display: none !important; }
-
-/* SPINNER */
-.spinner {
-  display: inline-block;
-  width: 16px; height: 16px;
-  border: 2px solid rgba(255, 16, 48, 0.2);
-  border-top-color: var(--neon-red);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* HELP TOOLTIP */
-.help-tip {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-.help-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  border: 1.5px solid var(--neon-yellow);
-  color: var(--neon-yellow);
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  font-weight: 700;
-  background: transparent;
-  transition: all 0.2s;
-}
-.help-tip:hover .help-icon {
-  background: rgba(255, 230, 0, 0.15);
-  box-shadow: 0 0 12px rgba(255, 230, 0, 0.3);
-}
-.help-tooltip {
-  visibility: hidden;
+  background: linear-gradient(135deg, rgba(255,230,0,0.08), transparent 60%);
   opacity: 0;
-  position: absolute;
-  bottom: calc(100% + 10px);
-  right: -10px;
-  width: 320px;
-  padding: 14px 16px;
-  background: var(--card-bg);
-  border: 1px solid rgba(255, 230, 0, 0.25);
-  border-radius: 4px;
-  box-shadow: 0 4px 30px rgba(0,0,0,0.6), 0 0 30px rgba(255,230,0,0.06);
+  transition: opacity 0.25s ease;
+}
+
+.card:hover {
+  border-color: var(--neon-yellow);
+  box-shadow: 0 0 40px rgba(255, 230, 0, 0.15), inset 0 0 40px rgba(255, 230, 0, 0.05);
+  transform: translateY(-3px);
+}
+
+.card:hover::before { opacity: 1; }
+
+.card-icon {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.card-desc {
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: var(--text-primary);
-  z-index: 100;
-  transition: opacity 0.2s, visibility 0.2s;
-  pointer-events: none;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+  position: relative;
 }
-.help-tip:hover .help-tooltip {
-  visibility: visible;
-  opacity: 1;
+
+.card .tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border: 1px solid var(--border-glow);
+  border-radius: 2px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  position: relative;
 }
-.help-tooltip b {
-  color: var(--neon-yellow);
+
+.card-adamantizator .card-title { color: var(--neon-yellow); }
+.card-healcalc .card-title { color: var(--neon-cyan); }
+
+.footer {
+  margin-top: 40px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+@keyframes flicker {
+  0%, 88%, 92%, 96%, 100% { opacity: 1; }
+  90%, 94% { opacity: 0.85; }
+}
+.flicker { animation: flicker 4s infinite; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--dark-bg); }
+::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
+
+@media (max-width: 480px) {
+  .header h1 { font-size: 1.6rem; letter-spacing: 3px; }
+  .card { padding: 20px 16px; }
 }
 </style>
 </head>
 <body>
-
-<div class="app" id="app">
-  <!-- HEADER -->
-  <header class="header">
-    <h1 class="flicker-text">ADAMANTIZATOR</h1>
-    <div class="subtitle flicker-text">Cyber DKP Analysis System</div>
+<div class="app">
+  <header class="header flicker">
+    <h1>ADAMANTIZATOR</h1>
+    <div class="subtitle">Tools for Rise of Kingdoms</div>
     <div class="glitch-line"></div>
   </header>
 
-   <!-- CYBER BANNER (Small Logo) -->
-   <div class="cyber-banner-small flicker-glow">
-     <img src="logo.png" alt="ADAMANTIZATOR Logo" loading="lazy" onerror="this.style.display='none'">
-   </div>
+  <div class="cards">
+    <a class="card card-adamantizator" href="adamantizator.html">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Adamantizator</div>
+      <div class="card-desc">Расчёт ДКП по загруженной Excel-таблице из игры</div>
+      <div class="tag">Загрузка .xlsx · Фильтр · Поиск</div>
+    </a>
 
-    <!-- LOADER -->
-    <div class="panel" id="loader-panel">
-      <div class="panel-title">Файл</div>
-      <div class="row">
-        <button class="btn btn-primary" id="loadBtn">[ ОТКРЫТЬ EXCEL ]</button>
-        <span id="fileLabel" style="color:var(--text-dim);font-size:0.9rem;">Файл не выбран</span>
-        <span id="fileInfo" style="color:var(--text-dim);font-size:0.85rem;font-family:var(--font-mono);"></span>
-        <div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;">
-          <span style="font-family:var(--font-display);font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Официальный сайт со статистикой Lilith</span>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <a href="https://rok-game-tools-global.lilith.com" target="_blank" class="btn btn-outline btn-small" style="padding:4px 12px;font-size:0.7rem;">Rok Tools ↗</a>
-            <div class="help-tip">
-              <span class="help-icon">?</span>
-              <div class="help-tooltip">
-                <b>Как получить таблицу:</b><br><br>
-                1. Выберите "Показать сведения об участниках"<br>
-                2. Выберите период, за который нужна статистика<br>
-                3. В настройке данных таблицы нажмите галочку на "Все"<br>
-                4. Скачайте таблицу и загрузите ее
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="loadMsg" class="hidden"></div>
-    </div>
-
-    <!-- PRELOADED FILES -->
-    <div class="panel" id="preloadPanel">
-      <div class="panel-title">Предзагруженные данные</div>
-      <div id="preloadList" class="row" style="gap:8px;min-height:30px;"></div>
-      <div id="preloadMsg" class="hidden"></div>
-    </div>
-
-   <div class="panel" id="formulaPanel">
-    <div class="panel-title">Редактор формулы ДКП</div>
-    <div class="formula-editor">
-      <div class="formula-preview" id="formulaPreview">(Смерти T4 + Смерти T5) &times; 30 + Убийства T4 &times; 10 + Убийства T5 &times; 20</div>
-      <div class="formula-coef-grid">
-      <div class="coef-group">
-        <label style="color:var(--neon-yellow);">Смерти T4</label>
-        <input type="number" id="coefDeathT4" value="30" step="1" min="0">
-      </div>
-      <div class="coef-group">
-        <label style="color:var(--neon-yellow);">Смерти T5</label>
-        <input type="number" id="coefDeathT5" value="30" step="1" min="0">
-      </div>
-          <div class="coef-group">
-            <label style="color:var(--neon-gold);">Убийства T4</label>
-            <input type="number" id="coefKillT4" value="10" step="1" min="0">
-          </div>
-          <div class="coef-group">
-            <label style="color:var(--neon-gold);">Убийства T5</label>
-            <input type="number" id="coefKillT5" value="20" step="1" min="0">
-          </div>
-      </div>
-      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <span style="color:var(--text-dim);font-size:0.75rem;font-family:var(--font-display);letter-spacing:1px;">Формула:</span>
-        <span id="formulaText" style="font-family:var(--font-mono);color:var(--neon-yellow);font-size:0.85rem;"></span>
-      </div>
-      <div style="margin-top:10px;">
-        <button class="btn btn-crimson btn-small" id="resetFormulaBtn">[ RESET DEFAULTS ]</button>
-      </div>
-    </div>
+    <a class="card card-healcalc" href="healcalc.html">
+      <div class="card-icon">⏳</div>
+      <div class="card-title">Heal Calculator</div>
+      <div class="card-desc">Расчёт времени лечения войск T4 / T5 с учётом бонусов и ручек</div>
+      <div class="tag">T4 · T5 · Скорость · Ресурсы</div>
+    </a>
   </div>
 
-  <!-- ФИЛЬТРЫ -->
-  <div class="panel">
-    <div class="panel-title">Фильтры и опции</div>
-    <div class="row row-gap" style="margin-bottom:12px;">
-      <div class="col" style="min-width:100px;">
-        <label>Сортировка</label>
-        <select id="sortMode">
-          <option value="desc">По убыванию</option>
-          <option value="asc">По возрастанию</option>
-          <option value="none">Без сортировки</option>
-        </select>
-      </div>
-      <div class="col" style="min-width:80px;">
-        <label>Множитель нормы</label>
-        <input type="number" id="multiplier" value="1" min="1" max="99" style="width:70px;text-align:center;">
-      </div>
-    </div>
-    <div class="row row-gap">
-      <div class="col" style="min-width:80px;">
-        <label>С места</label>
-        <input type="number" id="fromPlace" value="" min="1" style="width:90px;">
-      </div>
-      <div class="col" style="min-width:80px;">
-        <label>По место</label>
-        <input type="number" id="toPlace" value="" min="1" style="width:90px;">
-      </div>
-      <div class="col" style="min-width:100px;">
-        <label>Нижняя граница (≥)</label>
-        <input type="number" id="minVal" value="" style="width:120px;">
-      </div>
-      <div class="col" style="min-width:100px;">
-        <label>Верхняя граница (≤)</label>
-        <input type="number" id="maxVal" value="" style="width:120px;">
-      </div>
-      <div class="col" style="min-width:140px;margin-left:auto;">
-        <label>Поиск по нику</label>
-        <input type="text" id="searchNick" placeholder="Введите ник..." style="width:100%;">
-      </div>
-    </div>
-    <div class="row" style="margin-top:14px;justify-content:space-between;">
-      <button class="btn btn-crimson" id="calcBtn">[ РАССЧИТАТЬ </button>
-    </div>
-    
-    <div style="margin-top:16px;text-align:center;">
-      <button class="btn btn-outline btn-small" id="downloadBtn">[ СКАЧАТЬ EXCEL ]</button>
-    </div>
-  </div>
-
-  <!-- ТАБЛИЦА -->
-  <div class="panel" style="padding:0;overflow:hidden;">
-    <div class="status-bar" style="border-radius:0;border:none;border-bottom:1px solid var(--neon-yellow);margin-top:0;">
-      <span class="sum" id="sumDisplay">Сумма ДКП: 0</span>
-      <span class="count" id="countDisplay">Всего игроков: 0</span>
-    </div>
-    <div class="table-wrap" id="tableWrap">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:35px;text-align:center;">#</th>
-            <th style="text-align:left;">Имя</th>
-            <th style="text-align:right;">Мощь (акт.)</th>
-            <th style="text-align:right;">Макс. мощь</th>
-            <th style="text-align:right;">Убийства T4</th>
-            <th style="text-align:right;">Убийства T5</th>
-            <th style="text-align:right;">Смерти T4</th>
-            <th style="text-align:right;">Смерти T5</th>
-            <th style="text-align:right;">Текущий ДКП</th>
-            <th style="text-align:right;">Цель ДКП</th>
-            <th style="text-align:right;">Выполнение цели %</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-        </tbody>
-      </table>
-    </div>
+  <div class="footer">
+    <span>v2.0</span>
+    <span style="margin:0 8px;">|</span>
+    <span>Rise of Kingdoms</span>
   </div>
 </div>
-
-<script>
-// ===== STATE =====
-let df = null;
-let headers = [];
-
-// ===== DOM REFS =====
-const $ = id => document.getElementById(id);
-const loadBtn = $('loadBtn');
-const fileLabel = $('fileLabel');
-const fileInfo = $('fileInfo');
-const loadMsg = $('loadMsg');
-const formulaPanel = $('formulaPanel');
-const formulaPreview = $('formulaPreview');
-const formulaText = $('formulaText');
-const resetFormulaBtn = $('resetFormulaBtn');
-const sortMode = $('sortMode');
-const multiplier = $('multiplier');
-const fromPlace = $('fromPlace');
-const toPlace = $('toPlace');
-const minVal = $('minVal');
-const maxVal = $('maxVal');
-const calcBtn = $('calcBtn');
-const tableBody = $('tableBody');
-const downloadBtn = $('downloadBtn');
-const sumDisplay = $('sumDisplay');
-const countDisplay = $('countDisplay');
-const preloadList = $('preloadList');
-const preloadMsg = $('preloadMsg');
-
-// ===== PRELOADED FILES =====
-const PRELOADED_FILES = [
-  '06-07_3901.xlsx'
-];
-
-function preloadLabel(filename) {
-  return filename.replace(/\.[^.]+$/, '').replace(/_/g, ' ');
-}
-
-function showPreloadMsg(type, text) {
-  preloadMsg.className = `msg-${type}`;
-  preloadMsg.textContent = text;
-  setTimeout(() => { preloadMsg.className = 'hidden'; }, 4000);
-}
-
-function loadExcelFromBuffer(arrayBuffer, fileName) {
-  try {
-    const wb = XLSX.read(arrayBuffer, { type: 'array' });
-    const sheet = wb.Sheets[wb.SheetNames[0]];
-    const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
-    if (!json || json.length === 0) return false;
-    df = json;
-    headers = Object.keys(df[0]);
-    fileLabel.textContent = fileName;
-    fileInfo.textContent = `| Строк данных: ${df.length} | Столбцов: ${headers.length}`;
-    fileLabel.style.color = 'var(--neon-green)';
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
-
-async function loadPreloadedFile(filename) {
-  try {
-    const resp = await fetch(`data/${encodeURIComponent(filename)}`);
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const arrayBuffer = await resp.arrayBuffer();
-    const ok = loadExcelFromBuffer(arrayBuffer, filename);
-    if (!ok) { showPreloadMsg('error', `Файл "${preloadLabel(filename)}" пуст или поврежден`); return; }
-    showPreloadMsg('info', `"${preloadLabel(filename)}" загружен`);
-  } catch (err) {
-    const hint = window.location.protocol === 'file:'
-      ? ' (откройте сайт через http://localhost:8080, а не через file://)'
-      : '';
-    showPreloadMsg('error', `Ошибка загрузки "${preloadLabel(filename)}": ${err.message}${hint}`);
-  }
-}
-
-function renderPreloadedFiles() {
-  preloadList.innerHTML = '';
-  PRELOADED_FILES.forEach(f => {
-    const btn = document.createElement('button');
-    btn.className = 'btn btn-outline btn-small';
-    btn.textContent = preloadLabel(f);
-    btn.addEventListener('click', () => loadPreloadedFile(f));
-    preloadList.appendChild(btn);
-  });
-}
-
-renderPreloadedFiles();
-
-// ===== FORMULA COEF REFS =====
-const coefDeathT4 = $('coefDeathT4');
-const coefDeathT5 = $('coefDeathT5');
-const coefKillT4 = $('coefKillT4');
-const coefKillT5 = $('coefKillT5');
-
-const FORMULA_DEFAULTS = { deathT4: 30, deathT5: 30, killT4: 10, killT5: 20 };
-
-function getFormulaCoefficients() {
-  return {
-    deathT4: parseFloat(coefDeathT4.value) || 0,
-    deathT5: parseFloat(coefDeathT5.value) || 0,
-    killT4: parseFloat(coefKillT4.value) || 0,
-    killT5: parseFloat(coefKillT5.value) || 0
-  };
-}
-
-function updateFormulaDisplay() {
-  const c = getFormulaCoefficients();
-  const parts = [];
-  if (c.deathT4 > 0 || c.deathT5 > 0) {
-    const inner = [];
-    if (c.deathT4 > 0) inner.push(`Смерти T4 × ${c.deathT4}`);
-    if (c.deathT5 > 0) inner.push(`Смерти T5 × ${c.deathT5}`);
-    if (inner.length > 0) parts.push(`(${inner.join(' + ')})`);
-  }
-  if (c.killT4 > 0) parts.push(`Убийства T4 × ${c.killT4}`);
-  if (c.killT5 > 0) parts.push(`Убийства T5 × ${c.killT5}`);
-
-  let formulaStr = parts.join(' + ');
-  if (!formulaStr) formulaStr = '0';
-
-  formulaText.textContent = formulaStr;
-
-  // HTML preview
-  let html = formulaStr
-    .replace(/×/g, '&times;')
-    .replace(/(Смерти T4)/g, '<span style="color:var(--neon-yellow)">$1</span>')
-    .replace(/(Смерти T5)/g, '<span style="color:var(--neon-yellow)">$1</span>')
-    .replace(/(Убийства T4)/g, '<span style="color:var(--neon-gold)">$1</span>')
-    .replace(/(Убийства T5)/g, '<span style="color:var(--neon-gold)">$1</span>');
-  formulaPreview.innerHTML = html || '0';
-}
-
-[coefDeathT4, coefDeathT5, coefKillT4, coefKillT5].forEach(el => {
-  el.addEventListener('input', updateFormulaDisplay);
-});
-
-resetFormulaBtn.addEventListener('click', () => {
-  coefDeathT4.value = FORMULA_DEFAULTS.deathT4;
-  coefDeathT5.value = FORMULA_DEFAULTS.deathT5;
-  coefKillT4.value = FORMULA_DEFAULTS.killT4;
-  coefKillT5.value = FORMULA_DEFAULTS.killT5;
-  updateFormulaDisplay();
-});
-
-updateFormulaDisplay();
-
-// ===== LOAD FILE =====
-loadBtn.addEventListener('click', () => {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.xlsx,.xls';
-  input.onchange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    loadMsg.className = 'hidden';
-    try {
-      const data = await file.arrayBuffer();
-      const ok = loadExcelFromBuffer(data, file.name);
-      if (ok) {
-        showMsg('info', `Файл "${file.name}" загружен.\n\nСтрок: ${df.length}\nСтолбцов: ${headers.length}`);
-      } else {
-        showMsg('error', 'Не удалось прочитать файл. Возможно он пуст или поврежден.');
-      }
-    } catch (err) {
-      showMsg('error', `Не удалось загрузить файл: ${err.message}`);
-    }
-  };
-  input.click();
-});
-
-function showMsg(type, text) {
-  loadMsg.className = `msg-${type}`;
-  loadMsg.textContent = text;
-  setTimeout(() => { loadMsg.className = 'hidden'; }, 4000);
-}
-
-// ===== GET PLAYER NAME =====
-function getPlayerName(row) {
-  const names = ['Имя пользователя', 'Ник', 'Игрок', 'Nick', 'Player', 'Name', 'Имя'];
-  for (const n of names) {
-    if (row[n] !== undefined && row[n] !== null && String(row[n]).trim() !== '') return String(row[n]).trim();
-  }
-  return 'Unknown';
-}
-
-// ===== FORMAT =====
-function fmtNum(n) {
-  const v = typeof n === 'number' ? Math.round(n) : parseInt(n) || 0;
-  return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-}
-
-// ===== CALCULATE DKP FORMULA =====
-function calculateFormulaColumn(data) {
-  const required = ['Смерти T4', 'Смерти T5', 'Убийства T4', 'Убийства T5'];
-  const missing = required.filter(c => !headers.includes(c));
-  if (missing.length > 0) throw new Error(`Отсутствуют столбцы: ${missing.join(', ')}`);
-
-  const c = getFormulaCoefficients();
-  return data.map(row => {
-    const d4 = parseFloat(row['Смерти T4']) || 0;
-    const d5 = parseFloat(row['Смерти T5']) || 0;
-    const k4 = parseFloat(row['Убийства T4']) || 0;
-    const k5 = parseFloat(row['Убийства T5']) || 0;
-    return d4 * c.deathT4 + d5 * c.deathT5 + k4 * c.killT4 + k5 * c.killT5;
-  });
-}
-
-// ===== MAIN CALCULATE =====
-calcBtn.addEventListener('click', async () => {
-  if (!df || df.length === 0) {
-    showMsg('error', 'Сначала выберите Excel файл.');
-    return;
-  }
-
-  try {
-    let data = [...df];
-    let column;
-
-    const formulaValues = calculateFormulaColumn(data);
-    const formulaColName = 'ДКП (Смерти T4×30 + Смерти T5×30 + Убийства T4×10 + Убийства T5×20)';
-    data.forEach((row, i) => { row[formulaColName] = formulaValues[i]; });
-    column = formulaColName;
-
-    // Convert column to numeric
-    data.forEach(row => {
-      const v = parseFloat(row[column]);
-      row[column] = isNaN(v) ? NaN : v;
-    });
-    data = data.filter(row => !isNaN(row[column]));
-
-    if (data.length === 0) {
-      showMsg('info', 'Нет числовых данных');
-      return;
-    }
-
-    // Sort
-    const sortVal = sortMode.value;
-    if (sortVal === 'desc') {
-      data.sort((a, b) => b[column] - a[column]);
-    } else if (sortVal === 'asc') {
-      data.sort((a, b) => a[column] - b[column]);
-    }
-
-    // Range
-    const totalRows = data.length;
-    let from = parseInt(fromPlace.value) || 1;
-    let to = parseInt(toPlace.value) || totalRows;
-    if (from < 1) from = 1;
-    if (to > totalRows) to = totalRows;
-    if (from > to) [from, to] = [to, from];
-
-    let filtered = data.slice(from - 1, to);
-
-    // Min / Max
-    const minV = parseFloat(minVal.value);
-    if (minVal.value !== '' && !isNaN(minV)) {
-      filtered = filtered.filter(row => row[column] >= minV);
-    }
-    const maxV = parseFloat(maxVal.value);
-    if (maxVal.value !== '' && !isNaN(maxV)) {
-      filtered = filtered.filter(row => row[column] <= maxV);
-    }
-
-    if (filtered.length === 0) {
-      showMsg('info', 'Нет данных в выбранном диапазоне');
-      tableBody.innerHTML = '';
-      sumDisplay.textContent = 'Сумма ДКП: 0';
-      countDisplay.textContent = 'Всего игроков: 0';
-      return;
-    }
-
-    // Build table
-    const mult = parseInt(multiplier.value) || 1;
-    const hasPower = headers.includes('Мощь');
-    const totalSum = filtered.reduce((s, r) => s + (r[column] || 0), 0);
-
-    tableBody.innerHTML = '';
-    filtered.forEach((row, idx) => {
-      const place = idx + 1;
-      const name = getPlayerName(row);
-      const dkpVal = parseInt(row[column]) || 0;
-      const powerVal = hasPower ? (parseInt(row['Мощь']) || 0) : 0;
-      const maxPowerVal = hasPower && headers.includes('Макс. мощь') ? (parseInt(row['Макс. мощь']) || 0) : powerVal;
-      const normVal = powerVal * mult;
-      const pct = normVal > 0 ? (dkpVal / normVal * 100) : 0;
-      const killsT4 = parseInt(row['Убийства T4']) || 0;
-      const killsT5 = parseInt(row['Убийства T5']) || 0;
-      const deathsT4 = parseInt(row['Смерти T4']) || 0;
-      const deathsT5 = parseInt(row['Смерти T5']) || 0;
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="center">${place}</td>
-        <td class="player">${name}</td>
-        <td class="num">${hasPower ? fmtNum(powerVal) : 'N/A'}</td>
-        <td class="num">${hasPower ? fmtNum(maxPowerVal) : 'N/A'}</td>
-        <td class="num">${fmtNum(killsT4)}</td>
-        <td class="num">${fmtNum(killsT5)}</td>
-        <td class="num">${fmtNum(deathsT4)}</td>
-        <td class="num">${fmtNum(deathsT5)}</td>
-        <td class="num">${fmtNum(dkpVal)}</td>
-        <td class="num">${hasPower ? fmtNum(normVal) : 'N/A'}</td>
-        <td class="num pct">${hasPower ? pct.toFixed(2) + '%' : 'N/A'}</td>
-      `;
-      tableBody.appendChild(tr);
-    });
-
-    // Save the filtered data for download
-    currentData = [...filtered];
-    currentColumn = column;
-
-    sumDisplay.textContent = `Сумма ДКП: ${fmtNum(totalSum)}`;
-    countDisplay.textContent = `Всего игроков: ${filtered.length}`;
-
-  } catch (err) {
-    showMsg('error', `Ошибка при расчете: ${err.message}`);
-  }
-});
-
-// ===== DOWNLOAD EXCEL =====
-let currentData = null;
-let currentColumn = null;
-
-downloadBtn.addEventListener('click', () => {
-  if (!currentData) {
-    showMsg('error', 'Сначала нажмите "Рассчитать", чтобы получить итоговые данные.');
-    return;
-  }
-
-  try {
-    const mult = parseInt(multiplier.value) || 1;
-    const hasPower = headers.includes('Мощь');
-    const hasMaxPower = headers.includes('Макс. мощь');
-    const goalLabel = `Цель ДКП (Мощь x${mult})`;
-
-    const exportData = currentData.map(row => ({
-      'Имя': getPlayerName(row),
-      'Мощь (акт.)': hasPower ? (parseInt(row['Мощь']) || 0) : 0,
-      'Макс. мощь': hasMaxPower ? (parseInt(row['Макс. мощь']) || 0) : (hasPower ? (parseInt(row['Мощь']) || 0) : 0),
-      'Убийства T4': parseInt(row['Убийства T4']) || 0,
-      'Убийства T5': parseInt(row['Убийства T5']) || 0,
-      'Смерти T4': parseInt(row['Смерти T4']) || 0,
-      'Смерти T5': parseInt(row['Смерти T5']) || 0,
-      'Текущий ДКП': parseInt(row[currentColumn]) || 0,
-      [goalLabel]: hasPower ? ((parseInt(row['Мощь']) || 0) * mult) : 0,
-      'Выполнение цели %': (() => {
-        const power = hasPower ? (parseInt(row['Мощь']) || 0) : 0;
-        const dkp = parseInt(row[currentColumn]) || 0;
-        return power > 0 ? (dkp / (power * mult)) * 100 : 0;
-      })()
-    }));
-
-    const worksheet = XLSX.utils.json_to_sheet(exportData);
-
-    const colWidths = [
-      { wch: 30 }, { wch: 15 }, { wch: 15 },
-      { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 },
-      { wch: 18 }, { wch: 22 }, { wch: 18 }
-    ];
-    worksheet['!cols'] = colWidths;
-
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Данные');
-
-    const now = new Date();
-    const ts = now.getFullYear() +
-      String(now.getMonth() + 1).padStart(2, '0') +
-      String(now.getDate()).padStart(2, '0') + '_' +
-      String(now.getHours()).padStart(2, '0') +
-      String(now.getMinutes()).padStart(2, '0') +
-      String(now.getSeconds()).padStart(2, '0');
-
-    XLSX.writeFile(workbook, `Adamantizator_${ts}.xlsx`);
-    showMsg('info', 'Excel файл успешно скачан.');
-  } catch (err) {
-    showMsg('error', `Не удалось скачать Excel файл: ${err.message}`);
-  }
-});
-
-// ===== SEARCH BY NICK =====
-const searchNick = $('searchNick');
-searchNick.addEventListener('input', () => {
-  const q = searchNick.value.trim().toLowerCase();
-  const rows = tableBody.querySelectorAll('tr');
-  let visibleCount = 0;
-  rows.forEach(tr => {
-    const nameCell = tr.querySelector('td.player');
-    if (!nameCell) return;
-    const match = !q || nameCell.textContent.toLowerCase().includes(q);
-    tr.style.display = match ? '' : 'none';
-    if (match) visibleCount++;
-  });
-  const total = rows.length;
-  countDisplay.textContent = total > 0
-    ? `Игроков: ${visibleCount} / ${total}`
-    : 'Всего игроков: 0';
-});
-
-</script>
 </body>
 </html>
