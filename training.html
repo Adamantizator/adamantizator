@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRAINING CALCULATOR — T4 / T5</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --neon-yellow: #ffe600;
+  --neon-gold: #ffdd00;
+  --neon-amber: #ffb300;
+  --neon-red: #ff1030;
+  --neon-green: #00ff88;
+  --neon-cyan: #00f0ff;
+  --dark-bg: #0a0a0f;
+  --panel-bg: #12121a;
+  --card-bg: #1a1a2e;
+  --input-bg: #0d0d1a;
+  --border-glow: rgba(255, 230, 0, 0.3);
+  --text-primary: #fff8dc;
+  --text-dim: #e0d8b0;
+  --text-muted: #c0b080;
+  --font-display: 'Orbitron', monospace;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-mono: 'Fira Code', monospace;
+}
+
+body {
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    linear-gradient(rgba(255, 230, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 230, 0, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.app { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+.header { text-align: center; padding: 30px 0 20px; }
+.header h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, var(--neon-yellow), var(--neon-amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4));
+}
+.header .subtitle {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 6px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+.glitch-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-yellow), var(--neon-gold), transparent);
+  margin: 12px 0 0;
+  box-shadow: 0 0 20px rgba(255, 230, 0, 0.4);
+}
+
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 0 20px rgba(255, 230, 0, 0.06), inset 0 0 30px rgba(255, 230, 0, 0.03);
+}
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--neon-yellow);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel-title::before { content: '>'; color: var(--neon-gold); font-weight: 700; }
+
+.row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.col { display: flex; flex-direction: column; gap: 6px; }
+
+label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 4px;
+}
+
+input {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 8px 12px;
+  background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.25);
+  color: var(--text-primary);
+  border-radius: 3px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+input:focus {
+  border-color: var(--neon-yellow);
+  box-shadow: 0 0 15px rgba(255, 230, 0, 0.15);
+}
+
+.troop-inputs { display: flex; gap: 12px; }
+.troop-input-group { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.troop-input-group label { font-size: 0.65rem; white-space: nowrap; }
+.troop-input-group input { text-align: center; }
+
+.tier-divider {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 6px 0 4px;
+}
+
+.result-panel { text-align: center; padding: 24px 20px; }
+.result-main {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 30px rgba(255, 230, 0, 0.3);
+  margin: 8px 0;
+}
+.result-label {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.result-table {
+  margin-top: 16px;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+.result-table th {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 230, 0, 0.15);
+  text-align: right;
+}
+.result-table th:first-child { text-align: left; }
+.result-table th:last-child { text-align: right; }
+.result-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 230, 0, 0.06);
+  text-align: right;
+}
+.result-table td:first-child { text-align: left; color: var(--neon-yellow); font-weight: 600; }
+.result-table tr:last-child td { border-bottom: none; }
+.result-table .tier-row td { border-top: 1px solid rgba(255, 230, 0, 0.15); }
+.result-table tfoot td {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  border-top: 2px solid rgba(255, 230, 0, 0.2);
+  padding: 10px;
+  color: var(--neon-amber);
+}
+
+@keyframes flicker {
+  0%, 82% { opacity: 1; }
+  86% { opacity: 1; }
+  90% { opacity: 0.85; }
+  94% { opacity: 1; }
+  98% { opacity: 0.85; }
+  100% { opacity: 1; }
+}
+.flicker { animation: flicker 4s infinite; }
+
+@keyframes flicker-glow-text {
+  0%, 82% { -webkit-text-stroke: 0 transparent; }
+  86% { -webkit-text-stroke: 1.5px #ff1030; }
+  90% { -webkit-text-stroke: 0 transparent; }
+  94% { -webkit-text-stroke: 1.5px #ff1030; }
+  98% { -webkit-text-stroke: 0 transparent; }
+  100% { -webkit-text-stroke: 0 transparent; }
+}
+.flicker-glow-text { animation: flicker-glow-text 4s infinite; }
+
+@keyframes flicker-glow {
+  0%, 82% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  86% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
+  90% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  94% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
+  98% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  100% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+}
+.flicker-glow { animation: flicker-glow 4s infinite; }
+
+.lang-switch {
+  position: fixed; top: 4px; right: 8px;
+  display: flex; gap: 2px; z-index: 10;
+}
+.lang-btn {
+  font-family: var(--font-mono); font-size: 0.6rem;
+  padding: 3px 8px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer;
+  transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;
+}
+.lang-btn:first-child { border-radius: 3px 0 0 3px; }
+.lang-btn:last-child { border-radius: 0 3px 3px 0; }
+.lang-btn.active { background: var(--neon-yellow); color: #000; border-color: var(--neon-yellow); }
+.lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
+
+.cyber-banner-small {
+  width: 100%; max-width: 160px;
+  margin: 0 auto 20px; border-radius: 50%; overflow: hidden;
+  border: 2px solid rgba(255, 230, 0, 0.3);
+  box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05);
+  position: relative; background: var(--panel-bg); padding: 10px;
+}
+.cyber-banner-small::before {
+  content: ''; position: absolute;
+  top: -5px; left: -5px; right: -5px; bottom: -5px; border-radius: 50%;
+  background: linear-gradient(45deg, rgba(255, 230, 0, 0.1), transparent, rgba(255, 230, 0, 0.1));
+  animation: rotate 8s linear infinite; pointer-events: none;
+}
+.cyber-banner-small img {
+  display: block; width: 100%; height: auto; border-radius: 50%;
+  position: relative; z-index: 1;
+}
+.cyber-banner-small::after {
+  content: ''; position: absolute;
+  top: 10px; left: 10px; right: 10px; bottom: 10px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 230, 0, 0.1), transparent 45%, transparent 55%, rgba(255, 230, 0, 0.03));
+  animation: shimmer 6s linear infinite; pointer-events: none; z-index: 2;
+}
+
+@keyframes shimmer { to { transform: rotate(360deg); } }
+@keyframes rotate { to { transform: rotate(360deg); } }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--dark-bg); }
+::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
+
+@media (max-width: 768px) {
+  .header h1 { font-size: 1.4rem; letter-spacing: 2px; }
+  .troop-inputs { flex-wrap: wrap; }
+  .troop-input-group { min-width: 120px; }
+  .result-main { font-size: 1.4rem; }
+}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <button class="lang-btn" data-lang="ru">RU</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
+<div class="app" id="app">
+  <header class="header">
+    <div style="text-align:left;margin-bottom:4px;">
+      <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
+    </div>
+    <h1 class="flicker-glow-text">TRAINING CALCULATOR</h1>
+    <div class="subtitle" data-i18n="subtitle">T4 / T5 Troop Training</div>
+    <div class="glitch-line"></div>
+  </header>
+
+  <div class="cyber-banner-small flicker-glow">
+    <img src="logo.png" alt="TRAINING CALCULATOR" loading="lazy" onerror="this.style.display='none'">
+  </div>
+
+  <!-- T5 TRAINING -->
+  <div class="panel">
+    <div class="panel-title" data-i18n="train_t5">Обучение T5</div>
+    <div class="troop-inputs">
+      <div class="troop-input-group">
+        <label data-i18n="inf5">⚔️ Пехота T5</label>
+        <input type="number" id="trainInfantry5" value="0" min="0">
+      </div>
+      <div class="troop-input-group">
+        <label data-i18n="arc5">🏹 Луки T5</label>
+        <input type="number" id="trainArchers5" value="0" min="0">
+      </div>
+      <div class="troop-input-group">
+        <label data-i18n="cav5">🐴 Кони T5</label>
+        <input type="number" id="trainCavalry5" value="0" min="0">
+      </div>
+      <div class="troop-input-group">
+        <label data-i18n="sie5">💥 Осада T5</label>
+        <input type="number" id="trainSiege5" value="0" min="0">
+      </div>
+    </div>
+  </div>
+
+  <!-- T4 TRAINING -->
+  <div class="panel">
+    <div class="panel-title" data-i18n="train_t4">Обучение T4</div>
+    <div class="troop-inputs">
+      <div class="troop-input-group">
+        <label data-i18n="inf4">⚔️ Пехота T4</label>
+        <input type="number" id="trainInfantry4" value="0" min="0">
+      </div>
+      <div class="troop-input-group">
+        <label data-i18n="arc4">🏹 Луки T4</label>
+        <input type="number" id="trainArchers4" value="0" min="0">
+      </div>
+      <div class="troop-input-group">
+        <label data-i18n="cav4">🐴 Кони T4</label>
+        <input type="number" id="trainCavalry4" value="0" min="0">
+      </div>
+      <div class="troop-input-group">
+        <label data-i18n="sie4">💥 Осада T4</label>
+        <input type="number" id="trainSiege4" value="0" min="0">
+      </div>
+    </div>
+  </div>
+
+  <!-- T4→T5 RETRAINING -->
+  <div class="panel">
+    <div class="panel-title" data-i18n="retrain">Переобучение T4 → T5</div>
+    <div class="troop-inputs">
+      <div class="troop-input-group">
+        <label data-i18n="inf_rt">⚔️ Пехота</label>
+        <input type="number" id="retrainInfantry" value="0" min="0">
+      </div>
+      <div class="troop-input-group">
+        <label data-i18n="arc_rt">🏹 Луки</label>
+        <input type="number" id="retrainArchers" value="0" min="0">
+      </div>
+      <div class="troop-input-group">
+        <label data-i18n="cav_rt">🐴 Кони</label>
+        <input type="number" id="retrainCavalry" value="0" min="0">
+      </div>
+      <div class="troop-input-group">
+        <label data-i18n="sie_rt">💥 Осада</label>
+        <input type="number" id="retrainSiege" value="0" min="0">
+      </div>
+    </div>
+  </div>
+
+  <!-- SPEED BONUS -->
+  <div class="panel">
+    <div class="panel-title" data-i18n="bonuses">Бонусы</div>
+    <div class="row" style="gap:24px;">
+      <div class="col" style="min-width:140px;">
+        <label data-i18n="speed_label">Скорость обучения</label>
+        <input type="number" id="speedBonus" value="0" min="0" max="999" style="width:100px;text-align:center;">
+        <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);" data-i18n="speed_unit">% ускорения</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="panel result-panel">
+    <div class="result-label" data-i18n="result_time">Общее время обучения</div>
+    <div class="result-main" id="resultTime">—</div>
+    <div class="result-label" style="margin-top:16px;" data-i18n="result_cost">Общая стоимость ресурсов</div>
+    <table class="result-table" id="costTable">
+      <thead>
+        <tr>
+          <th data-i18n="resource">Ресурс</th>
+          <th style="text-align:right;" data-i18n="amount">Количество</th>
+        </tr>
+      </thead>
+      <tbody id="costBody"></tbody>
+      <tfoot id="costFoot"></tfoot>
+    </table>
+
+    <table class="result-table" id="detailTable">
+      <thead>
+        <tr>
+          <th data-i18n="type">Тип</th>
+          <th data-i18n="count">Кол-во</th>
+          <th style="text-align:right;" data-i18n="time_col">Время</th>
+        </tr>
+      </thead>
+      <tbody id="detailBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const LANG = {
+  ru: {
+    back: '← Главная', subtitle: 'T4 / T5 Troop Training',
+    train_t5: 'Обучение T5', train_t4: 'Обучение T4',
+    retrain: 'Переобучение T4 → T5',
+    inf5: '⚔️ Пехота T5', arc5: '🏹 Луки T5', cav5: '🐴 Кони T5', sie5: '💥 Осада T5',
+    inf4: '⚔️ Пехота T4', arc4: '🏹 Луки T4', cav4: '🐴 Кони T4', sie4: '💥 Осада T4',
+    inf_rt: '⚔️ Пехота', arc_rt: '🏹 Луки', cav_rt: '🐴 Кони', sie_rt: '💥 Осада',
+    bonuses: 'Бонусы', speed_label: 'Скорость обучения', speed_unit: '% ускорения',
+    result_time: 'Общее время обучения', result_cost: 'Общая стоимость ресурсов',
+    resource: 'Ресурс', amount: 'Количество',
+    type: 'Тип', count: 'Кол-во', time_col: 'Время',
+    food: '🍖 Пища', wood: '🪵 Дерево', stone: '🪨 Камень', gold: '🪙 Золото',
+    total: 'ИТОГО', sec: 'с', min: 'м', hr: 'ч', day: 'д',
+  },
+  en: {
+    back: '← Home', subtitle: 'T4 / T5 Troop Training',
+    train_t5: 'Train T5', train_t4: 'Train T4',
+    retrain: 'Retrain T4 → T5',
+    inf5: '⚔️ Infantry T5', arc5: '🏹 Archers T5', cav5: '🐴 Cavalry T5', sie5: '💥 Siege T5',
+    inf4: '⚔️ Infantry T4', arc4: '🏹 Archers T4', cav4: '🐴 Cavalry T4', sie4: '💥 Siege T4',
+    inf_rt: '⚔️ Infantry', arc_rt: '🏹 Archers', cav_rt: '🐴 Cavalry', sie_rt: '💥 Siege',
+    bonuses: 'Bonuses', speed_label: 'Training Speed', speed_unit: '% speed',
+    result_time: 'Total Training Time', result_cost: 'Total Resource Cost',
+    resource: 'Resource', amount: 'Amount',
+    type: 'Type', count: 'Count', time_col: 'Time',
+    food: '🍖 Food', wood: '🪵 Wood', stone: '🪨 Stone', gold: '🪙 Gold',
+    total: 'TOTAL', sec: 's', min: 'm', hr: 'h', day: 'd',
+  },
+};
+
+const detected = navigator.language.startsWith('ru') ? 'ru' : 'en';
+let lang = localStorage.getItem('lang') || detected;
+
+function t(key) { return LANG[lang][key] || key; }
+
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (LANG[lang][key]) el.textContent = LANG[lang][key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.documentElement.lang = lang;
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    lang = btn.dataset.lang;
+    localStorage.setItem('lang', lang);
+    applyLang();
+    calculate();
+  });
+});
+
+applyLang();
+
+// ===== DATA =====
+const T5 = {
+  infantry: { food: 800, wood: 800, stone: 0, gold: 400, sec: 120 },
+  archers:  { food: 0, wood: 800, stone: 600, gold: 400, sec: 120 },
+  cavalry:  { food: 800, wood: 0, stone: 600, gold: 400, sec: 120 },
+  siege:    { food: 500, wood: 500, stone: 400, gold: 400, sec: 120 },
+};
+const T4 = {
+  infantry: { food: 300, wood: 300, stone: 0, gold: 20, sec: 80 },
+  archers:  { food: 0, wood: 300, stone: 225, gold: 20, sec: 80 },
+  cavalry:  { food: 300, wood: 0, stone: 225, gold: 20, sec: 80 },
+  siege:    { food: 200, wood: 200, stone: 150, gold: 20, sec: 80 },
+};
+
+const TYPES = ['infantry', 'archers', 'cavalry', 'siege'];
+
+function fmtNum(n) { return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+function fmtTime(totalSec) {
+  if (totalSec <= 0) return '0 ' + t('sec');
+  const d = Math.floor(totalSec / 86400); totalSec %= 86400;
+  const h = Math.floor(totalSec / 3600); totalSec %= 3600;
+  const m = Math.floor(totalSec / 60); const s = Math.round(totalSec % 60);
+  let parts = [];
+  if (d > 0) parts.push(d + ' ' + t('day'));
+  if (h > 0) parts.push(h + ' ' + t('hr'));
+  if (m > 0) parts.push(m + ' ' + t('min'));
+  if (s > 0 || parts.length === 0) parts.push(s + ' ' + t('sec'));
+  return parts.join(' ');
+}
+
+function getVal(id) { return parseInt(document.getElementById(id).value) || 0; }
+
+function calculate() {
+  const speed = parseInt(document.getElementById('speedBonus').value) || 0;
+
+  // Collect counts
+  const train5 = {};
+  const train4 = {};
+  const retrain = {};
+  for (const t of TYPES) {
+    train5[t] = getVal('train' + t.charAt(0).toUpperCase() + t.slice(1) + '5');
+    train4[t] = getVal('train' + t.charAt(0).toUpperCase() + t.slice(1) + '4');
+    retrain[t] = getVal('retrain' + t.charAt(0).toUpperCase() + t.slice(1));
+  }
+
+  // Calculate costs and time
+  let totalFood = 0, totalWood = 0, totalStone = 0, totalGold = 0;
+  let totalSec = 0;
+  const rows = [];
+
+  for (const t of TYPES) {
+    // T5 training
+    if (train5[t] > 0) {
+      const d = T5[t];
+      totalFood += d.food * train5[t];
+      totalWood += d.wood * train5[t];
+      totalStone += d.stone * train5[t];
+      totalGold += d.gold * train5[t];
+      totalSec += d.sec * train5[t];
+      // Retraining T4→T5
+    }
+    if (retrain[t] > 0) {
+      const diffFood = T5[t].food - T4[t].food;
+      const diffWood = T5[t].wood - T4[t].wood;
+      const diffStone = T5[t].stone - T4[t].stone;
+      const diffGold = T5[t].gold - T4[t].gold;
+      totalFood += diffFood * retrain[t];
+      totalWood += diffWood * retrain[t];
+      totalStone += diffStone * retrain[t];
+      totalGold += diffGold * retrain[t];
+      totalSec += 40 * retrain[t];
+    }
+    // T4 training
+    if (train4[t] > 0) {
+      const d = T4[t];
+      totalFood += d.food * train4[t];
+      totalWood += d.wood * train4[t];
+      totalStone += d.stone * train4[t];
+      totalGold += d.gold * train4[t];
+      totalSec += d.sec * train4[t];
+    }
+  }
+
+  // Apply speed bonus
+  const speedMultiplier = 1 + speed / 100;
+  let finalSec = Math.ceil(totalSec / speedMultiplier);
+
+  // Build detail rows
+  const typeMap = { infantry: 0, archers: 1, cavalry: 2, siege: 3 };
+  const typeLabels = {
+    infantry: t('inf5'), archers: t('arc5'), cavalry: t('cav5'), siege: t('sie5'),
+  };
+  const typeLabels4 = {
+    infantry: t('inf4'), archers: t('arc4'), cavalry: t('cav4'), siege: t('sie4'),
+  };
+  const typeLabelsRt = {
+    infantry: t('inf_rt'), archers: t('arc_rt'), cavalry: t('cav_rt'), siege: t('sie_rt'),
+  };
+
+  detailBody.innerHTML = '';
+  for (const t of TYPES) {
+    if (train5[t] > 0) {
+      const sec = Math.ceil(T5[t].sec * train5[t] / speedMultiplier);
+      detailBody.innerHTML += `<tr><td>${typeLabels[t]}</td><td>${fmtNum(train5[t])}</td><td>${fmtTime(sec)}</td></tr>`;
+    }
+    if (retrain[t] > 0) {
+      const sec = Math.ceil(40 * retrain[t] / speedMultiplier);
+      detailBody.innerHTML += `<tr><td>→ ${typeLabelsRt[t]}</td><td>${fmtNum(retrain[t])}</td><td>${fmtTime(sec)}</td></tr>`;
+    }
+    if (train4[t] > 0) {
+      const sec = Math.ceil(T4[t].sec * train4[t] / speedMultiplier);
+      detailBody.innerHTML += `<tr><td>${typeLabels4[t]}</td><td>${fmtNum(train4[t])}</td><td>${fmtTime(sec)}</td></tr>`;
+    }
+  }
+
+  // Cost table
+  costBody.innerHTML = `
+    <tr><td>${t('food')}</td><td>${fmtNum(totalFood)}</td></tr>
+    <tr><td>${t('wood')}</td><td>${fmtNum(totalWood)}</td></tr>
+    <tr><td>${t('stone')}</td><td>${fmtNum(totalStone)}</td></tr>
+    <tr><td>${t('gold')}</td><td>${fmtNum(totalGold)}</td></tr>
+  `;
+  costFoot.innerHTML = `<tr><td>${t('total')}</td><td>${fmtNum(totalFood + totalWood + totalStone + totalGold)}</td></tr>`;
+
+  // Total time
+  document.getElementById('resultTime').textContent = fmtTime(finalSec);
+}
+
+// ===== EVENTS =====
+const inputs = document.querySelectorAll('input');
+inputs.forEach(el => el.addEventListener('input', calculate));
+calculate();
+</script>
+</body>
+</html>
