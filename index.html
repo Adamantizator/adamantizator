@@ -373,14 +373,13 @@ td.pct { color: var(--neon-yellow); }
   .formula-coef-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* GLITCH FLICKER */
+/* RED NEON GLITCH FLICKER */
 @keyframes flicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.98; }
-  92% { opacity: 1; }
-  94% { opacity: 0.3; }
-  96% { opacity: 0.9; }
-  98% { opacity: 0.2; }
+  0%, 88%, 100% { box-shadow: none; }
+  90% { box-shadow: 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.25), 0 0 80px rgba(255, 16, 48, 0.1); }
+  92% { box-shadow: none; }
+  94% { box-shadow: 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.25), 0 0 80px rgba(255, 16, 48, 0.1); }
+  96% { box-shadow: none; }
 }
 .flicker { animation: flicker 4s infinite; }
 
@@ -568,7 +567,7 @@ td.pct { color: var(--neon-yellow); }
   </header>
 
    <!-- CYBER BANNER (Small Logo) -->
-   <div class="cyber-banner-small flicker">
+   <div class="cyber-banner-small">
      <img src="logo.png" alt="ADAMANTIZATOR Logo" loading="lazy" onerror="this.style.display='none'">
    </div>
 
