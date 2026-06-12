@@ -682,6 +682,10 @@ td.pct { color: var(--neon-yellow); }
         <label>Верхняя граница (≤)</label>
         <input type="number" id="maxVal" value="" style="width:120px;">
       </div>
+      <div class="col" style="min-width:140px;margin-left:auto;">
+        <label>Поиск по нику</label>
+        <input type="text" id="searchNick" placeholder="Введите ник..." style="width:100%;">
+      </div>
     </div>
     <div class="row" style="margin-top:14px;justify-content:space-between;">
       <button class="btn btn-crimson" id="calcBtn">[ РАССЧИТАТЬ </button>
@@ -1101,6 +1105,25 @@ downloadBtn.addEventListener('click', () => {
   } catch (err) {
     showMsg('error', `Не удалось скачать Excel файл: ${err.message}`);
   }
+});
+
+// ===== SEARCH BY NICK =====
+const searchNick = $('searchNick');
+searchNick.addEventListener('input', () => {
+  const q = searchNick.value.trim().toLowerCase();
+  const rows = tableBody.querySelectorAll('tr');
+  let visibleCount = 0;
+  rows.forEach(tr => {
+    const nameCell = tr.querySelector('td.player');
+    if (!nameCell) return;
+    const match = !q || nameCell.textContent.toLowerCase().includes(q);
+    tr.style.display = match ? '' : 'none';
+    if (match) visibleCount++;
+  });
+  const total = rows.length;
+  countDisplay.textContent = total > 0
+    ? `Игроков: ${visibleCount} / ${total}`
+    : 'Всего игроков: 0';
 });
 
 </script>
