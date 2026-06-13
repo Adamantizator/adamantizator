@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="page_title">Gold Heads Calculator — Rise of Kingdoms</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --neon-yellow: #ffe600;
+  --neon-gold: #ffdd00;
+  --neon-amber: #ffb300;
+  --neon-red: #ff1030;
+  --neon-green: #00ff88;
+  --neon-cyan: #00f0ff;
+  --neon-purple: #cc66ff;
+  --dark-bg: #0a0a0f;
+  --panel-bg: #12121a;
+  --card-bg: #1a1a2e;
+  --input-bg: #0d0d1a;
+  --border-glow: rgba(255, 230, 0, 0.3);
+  --text-primary: #fff8dc;
+  --text-dim: #e0d8b0;
+  --text-muted: #c0b080;
+  --font-display: 'Orbitron', monospace;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-mono: 'Fira Code', monospace;
+}
+
+body {
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    linear-gradient(rgba(255, 230, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 230, 0, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.app { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; padding: 20px; }
+
+.header { text-align: center; padding: 30px 0 20px; }
+.header h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, var(--neon-yellow), var(--neon-amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4));
+}
+.header .subtitle {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 6px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+.glitch-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-yellow), var(--neon-gold), transparent);
+  margin: 12px 0 0;
+  box-shadow: 0 0 20px rgba(255, 230, 0, 0.4);
+}
+
+@keyframes flicker {
+  0%, 82% { opacity: 1; }
+  86% { opacity: 1; }
+  90% { opacity: 0.85; }
+  94% { opacity: 1; }
+  98% { opacity: 0.85; }
+  100% { opacity: 1; }
+}
+.flicker { animation: flicker 4s infinite; }
+
+@keyframes flicker-glow-text {
+  0%, 82% { -webkit-text-stroke: 0 transparent; }
+  86% { -webkit-text-stroke: 1.5px #ff1030; }
+  90% { -webkit-text-stroke: 0 transparent; }
+  94% { -webkit-text-stroke: 1.5px #ff1030; }
+  98% { -webkit-text-stroke: 0 transparent; }
+  100% { -webkit-text-stroke: 0 transparent; }
+}
+.flicker-glow-text { animation: flicker-glow-text 4s infinite; }
+
+@keyframes flicker-glow {
+  0%, 82% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  86% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
+  90% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  94% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
+  98% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  100% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+}
+.flicker-glow { animation: flicker-glow 4s infinite; }
+
+.lang-switch {
+  position: fixed; top: 2px; right: 8px;
+  display: flex; gap: 2px; z-index: 10;
+}
+.lang-btn {
+  font-family: var(--font-mono); font-size: 0.6rem;
+  padding: 3px 8px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer;
+  transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;
+}
+.lang-btn:first-child { border-radius: 3px 0 0 3px; }
+.lang-btn:last-child { border-radius: 0 3px 3px 0; }
+.lang-btn.active { background: var(--neon-yellow); color: #000; border-color: var(--neon-yellow); }
+.lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
+
+.cal-btn {
+  font-family: var(--font-display); font-size: 0.6rem;
+  padding: 3px 8px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer; text-decoration: none;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.cal-btn:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); }
+
+.cyber-banner-small {
+  width: 100%; max-width: 120px;
+  margin: 0 auto 20px; border-radius: 50%; overflow: hidden;
+  border: 2px solid rgba(255, 230, 0, 0.3);
+  box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05);
+  position: relative; background: var(--panel-bg); padding: 8px;
+}
+.cyber-banner-small::before {
+  content: ''; position: absolute;
+  top: -5px; left: -5px; right: -5px; bottom: -5px; border-radius: 50%;
+  background: linear-gradient(45deg, rgba(255, 230, 0, 0.1), transparent, rgba(255, 230, 0, 0.1));
+  animation: rotate 8s linear infinite; pointer-events: none;
+}
+.cyber-banner-small img {
+  display: block; width: 100%; height: auto; border-radius: 50%;
+  position: relative; z-index: 1;
+}
+.cyber-banner-small::after {
+  content: ''; position: absolute;
+  top: 8px; left: 8px; right: 8px; bottom: 8px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 230, 0, 0.1), transparent 45%, transparent 55%, rgba(255, 230, 0, 0.03));
+  animation: shimmer 6s linear infinite; pointer-events: none; z-index: 2;
+}
+@keyframes shimmer { to { transform: rotate(360deg); } }
+@keyframes rotate { to { transform: rotate(360deg); } }
+
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 0 20px rgba(255, 230, 0, 0.06), inset 0 0 30px rgba(255, 230, 0, 0.03);
+}
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--neon-yellow);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel-title::before { content: '>'; color: var(--neon-gold); font-weight: 700; }
+
+label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 4px;
+}
+
+select {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 8px 12px;
+  background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.25);
+  color: var(--text-primary);
+  border-radius: 3px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+select:focus {
+  border-color: var(--neon-yellow);
+  box-shadow: 0 0 15px rgba(255, 230, 0, 0.15);
+}
+select option { background: var(--dark-bg); color: var(--text-primary); }
+
+.row { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; }
+.col { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
+
+.result-panel { text-align: center; padding: 24px 20px; }
+
+.result-value {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 30px rgba(255, 230, 0, 0.3);
+  margin: 4px 0;
+}
+.result-label {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+.result-item {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255, 230, 0, 0.1);
+  border-radius: 3px;
+  padding: 12px;
+}
+.result-item .ri-value {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--neon-amber);
+}
+.result-item .ri-value.complete {
+  color: var(--neon-green);
+}
+.result-item .ri-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+.table-wrap { overflow-x: auto; }
+.heads-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.heads-table th {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(255, 230, 0, 0.15);
+  text-align: right;
+}
+.heads-table th:first-child { text-align: left; }
+.heads-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(255, 230, 0, 0.06);
+  text-align: right;
+}
+.heads-table td:first-child { text-align: left; }
+.heads-table tr.current td {
+  color: var(--neon-yellow);
+  font-weight: 700;
+}
+.heads-table tr.target td {
+  color: var(--neon-green);
+  font-weight: 700;
+}
+.heads-table tr.between td {
+  color: var(--neon-amber);
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--dark-bg); }
+::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
+
+@media (max-width: 768px) {
+  .header { padding-top: 36px; }
+  .header h1 { font-size: 1.4rem; letter-spacing: 2px; }
+  .app { padding: 10px; }
+  .panel { padding: 12px; }
+  .row { gap: 10px; }
+  .col { min-width: 120px; }
+  .result-grid { grid-template-columns: 1fr; }
+  .result-value { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
+  <button class="lang-btn" data-lang="ru">RU</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
+<div class="app" id="app">
+  <header class="header">
+    <div style="text-align:left;margin-bottom:4px;">
+      <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
+    </div>
+    <h1 class="flicker-glow-text">GOLD HEADS</h1>
+    <div class="subtitle" data-i18n="subtitle">Legendary Commander Calculator</div>
+    <div class="glitch-line"></div>
+  </header>
+
+  <div class="cyber-banner-small flicker-glow">
+    <img src="logo.png" alt="GOLD HEADS" loading="lazy" onerror="this.style.display='none'">
+  </div>
+
+  <!-- INPUT -->
+  <div class="panel">
+    <div class="panel-title" data-i18n="input_title">Input</div>
+    <div class="row">
+      <div class="col">
+        <label data-i18n="from_label">Current state</label>
+        <select id="fromState"></select>
+      </div>
+      <div class="col">
+        <label data-i18n="to_label">Target state</label>
+        <select id="toState"></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="panel result-panel">
+    <div class="result-label" data-i18n="result_label">Golden heads needed</div>
+    <div class="result-value" id="headsResult">0</div>
+
+    <div class="result-grid">
+      <div class="result-item">
+        <div class="ri-value" id="fromHeads">—</div>
+        <div class="ri-label" data-i18n="cum_at_from">Cumulative at current</div>
+      </div>
+      <div class="result-item">
+        <div class="ri-value" id="toHeads">—</div>
+        <div class="ri-label" data-i18n="cum_at_to">Cumulative at target</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="panel">
+    <div class="panel-title" data-i18n="table_title">Skill progression</div>
+    <div class="table-wrap">
+      <table class="heads-table">
+        <thead>
+          <tr>
+            <th data-i18n="skill_state">Skill state</th>
+            <th data-i18n="step_cost">Step cost</th>
+            <th data-i18n="cumulative">Cumulative</th>
+            <th data-i18n="status_col">Status</th>
+          </tr>
+        </thead>
+        <tbody id="headsTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const STATES = [
+  { state: '1111', step: 0,  cum: 0   },
+  { state: '2111', step: 10, cum: 10  },
+  { state: '3111', step: 10, cum: 20  },
+  { state: '4111', step: 15, cum: 35  },
+  { state: '5111', step: 15, cum: 50  },
+  { state: '5211', step: 30, cum: 80  },
+  { state: '5311', step: 30, cum: 110 },
+  { state: '5411', step: 40, cum: 150 },
+  { state: '5511', step: 40, cum: 190 },
+  { state: '5521', step: 45, cum: 235 },
+  { state: '5531', step: 45, cum: 280 },
+  { state: '5541', step: 50, cum: 330 },
+  { state: '5551', step: 50, cum: 380 },
+  { state: '5552', step: 75, cum: 455 },
+  { state: '5553', step: 75, cum: 530 },
+  { state: '5554', step: 80, cum: 610 },
+  { state: '5555', step: 80, cum: 690 },
+];
+
+const LANG = {
+  ru: {
+    back: '← Главная',
+    subtitle: 'Калькулятор Золотых Голов',
+    page_title: 'Gold Heads Calculator — Rise of Kingdoms',
+    input_title: 'Ввод данных',
+    from_label: 'Текущее состояние',
+    to_label: 'Целевое состояние',
+    result_label: 'Нужно золотых голов',
+    cum_at_from: 'Всего на текущем',
+    cum_at_to: 'Всего на целевом',
+    table_title: 'Прогрессия навыков',
+    skill_state: 'Навыки', step_cost: 'Шаг', cumulative: 'Всего', status_col: 'Статус',
+    status_current: 'Текущий', status_target: 'Цель', status_past: 'Пройдено', status_future: 'Предстоит',
+    same_state: 'Одинаковое состояние',
+    calendar_btn: '📅 Календарь',
+    from: 'От', to: 'До', heads: 'голов',
+  },
+  en: {
+    back: '← Home',
+    subtitle: 'Golden Heads Calculator',
+    page_title: 'Gold Heads Calculator — Rise of Kingdoms',
+    input_title: 'Input',
+    from_label: 'Current state',
+    to_label: 'Target state',
+    result_label: 'Golden heads needed',
+    cum_at_from: 'Cumulative at current',
+    cum_at_to: 'Cumulative at target',
+    table_title: 'Skill progression',
+    skill_state: 'Skill state', step_cost: 'Step', cumulative: 'Cumulative', status_col: 'Status',
+    status_current: 'Current', status_target: 'Target', status_past: 'Done', status_future: 'Ahead',
+    same_state: 'Same state',
+    calendar_btn: '📅 Calendar',
+    from: 'From', to: 'To', heads: 'heads',
+  },
+};
+
+const detected = navigator.language.startsWith('ru') ? 'ru' : 'en';
+let lang = localStorage.getItem('lang') || detected;
+
+function t(key) { return LANG[lang][key] || key; }
+
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (LANG[lang][key]) el.textContent = LANG[lang][key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.documentElement.lang = lang;
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    lang = btn.dataset.lang;
+    localStorage.setItem('lang', lang);
+    applyLang();
+    calculate();
+  });
+});
+
+applyLang();
+
+const fromSelect = document.getElementById('fromState');
+const toSelect = document.getElementById('toState');
+
+for (const s of STATES) {
+  const opt1 = document.createElement('option');
+  opt1.value = s.state;
+  opt1.textContent = `${s.state} (${fmtNum(s.cum)})`;
+  fromSelect.appendChild(opt1);
+
+  const opt2 = document.createElement('option');
+  opt2.value = s.state;
+  opt2.textContent = `${s.state} (${fmtNum(s.cum)})`;
+  toSelect.appendChild(opt2);
+}
+toSelect.value = '5555';
+
+function fmtNum(n) { return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+function getStateData(stateCode) {
+  return STATES.find(s => s.state === stateCode);
+}
+
+function calculate() {
+  const fromCode = fromSelect.value;
+  const toCode = toSelect.value;
+  const from = getStateData(fromCode);
+  const to = getStateData(toCode);
+
+  const fromHeadsEl = document.getElementById('fromHeads');
+  const toHeadsEl = document.getElementById('toHeads');
+  const headsResultEl = document.getElementById('headsResult');
+
+  if (!from || !to) return;
+
+  fromHeadsEl.textContent = fmtNum(from.cum);
+  toHeadsEl.textContent = fmtNum(to.cum);
+
+  const diff = to.cum - from.cum;
+  if (diff === 0) {
+    headsResultEl.textContent = '0';
+  } else if (diff > 0) {
+    headsResultEl.textContent = fmtNum(diff);
+  } else {
+    headsResultEl.textContent = '—';
+  }
+
+  renderTable(fromCode, toCode);
+}
+
+function renderTable(fromCode, toCode) {
+  const tbody = document.getElementById('headsTableBody');
+  let html = '';
+  let started = false;
+  let ended = false;
+
+  for (const s of STATES) {
+    let cls = '';
+    let status = t('status_future');
+
+    if (s.state === fromCode) {
+      cls = 'current';
+      status = t('status_current');
+      started = true;
+    } else if (s.state === toCode) {
+      cls = 'target';
+      status = t('status_target');
+      ended = true;
+    } else if (started && !ended) {
+      cls = 'between';
+      status = t('status_past');
+    } else if (s.state === fromCode && s.state === toCode) {
+      cls = 'current target';
+      status = t('status_current');
+    }
+
+    html += `<tr class="${cls}"><td>${s.state}</td><td>${s.step > 0 ? fmtNum(s.step) : '—'}</td><td>${fmtNum(s.cum)}</td><td>${status}</td></tr>`;
+  }
+  tbody.innerHTML = html;
+}
+
+fromSelect.addEventListener('change', calculate);
+toSelect.addEventListener('change', calculate);
+
+calculate();
+</script>
+</body>
+</html>
