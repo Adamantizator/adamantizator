@@ -229,6 +229,9 @@ input[type="range"]::-webkit-slider-thumb {
   margin-top: 6px;
 }
 .result-detail span { color: var(--neon-green); }
+.result-table-wrap {
+  overflow-x: auto;
+}
 .result-table {
   margin-top: 16px;
   width: 100%;
@@ -319,6 +322,16 @@ input[type="range"]::-webkit-slider-thumb {
 }
 .lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
+.cal-btn {
+  font-family: var(--font-display); font-size: 0.6rem;
+  padding: 3px 8px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer; text-decoration: none;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.cal-btn:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); }
+
 /* CYBER BANNER (Small Logo) */
 .cyber-banner-small {
   width: 100%;
@@ -372,15 +385,24 @@ input[type="range"]::-webkit-slider-thumb {
 ::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
 
 @media (max-width: 768px) {
+  .header { padding-top: 36px; }
   .header h1 { font-size: 1.4rem; letter-spacing: 2px; }
   .troop-inputs { flex-wrap: wrap; }
   .troop-input-group { min-width: 120px; }
   .result-time { font-size: 1.4rem; }
+  .result-table { font-size: 0.7rem; }
+  .result-table th { font-size: 0.5rem; padding: 4px 6px; }
+  .result-table td { padding: 4px 6px; }
+  .app { padding: 10px; }
+  .panel { padding: 12px; }
+  .row { gap: 10px; }
+  .result-main { font-size: 1.4rem; }
 }
 </style>
 </head>
 <body>
 <div class="lang-switch">
+  <a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
@@ -389,7 +411,7 @@ input[type="range"]::-webkit-slider-thumb {
     <div style="text-align:left;margin-bottom:4px;">
       <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
     </div>
-    <h1 class="flicker-glow-text">HEAL CALCULATOR</h1>
+    <h1 class="flicker-glow-text" data-i18n="h1">HEAL CALCULATOR</h1>
     <div class="subtitle" data-i18n="subtitle">Troop Healing Time Calculator</div>
     <div class="glitch-line"></div>
   </header>
@@ -475,6 +497,7 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="result-time" id="resultTime">—</div>
     <div class="result-detail" id="resultDetail"></div>
 
+    <div class="result-table-wrap">
     <table class="result-table" id="resultTable">
       <thead>
         <tr>
@@ -485,11 +508,13 @@ input[type="range"]::-webkit-slider-thumb {
       </thead>
       <tbody id="resultBody"></tbody>
     </table>
+    </div>
   </div>
 
   <!-- RESOURCE COST -->
   <div class="panel" id="costPanel">
     <div class="panel-title" data-i18n="cost_title">Стоимость лечения</div>
+    <div class="result-table-wrap">
     <table class="result-table" id="costTable">
       <thead>
         <tr>
@@ -503,13 +528,14 @@ input[type="range"]::-webkit-slider-thumb {
       <tbody id="costBody"></tbody>
       <tfoot id="costFoot"></tfoot>
     </table>
+    </div>
   </div>
 </div>
 
 <script>
 const LANG = {
   ru: {
-    back: '← Главная', subtitle: 'Troop Healing Time Calculator',
+    back: '← Главная', subtitle: 'Калькулятор Лечения / Heal Calculator', h1:'КАЛЬКУЛЯТОР ЛЕЧЕНИЯ',
     troops: 'Количество войск', bonuses: 'Бонусы',
     speed_label: 'Скорость лечения', speed_unit: '% ускорения',
     resource_label: 'Потребление ресурсов', resource_unit: '% экономии',
@@ -526,9 +552,10 @@ const LANG = {
     no_handles: 'Без ручек', with_handles: 'С ручками',
     sec: 'с', min: 'м', hr: 'ч', day: 'д',
     short_sec: 'сек.', short_min: 'мин.', short_hr: 'ч.', short_day: 'д.',
+    calendar_btn: '📅 Календарь',
   },
   en: {
-    back: '← Home', subtitle: 'Troop Healing Time Calculator',
+    back: '← Home', subtitle: 'Heal Calculator / Калькулятор Лечения', h1:'HEAL CALCULATOR',
     troops: 'Troop Count', bonuses: 'Bonuses',
     speed_label: 'Healing Speed', speed_unit: '% speed',
     resource_label: 'Resource Consumption', resource_unit: '% saving',
@@ -545,6 +572,7 @@ const LANG = {
     no_handles: 'No handles', with_handles: 'With handles',
     sec: 's', min: 'm', hr: 'h', day: 'd',
     short_sec: 's', short_min: 'm', short_hr: 'h', short_day: 'd',
+    calendar_btn: '📅 Calendar',
   },
 };
 

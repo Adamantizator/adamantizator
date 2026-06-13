@@ -287,13 +287,29 @@ select option { background: var(--card-bg); }
 }
 .lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
+.cal-btn {
+  font-family: var(--font-display); font-size: 0.6rem;
+  padding: 3px 8px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer; text-decoration: none;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.cal-btn:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); }
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--dark-bg); }
 ::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
 
 @media (max-width: 768px) {
+  .header { padding-top: 36px; }
   .header h1 { font-size: 1.2rem; letter-spacing: 2px; }
-  .row { gap: 10px; }
+  .row { gap: 10px; flex-direction: column; align-items: stretch; }
+  .app { padding: 10px; }
+  .panel { padding: 12px; }
+  table { font-size: 0.7rem; }
+  thead th { font-size: 0.5rem; padding: 6px 4px; }
+  tbody td { padding: 6px 4px; }
 }
 
 .cyber-banner-small {
@@ -338,17 +354,18 @@ select option { background: var(--card-bg); }
 </head>
 <body>
 <div class="lang-switch">
+  <a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
 <div class="app" id="app">
   <header class="header flicker">
+    <div style="text-align:left;margin-bottom:4px;">
+      <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
+    </div>
     <h1 class="flicker-glow-text" data-i18n="title">СТАТИСТИКА УЧАСТНИКОВ</h1>
     <div class="subtitle" data-i18n="subtitle">Excel Table Analyzer</div>
     <div class="glitch-line"></div>
-    <div style="text-align:left;margin-top:8px;">
-      <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
-    </div>
   </header>
 
   <!-- CYBER BANNER (Small Logo) -->
@@ -455,7 +472,7 @@ select option { background: var(--card-bg); }
 // ===== I18N =====
 const LANG = {
   ru: {
-    back: '← Главная', title: 'СТАТИСТИКА УЧАСТНИКОВ', subtitle: 'Excel Table Analyzer', page_title: 'Статистика участников — Excel Analyzer',
+    back: '← Главная', title: 'СТАТИСТИКА УЧАСТНИКОВ', subtitle: 'Статистика Участников / Participant Statistics', page_title: 'Статистика участников — Excel Analyzer',
     file: 'Файл', open_excel: '[ ОТКРЫТЬ EXCEL ]', no_file: 'Файл не выбран',
     preloaded: 'Предзагруженные данные',
     filters: 'Фильтры и опции',
@@ -474,9 +491,10 @@ const LANG = {
     err_http: 'Ошибка загрузки',
     err_parse: 'Ошибка чтения',
     empty_no_data: 'Нет данных для экспорта.',
+    calendar_btn: '📅 Календарь',
   },
   en: {
-    back: '← Home', title: 'PARTICIPANT STATISTICS', subtitle: 'Excel Table Analyzer', page_title: 'Participant Statistics — Excel Analyzer',
+    back: '← Home', title: 'PARTICIPANT STATISTICS', subtitle: 'Participant Statistics / Статистика Участников', page_title: 'Participant Statistics — Excel Analyzer',
     file: 'File', open_excel: '[ OPEN EXCEL ]', no_file: 'No file selected',
     preloaded: 'Preloaded Data',
     filters: 'Filters & Options',
@@ -495,6 +513,7 @@ const LANG = {
     err_http: 'Load error',
     err_parse: 'Read error',
     empty_no_data: 'No data to export.',
+    calendar_btn: '📅 Calendar',
   },
 };
 

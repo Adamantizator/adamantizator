@@ -366,10 +366,21 @@ td.pct { color: var(--neon-yellow); }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
+  .header { padding-top: 36px; }
   .header h1 { font-size: 1.6rem; letter-spacing: 3px; }
   .row { flex-direction: column; align-items: stretch; }
   .col-grow { min-width: unset; }
   .formula-coef-grid { grid-template-columns: 1fr 1fr; }
+  table { font-size: 0.7rem; }
+  thead th { font-size: 0.55rem; padding: 6px 4px; }
+  tbody td { padding: 6px 4px; }
+  td.num { font-size: 0.65rem; }
+  .status-bar { flex-direction: column; gap: 4px; font-size: 0.7rem; align-items: flex-start; }
+  .app { padding: 10px; }
+  .card { padding: 16px 12px; }
+  .card-title { font-size: 0.9rem; }
+  .card-desc { font-size: 0.8rem; }
+  .header h1::after { font-size: 0.5rem; margin-left: 4px; }
 }
 
 /* RED NEON GLOW — TEXT */
@@ -432,6 +443,16 @@ td.pct { color: var(--neon-yellow); }
   border-color: var(--neon-yellow);
 }
 .lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
+
+.cal-btn {
+  font-family: var(--font-display); font-size: 0.6rem;
+  padding: 3px 8px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer; text-decoration: none;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.cal-btn:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); }
 
 /* CYBER BANNER (Small Logo) */
 .cyber-banner-small {
@@ -608,6 +629,7 @@ td.pct { color: var(--neon-yellow); }
 </head>
 <body>
 <div class="lang-switch">
+  <a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
@@ -617,7 +639,7 @@ td.pct { color: var(--neon-yellow); }
     <div style="text-align:left;margin-bottom:4px;">
       <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
     </div>
-    <h1 class="flicker-glow-text">ADAMANTIZATOR</h1>
+    <h1 class="flicker-glow-text" data-i18n="h1">ADAMANTIZATOR</h1>
     <div class="subtitle flicker-glow-text" data-i18n="subtitle">Cyber DKP Analysis System</div>
     <div class="glitch-line"></div>
   </header>
@@ -775,7 +797,7 @@ td.pct { color: var(--neon-yellow); }
 // ===== I18N =====
 const LANG = {
   ru: {
-    back: '← Главная', subtitle: 'Cyber DKP Analysis System',
+    back: '← Главная', subtitle: 'ДКП Анализатор / DKP Analyzer', h1:'АДАМАНТИЗАТОР',
     file: 'Файл', open_excel: '[ ОТКРЫТЬ EXCEL ]', no_file: 'Файл не выбран',
     lilith_link: 'Официальный сайт со статистикой Lilith',
     help_tip: '<b>Как получить таблицу:</b><br><br>1. Выберите "Показать сведения об участниках"<br>2. Выберите период, за который нужна статистика<br>3. В настройке данных таблицы нажмите галочку на "Все"<br>4. Скачайте таблицу и загрузите ее<br><br><b>Важно:</b> исходный файл с сайта Rok Tools должен быть на <u>русском или английском</u> языке',
@@ -796,9 +818,10 @@ const LANG = {
     th_dkp: 'Текущий ДКП', th_goal: 'Цель ДКП', th_pct: 'Выполнение цели %',
     sum_dkp: 'Сумма ДКП:', total_players: 'Всего игроков:',
     players_filtered: 'Игроков:', of: '/',
+    calendar_btn: '📅 Календарь',
   },
   en: {
-    back: '← Home', subtitle: 'Cyber DKP Analysis System',
+    back: '← Home', subtitle: 'DKP Analyzer / ДКП Анализатор', h1:'ADAMANTIZATOR',
     file: 'File', open_excel: '[ OPEN EXCEL ]', no_file: 'No file selected',
     lilith_link: 'Lilith official stats website',
     help_tip: '<b>How to get the table:</b><br><br>1. Select "Show member details"<br>2. Select the period you need stats for<br>3. In table data settings, check "All"<br>4. Download the table and upload it<br><br><b>Important:</b> the source file from Rok Tools must be in <u>Russian or English</u> language',
@@ -819,6 +842,7 @@ const LANG = {
     th_dkp: 'Current DKP', th_goal: 'DKP Goal', th_pct: 'Goal %',
     sum_dkp: 'DKP Sum:', total_players: 'Total players:',
     players_filtered: 'Players:', of: '/',
+    calendar_btn: '📅 Calendar',
   },
 };
 
