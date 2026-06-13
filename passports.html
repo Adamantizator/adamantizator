@@ -143,34 +143,36 @@ function calc(){
   const raw=pi.value.replace(/\s/g,'');
   const pw=parseFloat(raw)||0;
   const pm=pw/1000000;
-  const curP=pass(pm);
   const cap=parseInt(document.getElementById('hospCap').value)||0;
   const t4m=parseInt(document.getElementById('t4in').value)||0;
   const t5m=parseInt(document.getElementById('t5in').value)||0;
-  const p=pass(pm);
-  document.getElementById('passDisplay').textContent=p;
-  document.getElementById('credDisplay').textContent=fn(p*CPP);
-  document.getElementById('timeDisplay').textContent='~'+(p*DP);
-  document.getElementById('cppDisplay').textContent=fn(CPP);
   const dw=document.getElementById('deathWarn');
   const dt=document.getElementById('deathText');
-  // Manual T4/T5
+  dw.classList.remove('visible');
+  // Determine effective power
+  let effPw=pw;
   const mb=document.getElementById('manualBox');
   if(t4m>0||t5m>0){
     const hp=t4m*P4+t5m*P5;
     const tot=t4m+t5m;
-    const eff=Math.max(0,pw-hp);
-    document.getElementById('manualPower').textContent=fn(eff);
-    document.getElementById('manualPass').textContent=pass(eff/1000000);
+    effPw=Math.max(0,pw-hp);
+    document.getElementById('manualPower').textContent=fn(effPw);
+    document.getElementById('manualPass').textContent=pass(effPw/1000000);
     mb.style.display='block';
     if(cap>0&&tot>cap){dw.classList.add('visible');dt.textContent=fn(tot-cap)+' '+t('tdie')+' (T4+T5)'}
-    else{dw.classList.remove('visible')}
   }else{mb.style.display='none'}
-  // Suggestion for previous tier
+  const effPm=effPw/1000000;
+  const p=pass(effPm);
+  document.getElementById('passDisplay').textContent=p;
+  document.getElementById('credDisplay').textContent=fn(p*CPP);
+  document.getElementById('timeDisplay').textContent='~'+(p*DP);
+  document.getElementById('cppDisplay').textContent=fn(CPP);
+  // Suggestion for previous tier (based on FULL power)
   const sug=document.getElementById('suggestion');
+  const curP=pass(pm);
   const prev=getPrevTier(curP);
   if(prev){
-    const targetMax=prev.max*1000000;
+    const targetMax=prev.max*1000000-1;
     const shed=pw-targetMax;
     if(shed>0){
       sug.style.display='block';
@@ -186,13 +188,13 @@ function calc(){
       document.getElementById('t5suggest').textContent=t5cnt;
       document.getElementById('t4mix').textContent=t4mix;
       const ms=document.getElementById('mixSpan');
-      if(t5cnt>0||t4mix>0){ms.style.display='inline'}else{ms.style.display='none'}
-      if(cap>0&&t4only>cap){
-        if(!dw.classList.contains('visible')){dw.classList.add('visible');dt.textContent=fn(t4only-cap)+' '+t('tdie')+' (T4)'}
+      ms.style.display=(t5cnt>0||t4mix>0)?'inline':'none';
+      if(cap>0&&t4only>cap&&!dw.classList.contains('visible')){
+        dw.classList.add('visible');dt.textContent=fn(t4only-cap)+' '+t('tdie')+' (T4)'
       }
     }else{sug.style.display='none'}
   }else{sug.style.display='none'}
-  render(pm);
+  render(effPm);
 }
 function render(pm){
   const tb=document.getElementById('tableBody');let h='';
