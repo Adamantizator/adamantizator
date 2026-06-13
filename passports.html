@@ -167,6 +167,26 @@ body::after {
 @keyframes shimmer { to { transform: rotate(360deg); } }
 @keyframes rotate { to { transform: rotate(360deg); } }
 
+/* TABS */
+.tabs {
+  display: flex; gap: 2px; margin-bottom: 16px;
+}
+.tab-btn {
+  font-family: var(--font-display); font-size: 0.6rem;
+  padding: 8px 16px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.2s; flex: 1;
+}
+.tab-btn:first-child { border-radius: 3px 0 0 3px; }
+.tab-btn:last-child { border-radius: 0 3px 3px 0; }
+.tab-btn.active { background: var(--neon-yellow); color: #000; border-color: var(--neon-yellow); }
+.tab-btn:hover:not(.active) { border-color: var(--neon-yellow); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
 .panel {
   background: var(--panel-bg);
   border: 1px solid var(--border-glow);
@@ -219,6 +239,27 @@ select option { background: var(--dark-bg); color: var(--text-primary); }
 .row { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; }
 .col { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
 
+/* WARNING */
+.warning-box {
+  background: rgba(255, 16, 48, 0.1);
+  border: 1px solid var(--neon-red);
+  border-radius: 3px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  color: var(--neon-red);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  display: none;
+}
+.warning-box.visible { display: block; }
+.warning-box .warn-title {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
 .result-panel { text-align: center; padding: 24px 20px; }
 
 .result-value {
@@ -231,6 +272,9 @@ select option { background: var(--dark-bg); color: var(--text-primary); }
 }
 .result-value.small {
   font-size: 1.8rem;
+}
+.result-value.reduced {
+  color: var(--neon-green);
 }
 .result-label {
   font-family: var(--font-display);
@@ -246,6 +290,9 @@ select option { background: var(--dark-bg); color: var(--text-primary); }
   grid-template-columns: 1fr 1fr 1fr;
   gap: 12px;
   margin-top: 16px;
+}
+.result-grid.cols-2 {
+  grid-template-columns: 1fr 1fr;
 }
 .result-item {
   background: rgba(255,255,255,0.02);
@@ -309,8 +356,10 @@ select option { background: var(--dark-bg); color: var(--text-primary); }
   .row { gap: 10px; }
   .col { min-width: 120px; }
   .result-grid { grid-template-columns: 1fr 1fr; }
+  .result-grid.cols-2 { grid-template-columns: 1fr 1fr; }
   .result-value { font-size: 2rem; }
   .result-value.small { font-size: 1.4rem; }
+  .tab-btn { font-size: 0.5rem; padding: 6px 8px; }
 }
 </style>
 </head>
@@ -334,21 +383,74 @@ select option { background: var(--dark-bg); color: var(--text-primary); }
     <img src="logo.png" alt="PASSPORTS" loading="lazy" onerror="this.style.display='none'">
   </div>
 
-  <!-- INPUT -->
-  <div class="panel">
-    <div class="panel-title" data-i18n="input_title">Input</div>
-    <div class="row">
-      <div class="col">
-        <label data-i18n="power_label">Player power (millions)</label>
-        <input type="number" id="powerInput" value="10" min="0" max="200" step="0.1">
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="simple" data-i18n="tab_simple">Simple</button>
+    <button class="tab-btn" data-tab="hospital" data-i18n="tab_hospital">Hospital</button>
+  </div>
+
+  <!-- TAB: SIMPLE -->
+  <div class="tab-content active" id="tab-simple">
+    <div class="panel">
+      <div class="panel-title" data-i18n="input_title">Input</div>
+      <div class="row">
+        <div class="col">
+          <label data-i18n="power_label">Total power (millions)</label>
+          <input type="number" id="powerInput" value="10" min="0" max="999" step="0.1">
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- RESULT -->
+  <!-- TAB: HOSPITAL -->
+  <div class="tab-content" id="tab-hospital">
+    <div class="panel">
+      <div class="panel-title" data-i18n="input_title_hosp">Hospital Calculation</div>
+      <div class="row">
+        <div class="col">
+          <label data-i18n="power_label_hosp">Total power (millions)</label>
+          <input type="number" id="powerHosp" value="10" min="0" max="999" step="0.1">
+        </div>
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <div class="col">
+          <label data-i18n="hosp_cap">Hospital capacity (troops)</label>
+          <input type="number" id="hospCapacity" value="0" min="0" step="1">
+        </div>
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <div class="col">
+          <label>T4 <span class="dim" data-i18n="to_hospital">to hospital</span></label>
+          <input type="number" id="t4Count" value="0" min="0" step="1">
+        </div>
+        <div class="col">
+          <label>T5 <span class="dim" data-i18n="to_hospital">to hospital</span></label>
+          <input type="number" id="t5Count" value="0" min="0" step="1">
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box" id="deathWarning">
+      <div class="warn-title" data-i18n="death_warn_title">⚠ Troops will die!</div>
+      <span id="deathText"></span>
+    </div>
+  </div>
+
+  <!-- RESULT (shared) -->
   <div class="panel result-panel">
     <div class="result-label" data-i18n="passports_label">Passports needed</div>
     <div class="result-value" id="passportsResult">1</div>
+
+    <div class="result-grid cols-2" id="hospResultGrid" style="display:none;">
+      <div class="result-item">
+        <div class="ri-value" id="hospPowerDisplay">0</div>
+        <div class="ri-label" data-i18n="hosp_power_label">Hospital troop power</div>
+      </div>
+      <div class="result-item">
+        <div class="ri-value" id="effPowerDisplay">—</div>
+        <div class="ri-label" data-i18n="eff_power_label">Effective power</div>
+      </div>
+    </div>
 
     <div class="result-grid">
       <div class="result-item">
@@ -373,7 +475,7 @@ select option { background: var(--dark-bg); color: var(--text-primary); }
       <table class="pass-table">
         <thead>
           <tr>
-            <th data-i18n="power_th">Power (M)</th>
+            <th data-i18n="power_th">Power</th>
             <th data-i18n="passports_th">Passports</th>
             <th data-i18n="credits_th">Credits</th>
             <th data-i18n="farming_th">Farming days</th>
@@ -387,7 +489,6 @@ select option { background: var(--dark-bg); color: var(--text-primary); }
 
 <script>
 const CREDITS_PER_PASS = 600000;
-const DAYS_PER_CREDIT_UNIT = 15 / 600000; // days per credit
 const DAYS_PER_PASS = 15;
 
 const THRESHOLDS = [
@@ -409,7 +510,6 @@ function calcPassports(powerM) {
   for (const t of THRESHOLDS) {
     if (powerM < t.max) return t.passes;
   }
-  // Every additional 5M over 60 → +5 passports
   const base = 30;
   const extra = Math.ceil((powerM - 60) / 5) * 5;
   return base + extra;
@@ -420,33 +520,53 @@ const LANG = {
     back: '← Главная',
     subtitle: 'Калькулятор Паспортов Миграции',
     page_title: 'Passport Calculator — Rise of Kingdoms',
+    tab_simple: 'Обычный',
+    tab_hospital: 'Госпиталь',
     input_title: 'Ввод данных',
-    power_label: 'Мощь игрока (миллионы)',
+    input_title_hosp: 'Расчёт через госпиталь',
+    power_label: 'Полная мощь (миллионы)',
+    power_label_hosp: 'Полная мощь (миллионы)',
+    hosp_cap: 'Вместимость госпиталя',
+    to_hospital: 'в госпиталь',
     passports_label: 'Нужно паспортов',
     credits_label: 'Всего кредитов',
     time_label: 'Дней фарма',
     cost_per_pass: 'Кредитов / паспорт',
+    hosp_power_label: 'Мощь в госпитале',
+    eff_power_label: 'Мощь без госпиталя',
+    death_warn_title: '⚠ Войска погибнут!',
     table_title: 'Стоимость паспортов по мощи',
-    power_th: 'Мощь (М)', passports_th: 'Паспортов', credits_th: 'Кредитов', farming_th: 'Дней фарма',
+    power_th: 'Мощь', passports_th: 'Паспортов', credits_th: 'Кредитов', farming_th: 'Дней фарма',
     calendar_btn: '📅 Календарь',
     days: 'дн.',
     passports: 'пасс.',
+    troops_die: 'войск погибнет',
   },
   en: {
     back: '← Home',
     subtitle: 'Migration Passport Calculator',
     page_title: 'Passport Calculator — Rise of Kingdoms',
+    tab_simple: 'Simple',
+    tab_hospital: 'Hospital',
     input_title: 'Input',
-    power_label: 'Player power (millions)',
+    input_title_hosp: 'Hospital Calculation',
+    power_label: 'Total power (millions)',
+    power_label_hosp: 'Total power (millions)',
+    hosp_cap: 'Hospital capacity (troops)',
+    to_hospital: 'to hospital',
     passports_label: 'Passports needed',
     credits_label: 'Total credits',
     time_label: 'Farming days',
     cost_per_pass: 'Credits / passport',
+    hosp_power_label: 'Hospital troop power',
+    eff_power_label: 'Effective power',
+    death_warn_title: '⚠ Troops will die!',
     table_title: 'Passport cost by power',
-    power_th: 'Power (M)', passports_th: 'Passports', credits_th: 'Credits', farming_th: 'Farming days',
+    power_th: 'Power', passports_th: 'Passports', credits_th: 'Credits', farming_th: 'Farming days',
     calendar_btn: '📅 Calendar',
     days: 'days',
     passports: 'pass.',
+    troops_die: 'troops will die',
   },
 };
 
@@ -479,9 +599,67 @@ applyLang();
 
 function fmtNum(n) { return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
 
+function mToFull(m) { return fmtNum(m * 1000000); }
+
+// Tab switching
+let activeTab = 'simple';
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeTab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === activeTab));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + activeTab));
+    calculate();
+  });
+});
+
 function calculate() {
-  const power = parseFloat(document.getElementById('powerInput').value) || 0;
-  const passes = calcPassports(power);
+  let powerM;
+
+  if (activeTab === 'simple') {
+    powerM = parseFloat(document.getElementById('powerInput').value) || 0;
+    document.getElementById('hospResultGrid').style.display = 'none';
+    document.getElementById('deathWarning').classList.remove('visible');
+  } else {
+    powerM = parseFloat(document.getElementById('powerHosp').value) || 0;
+    const t4 = parseInt(document.getElementById('t4Count').value) || 0;
+    const t5 = parseInt(document.getElementById('t5Count').value) || 0;
+    const cap = parseInt(document.getElementById('hospCapacity').value) || 0;
+
+    const totalTroops = t4 + t5;
+    const hospPower = t4 * 4 + t5 * 10;
+
+    // Death warning
+    const deathBox = document.getElementById('deathWarning');
+    const deathText = document.getElementById('deathText');
+    if (cap > 0 && totalTroops > cap) {
+      const deaths = totalTroops - cap;
+      deathText.textContent = deaths + ' ' + t('troops_die');
+      deathBox.classList.add('visible');
+    } else {
+      deathBox.classList.remove('visible');
+    }
+
+    // Effective power (subtract hospital troop power)
+    const powerRaw = powerM * 1000000;
+    const effRaw = Math.max(0, powerRaw - hospPower);
+    powerM = effRaw / 1000000;
+
+    document.getElementById('hospPowerDisplay').textContent = fmtNum(hospPower);
+    document.getElementById('effPowerDisplay').textContent = mToFull(powerM);
+    document.getElementById('hospResultGrid').style.display = 'grid';
+
+    if (powerM <= 0) {
+      document.getElementById('passportsResult').textContent = '0';
+      document.getElementById('creditsResult').textContent = '0';
+      document.getElementById('timeResult').textContent = '~0';
+      document.getElementById('costPerPass').textContent = fmtNum(CREDITS_PER_PASS);
+      renderTable(0);
+      return;
+    }
+  }
+
+  const passes = calcPassports(powerM);
   const credits = passes * CREDITS_PER_PASS;
   const days = passes * DAYS_PER_PASS;
 
@@ -490,35 +668,35 @@ function calculate() {
   document.getElementById('timeResult').textContent = '~' + days;
   document.getElementById('costPerPass').textContent = fmtNum(CREDITS_PER_PASS);
 
-  renderTable(power);
+  renderTable(powerM);
 }
 
-function renderTable(power) {
+function renderTable(powerM) {
   const tbody = document.getElementById('passTableBody');
   let html = '';
 
-  // Show standard thresholds
   for (const t of THRESHOLDS) {
     const credits = t.passes * CREDITS_PER_PASS;
     const days = t.passes * DAYS_PER_PASS;
-    const active = power < t.max ? 'active' : '';
-    const label = (t.max - 5) + '–' + (t.max - 1) + 'M';
+    const active = powerM < t.max ? 'active' : '';
+    const from = (t.max - 5) * 1000000;
+    const to = t.max * 1000000 - 1;
+    const label = fmtNum(from) + ' – ' + fmtNum(to);
     html += `<tr class="${active}"><td>${label}</td><td>${t.passes}</td><td>${fmtNum(credits)}</td><td>~${days}</td></tr>`;
   }
 
-  // 60M+ row
-  const p60 = 60;
+  // 55–60M row
   const pass60 = 30;
-  const active60 = power >= 60 && power < 65 ? 'active' : '';
-  html += `<tr class="${active60}"><td>55–60M</td><td>${pass60}</td><td>${fmtNum(pass60 * CREDITS_PER_PASS)}</td><td>~${pass60 * DAYS_PER_PASS}</td></tr>`;
+  const active60 = powerM >= 60 && powerM < 65 ? 'active' : '';
+  html += `<tr class="${active60}"><td>${fmtNum(55000000)} – ${fmtNum(60000000)}</td><td>${pass60}</td><td>${fmtNum(pass60 * CREDITS_PER_PASS)}</td><td>~${pass60 * DAYS_PER_PASS}</td></tr>`;
 
-  // Extra rows for 65M+
-  if (power >= 65) {
-    const extraPasses = calcPassports(power);
-    for (let m = 65; m <= Math.min(power + 5, 200); m += 5) {
+  if (powerM >= 65) {
+    for (let m = 65; m <= Math.min(powerM + 5, 999); m += 5) {
       const passes = calcPassports(m);
-      const activeRow = power < m + 5 && power >= m ? 'active' : '';
-      const label = (m - 5) + '–' + (m - 1) + 'M';
+      const activeRow = powerM < m + 5 && powerM >= m ? 'active' : '';
+      const from = (m - 5) * 1000000;
+      const to = m * 1000000 - 1;
+      const label = fmtNum(from) + ' – ' + fmtNum(to);
       html += `<tr class="${activeRow}"><td>${label}</td><td>${passes}</td><td>${fmtNum(passes * CREDITS_PER_PASS)}</td><td>~${passes * DAYS_PER_PASS}</td></tr>`;
     }
   }
@@ -527,6 +705,10 @@ function renderTable(power) {
 }
 
 document.getElementById('powerInput').addEventListener('input', calculate);
+document.getElementById('powerHosp').addEventListener('input', calculate);
+document.getElementById('hospCapacity').addEventListener('input', calculate);
+document.getElementById('t4Count').addEventListener('input', calculate);
+document.getElementById('t5Count').addEventListener('input', calculate);
 
 calculate();
 </script>
