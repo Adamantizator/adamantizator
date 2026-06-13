@@ -63,8 +63,8 @@ body::after {
 .app {
   position: relative;
   z-index: 2;
-  max-width: 700px;
-  width: 90%;
+  max-width: 960px;
+  width: 92%;
   text-align: center;
   padding: 20px;
 }
@@ -101,9 +101,9 @@ body::after {
 
 .cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
-  max-width: 700px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -344,11 +344,15 @@ body::after {
 ::-webkit-scrollbar-track { background: var(--dark-bg); }
 ::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
 
+@media (max-width: 768px) {
+  .cards { grid-template-columns: 1fr 1fr; }
+  .card { padding: 20px 16px; }
+}
 @media (max-width: 480px) {
   .header { padding-top: 36px; }
   .header h1 { font-size: 1.2rem; letter-spacing: 2px; }
   .cards { grid-template-columns: 1fr; }
-  .card { padding: 20px 16px; }
+  .card { padding: 16px 12px; }
   .cal-btn { right: 56px; font-size: 0.5rem; padding: 2px 5px; }
   .lang-btn { font-size: 0.5rem; padding: 2px 5px; }
   .app { padding: 10px; }
@@ -375,22 +379,6 @@ body::after {
 
   <div class="cards">
     <div class="card-wrap">
-      <a class="card card-adamantizator" href="adamantizator.html">
-        <div class="card-icon">⚔️</div>
-        <div class="card-title" data-i18n="card1_title">Adamantizator</div>
-        <div class="card-desc" data-i18n="card1_desc">Расчёт ДКП по загруженной Excel-таблице из игры</div>
-        <div class="tag" data-i18n="card1_tag">Загрузка .xlsx · Фильтр · Поиск</div>
-      </a>
-    </div>
-    <div class="card-wrap">
-      <a class="card card-stats" href="stats.html">
-        <div class="card-icon">📋</div>
-        <div class="card-title" data-i18n="card3_title">Статистика участников</div>
-        <div class="card-desc" data-i18n="card3_desc">Анализ Excel-таблиц: загрузка, сортировка, фильтры, поиск, экспорт</div>
-        <div class="tag" data-i18n="card3_tag">Загрузка .xlsx · Фильтр · Экспорт</div>
-      </a>
-    </div>
-    <div class="card-wrap">
       <a class="card card-healcalc" href="healcalc.html">
         <div class="card-icon">💊</div>
         <div class="card-title" data-i18n="card2_title">Heal Calculator</div>
@@ -407,19 +395,35 @@ body::after {
       </a>
     </div>
     <div class="card-wrap">
-      <a class="card card-calendar" href="calendar.html">
-        <div class="card-icon">📅</div>
-        <div class="card-title" data-i18n="card5_title">Events Calendar</div>
-        <div class="card-desc" data-i18n="card5_desc">Календарь событий Rise of Kingdoms с паттернами MGE, WoF, MTG и других ивентов</div>
-        <div class="tag" data-i18n="card5_tag">MGE · WoF · MTG · Ark</div>
-      </a>
-    </div>
-    <div class="card-wrap">
       <a class="card card-vip" href="vipcalc.html">
         <div class="card-icon">👑</div>
         <div class="card-title" data-i18n="card6_title">VIP Calculator</div>
         <div class="card-desc" data-i18n="card6_desc">Расчёт уровня VIP и очков, необходимых до целевого уровня (1–18)</div>
         <div class="tag" data-i18n="card6_tag">VIP 1–18 · Прогресс · Очки</div>
+      </a>
+    </div>
+    <div class="card-wrap">
+      <a class="card card-adamantizator" href="adamantizator.html">
+        <div class="card-icon">⚔️</div>
+        <div class="card-title" data-i18n="card1_title">Adamantizator</div>
+        <div class="card-desc" data-i18n="card1_desc">Расчёт ДКП по загруженной Excel-таблице из игры</div>
+        <div class="tag" data-i18n="card1_tag">Загрузка .xlsx · Фильтр · Поиск</div>
+      </a>
+    </div>
+    <div class="card-wrap">
+      <a class="card card-stats" href="stats.html">
+        <div class="card-icon">📋</div>
+        <div class="card-title" data-i18n="card3_title">Статистика участников</div>
+        <div class="card-desc" data-i18n="card3_desc">Анализ Excel-таблиц: загрузка, сортировка, фильтры, поиск, экспорт</div>
+        <div class="tag" data-i18n="card3_tag">Загрузка .xlsx · Фильтр · Экспорт</div>
+      </a>
+    </div>
+    <div class="card-wrap">
+      <a class="card card-calendar" href="calendar.html">
+        <div class="card-icon">📅</div>
+        <div class="card-title" data-i18n="card5_title">Events Calendar</div>
+        <div class="card-desc" data-i18n="card5_desc">Календарь событий Rise of Kingdoms с паттернами MGE, WoF, MTG и других ивентов</div>
+        <div class="tag" data-i18n="card5_tag">MGE · WoF · MTG · Ark</div>
       </a>
     </div>
   </div>
