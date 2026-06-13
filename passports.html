@@ -94,7 +94,7 @@ input:focus{border-color:var(--neon-yellow);box-shadow:0 0 15px rgba(255,230,0,0
 
     <div class="suggestion" id="manualBox" style="display:none;margin-top:8px">
       Мощь с заполнением госпиталя: <span class="hl" id="manualPower">0</span>
-      <span class="dim">—</span> Паспортов: <span class="hl" id="manualPass">0</span>
+      <br><span class="dim">Паспортов без заполнения госпиталя: <span class="hl" id="manualPassOrig">0</span></span>
     </div>
 
     <div class="result-grid">
@@ -157,7 +157,7 @@ function calc(){
     const tot=t4m+t5m;
     effPw=Math.max(0,pw-hp);
     document.getElementById('manualPower').textContent=fn(effPw);
-    document.getElementById('manualPass').textContent=pass(effPw/1000000);
+    document.getElementById('manualPassOrig').textContent=pass(pm);
     mb.style.display='block';
     if(cap>0&&tot>cap){dw.classList.add('visible');dt.textContent=fn(tot-cap)+' '+t('tdie')+' (T4+T5)'}
   }else{mb.style.display='none'}
