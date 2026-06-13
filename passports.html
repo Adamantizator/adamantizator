@@ -189,7 +189,7 @@ function calc(){
       document.getElementById('t4mix').textContent=t4mix;
       const ms=document.getElementById('mixSpan');
       ms.style.display=(t5cnt>0||t4mix>0)?'inline':'none';
-      if(cap<t4only&&!dw.classList.contains('visible')){
+      if(!(cap===0&&t4m===0&&t5m===0)&&cap<t4only&&!dw.classList.contains('visible')){
         dw.classList.add('visible');dt.textContent=fn(t4only-cap)+' '+t('tdie')+' (T4)'
       }
     }else{sug.style.display='none'}
