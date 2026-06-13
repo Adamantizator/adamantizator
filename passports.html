@@ -92,7 +92,10 @@ input:focus{border-color:var(--neon-yellow);box-shadow:0 0 15px rgba(255,230,0,0
       Снизить с <span class="hl" id="curP">1</span> до <span class="hl" id="prevP">1</span> паспортов: мощь до <span class="hl" id="targetPower">0</span> (сбросить <span class="hl" id="shedPower">0</span>)
       <br>T4: <span class="hl" id="t4suggest">0</span>
       <span class="dim" id="mixSpan">(T5: <span id="t5suggest">0</span> + T4: <span id="t4mix">0</span>)</span>
-      <div class="sug-death" id="sugDeath"></div>
+      <div class="sug-death" id="sugDeath">
+        <div id="sugDeathT4"></div>
+        <div id="sugDeathT5" style="margin-top:4px;"></div>
+      </div>
     </div>
 
     <div class="suggestion" id="manualBox" style="display:none;margin-top:8px">
@@ -193,8 +196,15 @@ function calc(){
       const ms=document.getElementById('mixSpan');
       ms.style.display=(t5cnt>0||t4mix>0)?'inline':'none';
       const sd=document.getElementById('sugDeath');
+      const sdT4=document.getElementById('sugDeathT4');
+      const sdT5=document.getElementById('sugDeathT5');
+      const t5only=Math.ceil(shed/P5);
       if(cap>0&&cap<t4only){
-        sd.classList.add('visible');sd.textContent='⚠ '+fn(t4only-cap)+' '+t('tdie')+' (T4)'
+        sd.classList.add('visible');
+        sdT4.textContent='⚠ '+fn(t4only-cap)+' '+t('tdie')+' (T4)';
+        const d5=Math.max(0,t5only-cap);
+        if(d5>0){sdT5.textContent='⚠ '+fn(d5)+' '+t('tdie')+' (T5)';sdT5.style.display='block'}
+        else{sdT5.style.display='none'}
       }else{sd.classList.remove('visible')}
     }else{sug.style.display='none'}
   }else{sug.style.display='none'}
