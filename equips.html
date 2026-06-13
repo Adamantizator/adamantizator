@@ -190,7 +190,8 @@ const EQUIP = {
     sets:[
       {id:'early',label:{ru:'Ранняя игра',en:'Earlygame'},subtitle:{ru:'',en:''},slots:[S('helmet','Windswept War Helm'),S('chest','Windswept Breastplate'),S('weapon','Gatekeepers Shield'),S('gloves',"Calvin's Hand"),S('pants','Sentry Breeches'),S('acc1',''),S('acc2',''),S('boots','The Scarlet Hounds')]},
        {id:'mid',label:{ru:'Середина игры',en:'Midgame'},subtitle:{ru:'',en:''},slots:[S('helmet',"Witch's Lineage"),S('chest',"Quinn's Soul"),S('weapon','Gatekeepers Shield'),S('gloves',"Seth's Brutality"),S('pants',"Karuak's Humility"),S('acc1',''),S('acc2',''),S('boots','Frost Treads')]},
-      {id:'end1',label:{ru:'Эндгейм Сет 1',en:'Endgame Set 1'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Hope Cloak'),S('weapon','Shield of the Eternal Empire'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Eternal Night'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
+       {id:'intermediate',label:{ru:'Промежуточный сет',en:'Intermediate Set'},subtitle:{ru:'',en:''},hint:{ru:'Можно сковать 2 любых предмета из сета империи, рекомендуется ковать шлем и что то еще, перчатки или ботинки. Менять остальное можно в любой момент, поножи в последнюю очередь - каруака не плохие.',en:'You can craft any 2 Empire set items, recommended to craft the helm and something else — gloves or boots. You can swap the rest at any time. Do pants last — Karuak is not bad.'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Hope Cloak'),S('weapon','Gatekeepers Shield'),S('gloves',"Seth's Brutality"),S('pants',"Karuak's Humility"),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
+       {id:'end1',label:{ru:'Эндгейм Сет 1',en:'Endgame Set 1'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Hope Cloak'),S('weapon','Shield of the Eternal Empire'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Eternal Night'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
       {id:'end2',label:{ru:'Эндгейм Сет 2',en:'Endgame Set 2'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Helm of the Conqueror'),S('chest','Plate of the Eternal Empire'),S('weapon','Hammer of the Sun and Moon'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Greaves of the Eternal Empire'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
       {id:'end3',label:{ru:'Эндгейм Сет 3',en:'Endgame Set 3'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Hope Cloak'),S('weapon','Shield of the Eternal Empire'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]},
       {id:'end4',label:{ru:'Эндгейм Сет 4',en:'Endgame Set 4'},subtitle:{ru:'(Рейд/Гарнизон)',en:'(Rally/Garrison)'},slots:[S('helmet','Helm of the Conqueror'),S('chest','Hope Cloak'),S('weapon','Hammer of the Sun and Moon'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Eternal Night'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
@@ -762,16 +763,17 @@ function getSetStats(troop, setId){
     });
   });
   applySetBonuses(agg,procs,names);
-  return {agg,procs};
+  return {agg,procs,hint:set.hint};
 }
 function renderStatsHtml(data){
-  const{agg,procs}=data;
+  const{agg,procs,hint}=data;
   const sorted=Object.entries(agg).sort((a,b)=>{
     const ka=statSortKey(a[0]),kb=statSortKey(b[0]);
     return ka!==kb?ka-kb:Math.abs(b[1])-Math.abs(a[1]);
   });
   let h=sorted.map(([k,v])=>`<div class="stat-row"><span class="${statColorClass(k)}">${ts(k)}</span><span class="val ${statColorClass(k)}">${v>0?'+':''}${v}%</span></div>`).join('');
   procs.forEach(p=>{h+=`<div class="stat-row"><span>${p}</span><span class="val">⚡</span></div>`});
+  if(hint){h+=`<div style="border-top:1px solid rgba(255,230,0,0.2);margin:6px 0 4px"></div><div style="font-size:0.55rem;color:var(--text-dim);line-height:1.5;max-width:260px;margin-top:4px">${tt(hint)}</div>`}
   return h;
 }
 function renderTabs(){
