@@ -715,12 +715,12 @@ function calculate() {
     + [`${t('no_handles')}: <span>${fmtTime(rawSeconds)}</span>`, `${t('with_handles')}: <span>${fmtTimeShort(savedSeconds)}</span>`].join(' &nbsp;|&nbsp; ');
 
   // Time table per troop
-  resultBody.innerHTML = TROOPS.map((t, i) => {
+  resultBody.innerHTML = TROOPS.map((troop, i) => {
     const cnt = counts[i];
     if (cnt === 0) return '';
-    const troopTime = cnt * t.seconds;
+    const troopTime = cnt * troop.seconds;
     return `<tr>
-      <td>${t.icon} ${t(t.labelKey)}</td>
+      <td>${troop.icon} ${t(troop.labelKey)}</td>
       <td>${cnt.toLocaleString('ru-RU')}</td>
       <td>${troopTime > 0 ? fmtTime(troopTime) : '—'}</td>
     </tr>`;
@@ -731,12 +731,12 @@ function calculate() {
   const resourceMult = resourceBonus.value > 0 ? (1 - parseFloat(resourceBonus.value) / 100) : 1;
   const totals = { food: 0, wood: 0, stone: 0, gold: 0 };
 
-  costBody.innerHTML = TROOPS.map((t, i) => {
+  costBody.innerHTML = TROOPS.map((troop, i) => {
     const cnt = counts[i];
     if (cnt === 0) return '';
-    resources.forEach(r => { totals[r] += cnt * t.cost[r] * resourceMult; });
-    const row = resources.map(r => fmtNum(cnt * t.cost[r] * resourceMult));
-    return `<tr><td>${t.icon} ${t(t.labelKey)}</td><td>${row.join('</td><td>')}</td></tr>`;
+    resources.forEach(r => { totals[r] += cnt * troop.cost[r] * resourceMult; });
+    const row = resources.map(r => fmtNum(cnt * troop.cost[r] * resourceMult));
+    return `<tr><td>${troop.icon} ${t(troop.labelKey)}</td><td>${row.join('</td><td>')}</td></tr>`;
   }).join('');
 
   costFoot.innerHTML = `<tr style="border-top:1px solid rgba(255,230,0,0.25);font-weight:700;color:var(--neon-yellow);">
