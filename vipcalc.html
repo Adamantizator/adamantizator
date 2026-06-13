@@ -353,7 +353,7 @@ select option { background: var(--dark-bg); color: var(--text-primary); }
     <div style="text-align:left;margin-bottom:4px;">
       <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
     </div>
-    <h1 class="flicker-glow-text">VIP CALCULATOR</h1>
+    <h1 class="flicker-glow-text" data-i18n="h1">VIP CALCULATOR</h1>
     <div class="subtitle" data-i18n="subtitle">VIP Level Calculator</div>
     <div class="glitch-line"></div>
   </header>
@@ -459,6 +459,7 @@ function fmtNum(n) { return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d
 const LANG = {
   ru: {
     back: '← Главная',
+    h1:'VIP КАЛЬКУЛЯТОР',
     subtitle: 'VIP Калькулятор / VIP Calculator',
     page_title: 'VIP Calculator — Rise of Kingdoms',
     input_title: 'Ввод данных',
@@ -476,6 +477,7 @@ const LANG = {
   },
   en: {
     back: '← Home',
+    h1:'VIP CALCULATOR',
     subtitle: 'VIP Calculator / VIP Калькулятор',
     page_title: 'VIP Calculator — Rise of Kingdoms',
     input_title: 'Input',
