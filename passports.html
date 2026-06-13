@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="page_title">Passport Calculator — Rise of Kingdoms</title>
+<title data-i18n="title">Passport Calculator — Rise of Kingdoms</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap');
 
@@ -37,64 +37,37 @@ body {
   overflow-x: hidden;
 }
 body::before {
-  content: '';
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background:
-    linear-gradient(rgba(255, 230, 0, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 230, 0, 0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-  z-index: 0;
+  content: ''; position: fixed; top:0;left:0;right:0;bottom:0;
+  background: linear-gradient(rgba(255,230,0,0.05) 1px,transparent 1px), linear-gradient(90deg,rgba(255,230,0,0.05) 1px,transparent 1px);
+  background-size: 40px 40px; pointer-events: none; z-index: 0;
 }
 body::after {
-  content: '';
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px);
-  pointer-events: none;
-  z-index: 1;
+  content: ''; position: fixed; top:0;left:0;right:0;bottom:0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px);
+  pointer-events: none; z-index: 1;
 }
 
 .app { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; padding: 20px; }
 
 .header { text-align: center; padding: 30px 0 20px; }
 .header h1 {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 4px;
+  font-family: var(--font-display); font-size: 2rem; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 4px;
   background: linear-gradient(135deg, var(--neon-yellow), var(--neon-amber));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(255,230,0,0.4));
 }
 .header .subtitle {
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 6px;
-  color: var(--text-dim);
-  margin-top: 6px;
-  text-transform: uppercase;
+  font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 6px;
+  color: var(--text-dim); margin-top: 6px; text-transform: uppercase;
 }
 .glitch-line {
-  height: 2px;
+  height: 2px; margin: 12px 0 0;
   background: linear-gradient(90deg, transparent, var(--neon-yellow), var(--neon-gold), transparent);
-  margin: 12px 0 0;
-  box-shadow: 0 0 20px rgba(255, 230, 0, 0.4);
+  box-shadow: 0 0 20px rgba(255,230,0,0.4);
 }
 
-@keyframes flicker {
-  0%, 82% { opacity: 1; }
-  86% { opacity: 1; }
-  90% { opacity: 0.85; }
-  94% { opacity: 1; }
-  98% { opacity: 0.85; }
-  100% { opacity: 1; }
-}
-.flicker { animation: flicker 4s infinite; }
-
+.flicker-glow-text { animation: flicker-glow-text 4s infinite; }
 @keyframes flicker-glow-text {
   0%, 82% { -webkit-text-stroke: 0 transparent; }
   86% { -webkit-text-stroke: 1.5px #ff1030; }
@@ -103,28 +76,13 @@ body::after {
   98% { -webkit-text-stroke: 0 transparent; }
   100% { -webkit-text-stroke: 0 transparent; }
 }
-.flicker-glow-text { animation: flicker-glow-text 4s infinite; }
 
-@keyframes flicker-glow {
-  0%, 82% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
-  86% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
-  90% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
-  94% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
-  98% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
-  100% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
-}
-.flicker-glow { animation: flicker-glow 4s infinite; }
-
-.lang-switch {
-  position: fixed; top: 2px; right: 8px;
-  display: flex; gap: 2px; z-index: 10;
-}
+.lang-switch { position: fixed; top: 2px; right: 8px; display: flex; gap: 2px; z-index: 10; }
 .lang-btn {
-  font-family: var(--font-mono); font-size: 0.6rem;
-  padding: 3px 8px; background: var(--input-bg);
-  border: 1px solid rgba(255, 230, 0, 0.2);
-  color: var(--text-muted); cursor: pointer;
-  transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;
+  font-family: var(--font-mono); font-size: 0.6rem; padding: 3px 8px;
+  background: var(--input-bg); border: 1px solid rgba(255,230,0,0.2);
+  color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+  text-transform: uppercase; letter-spacing: 1px;
 }
 .lang-btn:first-child { border-radius: 3px 0 0 3px; }
 .lang-btn:last-child { border-radius: 0 3px 3px 0; }
@@ -132,171 +90,102 @@ body::after {
 .lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
 .cal-btn {
-  font-family: var(--font-display); font-size: 0.6rem;
-  padding: 3px 8px; background: var(--input-bg);
-  border: 1px solid rgba(255, 230, 0, 0.2);
+  font-family: var(--font-display); font-size: 0.6rem; padding: 3px 8px;
+  background: var(--input-bg); border: 1px solid rgba(255,230,0,0.2);
   color: var(--text-muted); cursor: pointer; text-decoration: none;
-  text-transform: uppercase; letter-spacing: 1px;
-  transition: all 0.2s;
+  text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s;
 }
 .cal-btn:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); }
 
 .cyber-banner-small {
-  width: 100%; max-width: 120px;
-  margin: 0 auto 20px; border-radius: 50%; overflow: hidden;
-  border: 2px solid rgba(255, 230, 0, 0.3);
-  box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05);
+  width: 100%; max-width: 120px; margin: 0 auto 20px; border-radius: 50%; overflow: hidden;
+  border: 2px solid rgba(255,230,0,0.3);
+  box-shadow: 0 0 30px rgba(255,230,0,0.2), inset 0 0 40px rgba(255,230,0,0.05);
   position: relative; background: var(--panel-bg); padding: 8px;
 }
 .cyber-banner-small::before {
-  content: ''; position: absolute;
-  top: -5px; left: -5px; right: -5px; bottom: -5px; border-radius: 50%;
-  background: linear-gradient(45deg, rgba(255, 230, 0, 0.1), transparent, rgba(255, 230, 0, 0.1));
+  content: ''; position: absolute; top:-5px;left:-5px;right:-5px;bottom:-5px; border-radius: 50%;
+  background: linear-gradient(45deg, rgba(255,230,0,0.1), transparent, rgba(255,230,0,0.1));
   animation: rotate 8s linear infinite; pointer-events: none;
 }
-.cyber-banner-small img {
-  display: block; width: 100%; height: auto; border-radius: 50%;
-  position: relative; z-index: 1;
-}
+.cyber-banner-small img { display: block; width: 100%; height: auto; border-radius: 50%; position: relative; z-index: 1; }
 .cyber-banner-small::after {
-  content: ''; position: absolute;
-  top: 8px; left: 8px; right: 8px; bottom: 8px; border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 230, 0, 0.1), transparent 45%, transparent 55%, rgba(255, 230, 0, 0.03));
+  content: ''; position: absolute; top:8px;left:8px;right:8px;bottom:8px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255,230,0,0.1), transparent 45%, transparent 55%, rgba(255,230,0,0.03));
   animation: shimmer 6s linear infinite; pointer-events: none; z-index: 2;
 }
 @keyframes shimmer { to { transform: rotate(360deg); } }
 @keyframes rotate { to { transform: rotate(360deg); } }
 
 .panel {
-  background: var(--panel-bg);
-  border: 1px solid var(--border-glow);
-  border-radius: 4px;
-  padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 0 20px rgba(255, 230, 0, 0.06), inset 0 0 30px rgba(255, 230, 0, 0.03);
+  background: var(--panel-bg); border: 1px solid var(--border-glow); border-radius: 4px;
+  padding: 20px; margin-bottom: 16px;
+  box-shadow: 0 0 20px rgba(255,230,0,0.06), inset 0 0 30px rgba(255,230,0,0.03);
 }
-.panel-title {
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--neon-yellow);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.panel-title::before { content: '>'; color: var(--neon-gold); font-weight: 700; }
 
 label {
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  display: block;
-  margin-bottom: 4px;
+  font-family: var(--font-display); font-size: 0.6rem; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 4px;
 }
 
 input {
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  padding: 10px 14px;
-  background: var(--input-bg);
-  border: 1px solid rgba(255, 230, 0, 0.25);
-  color: var(--text-primary);
-  border-radius: 3px;
-  outline: none;
-  transition: border-color 0.2s;
-  width: 100%;
-  letter-spacing: 0.5px;
+  font-family: var(--font-body); font-size: 1.1rem; padding: 10px 14px;
+  background: var(--input-bg); border: 1px solid rgba(255,230,0,0.25);
+  color: var(--text-primary); border-radius: 3px; outline: none;
+  transition: border-color 0.2s; width: 100%; letter-spacing: 0.5px;
 }
-input:focus {
-  border-color: var(--neon-yellow);
-  box-shadow: 0 0 15px rgba(255, 230, 0, 0.15);
-}
-input::placeholder {
-  color: var(--text-muted);
-  opacity: 0.4;
-}
+input:focus { border-color: var(--neon-yellow); box-shadow: 0 0 15px rgba(255,230,0,0.15); }
 
-.row { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; }
-.col { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+.col { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px; }
+
+.warning-box {
+  background: rgba(255,16,48,0.1); border: 1px solid var(--neon-red);
+  border-radius: 3px; padding: 12px 16px; margin-bottom: 12px;
+  color: var(--neon-red); font-family: var(--font-mono); font-size: 0.8rem;
+  display: none;
+}
+.warning-box.visible { display: block; }
 
 .result-panel { text-align: center; padding: 24px 20px; }
-
 .result-value {
-  font-family: var(--font-display);
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: var(--neon-yellow);
-  text-shadow: 0 0 30px rgba(255, 230, 0, 0.3);
+  font-family: var(--font-display); font-size: 2.5rem; font-weight: 900;
+  color: var(--neon-yellow); text-shadow: 0 0 30px rgba(255,230,0,0.3);
   margin: 4px 0;
 }
 .result-label {
-  font-family: var(--font-display);
-  font-size: 0.65rem;
-  letter-spacing: 2px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  margin-bottom: 4px;
+  font-family: var(--font-display); font-size: 0.65rem; letter-spacing: 2px;
+  color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;
 }
-
-.result-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-  margin-top: 16px;
-}
+.result-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px; }
+.result-grid.cols-2 { grid-template-columns: 1fr 1fr; }
 .result-item {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255, 230, 0, 0.1);
-  border-radius: 3px;
-  padding: 12px;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,230,0,0.1);
+  border-radius: 3px; padding: 12px;
 }
 .result-item .ri-value {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--neon-amber);
+  font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--neon-amber);
 }
 .result-item .ri-label {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 2px;
+  font-family: var(--font-mono); font-size: 0.55rem; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;
 }
 
 .table-wrap { overflow-x: auto; }
-.pass-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+table {
+  width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.75rem;
 }
-.pass-table th {
-  font-family: var(--font-display);
-  font-size: 0.5rem;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  padding: 6px 8px;
-  border-bottom: 1px solid rgba(255, 230, 0, 0.15);
-  text-align: right;
+th {
+  font-family: var(--font-display); font-size: 0.5rem; letter-spacing: 1px;
+  color: var(--text-muted); text-transform: uppercase; padding: 6px 8px;
+  border-bottom: 1px solid rgba(255,230,0,0.15); text-align: right;
 }
-.pass-table th:first-child { text-align: left; }
-.pass-table td {
-  padding: 6px 8px;
-  border-bottom: 1px solid rgba(255, 230, 0, 0.06);
-  text-align: right;
+th:first-child { text-align: left; }
+td {
+  padding: 6px 8px; border-bottom: 1px solid rgba(255,230,0,0.06); text-align: right;
 }
-.pass-table td:first-child { text-align: left; }
-.pass-table tr.active td {
-  color: var(--neon-yellow);
-  font-weight: 700;
-}
+td:first-child { text-align: left; }
+tr.active td { color: var(--neon-yellow); font-weight: 700; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--dark-bg); }
@@ -316,17 +205,16 @@ input::placeholder {
 </head>
 <body>
 <div class="lang-switch">
-  <a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
+  <a href="calendar.html" class="cal-btn" data-i18n="cal">📅 Calendar</a>
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
-<div class="app" id="app">
+<div class="app">
   <header class="header">
     <div style="text-align:left;margin-bottom:4px;">
       <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
     </div>
     <h1 class="flicker-glow-text">PASSPORTS</h1>
-    <div class="subtitle" data-i18n="subtitle">Migration Passport Calculator</div>
     <div class="glitch-line"></div>
   </header>
 
@@ -334,214 +222,214 @@ input::placeholder {
     <img src="logo.png" alt="PASSPORTS" loading="lazy" onerror="this.style.display='none'">
   </div>
 
-  <!-- INPUT -->
   <div class="panel">
-    <div class="panel-title" data-i18n="input_title">Input</div>
     <div class="row">
       <div class="col">
-        <label data-i18n="power_label">Total power</label>
+        <label data-i18n="power">Мощь</label>
         <input type="text" id="powerInput" inputmode="numeric" placeholder="10 000 000">
       </div>
     </div>
+    <div class="row" style="margin-top:12px;">
+      <div class="col">
+        <label data-i18n="hosp">Госпиталь</label>
+        <input type="number" id="hospCap" value="0" min="0">
+      </div>
+      <div class="col">
+        <label>T4</label>
+        <input type="number" id="t4Count" value="0" min="0">
+      </div>
+      <div class="col">
+        <label>T5</label>
+        <input type="number" id="t5Count" value="0" min="0">
+      </div>
+    </div>
   </div>
 
-  <!-- RESULT -->
+  <div class="warning-box" id="deathWarn">
+    <span id="deathText"></span>
+  </div>
+
   <div class="panel result-panel">
-    <div class="result-label" data-i18n="passports_label">Passports needed</div>
-    <div class="result-value" id="passportsResult">1</div>
+    <div class="result-label" data-i18n="need">Нужно паспортов</div>
+    <div class="result-value" id="passResult">1</div>
+
+    <div class="result-grid cols-2" id="hospGrid" style="display:none;">
+      <div class="result-item">
+        <div class="ri-value" id="hospPower">0</div>
+        <div class="ri-label" data-i18n="hospPow">Мощь в госпитале</div>
+      </div>
+      <div class="result-item">
+        <div class="ri-value" id="effPower">—</div>
+        <div class="ri-label" data-i18n="effPow">Мощь без госпиталя</div>
+      </div>
+    </div>
 
     <div class="result-grid">
       <div class="result-item">
-        <div class="ri-value" id="creditsResult">600 000</div>
-        <div class="ri-label" data-i18n="credits_label">Total credits</div>
+        <div class="ri-value" id="credResult">600 000</div>
+        <div class="ri-label" data-i18n="credits">Кредиты</div>
       </div>
       <div class="result-item">
         <div class="ri-value" id="timeResult">~15</div>
-        <div class="ri-label" data-i18n="time_label">Est. farming days</div>
+        <div class="ri-label" data-i18n="days">Дней</div>
       </div>
       <div class="result-item">
-        <div class="ri-value" id="costPerPass">600 000</div>
-        <div class="ri-label" data-i18n="cost_per_pass">Credits per passport</div>
+        <div class="ri-value" id="cppResult">600 000</div>
+        <div class="ri-label" data-i18n="cpp">Кредитов/пасс</div>
       </div>
     </div>
   </div>
 
-  <!-- TABLE -->
-  <div class="panel">
-    <div class="panel-title" data-i18n="table_title">Passport cost by power</div>
-    <div class="table-wrap">
-      <table class="pass-table">
-        <thead>
-          <tr>
-            <th data-i18n="power_th">Power</th>
-            <th data-i18n="passports_th">Passports</th>
-            <th data-i18n="credits_th">Credits</th>
-            <th data-i18n="farming_th">Farming days</th>
-          </tr>
-        </thead>
-        <tbody id="passTableBody"></tbody>
-      </table>
-    </div>
+  <div class="panel" style="padding:20px 20px 4px;">
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="powCol">Мощь</th>
+          <th data-i18n="passCol">Паспортов</th>
+          <th data-i18n="credCol">Кредитов</th>
+          <th data-i18n="dayCol">Дней</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
   </div>
 </div>
 
 <script>
-const CREDITS_PER_PASS = 600000;
-const DAYS_PER_PASS = 15;
-
-const THRESHOLDS = [
-  { max: 10, passes: 1 },
-  { max: 15, passes: 2 },
-  { max: 20, passes: 3 },
-  { max: 25, passes: 4 },
-  { max: 30, passes: 6 },
-  { max: 35, passes: 9 },
-  { max: 40, passes: 12 },
-  { max: 45, passes: 15 },
-  { max: 50, passes: 20 },
-  { max: 55, passes: 25 },
-  { max: 60, passes: 30 },
+const CPP = 600000;
+const DP = 15;
+const THR = [
+  {max:10,p:1},{max:15,p:2},{max:20,p:3},{max:25,p:4},{max:30,p:6},
+  {max:35,p:9},{max:40,p:12},{max:45,p:15},{max:50,p:20},{max:55,p:25},{max:60,p:30},
 ];
 
-function calcPassports(powerM) {
-  if (powerM <= 0) return 0;
-  for (const t of THRESHOLDS) {
-    if (powerM < t.max) return t.passes;
-  }
-  const base = 30;
-  const extra = Math.ceil((powerM - 60) / 5) * 5;
-  return base + extra;
+function pass(pm) {
+  if (pm <= 0) return 0;
+  for (const t of THR) { if (pm < t.max) return t.p; }
+  return 30 + Math.ceil((pm - 60) / 5) * 5;
 }
 
 const LANG = {
   ru: {
-    back: '← Главная',
-    subtitle: 'Калькулятор Паспортов Миграции',
-    page_title: 'Passport Calculator — Rise of Kingdoms',
-    input_title: 'Ввод данных',
-    power_label: 'Полная мощь',
-    passports_label: 'Нужно паспортов',
-    credits_label: 'Всего кредитов',
-    time_label: 'Дней фарма',
-    cost_per_pass: 'Кредитов / паспорт',
-    table_title: 'Стоимость паспортов по мощи',
-    power_th: 'Мощь', passports_th: 'Паспортов', credits_th: 'Кредитов', farming_th: 'Дней фарма',
-    calendar_btn: '📅 Календарь',
-    days: 'дн.',
+    back: '← Главная', title: 'Passport Calculator — Rise of Kingdoms',
+    power: 'Мощь', hosp: 'Госпиталь', need: 'Нужно паспортов',
+    credits: 'Кредиты', days: 'Дней', cpp: 'Кредитов/пасс',
+    hospPow: 'Мощь в госпитале', effPow: 'Мощь без госпиталя',
+    powCol: 'Мощь', passCol: 'Паспортов', credCol: 'Кредитов', dayCol: 'Дней',
+    cal: '📅 Calendar',
+    troops_die: 'погибнет',
   },
   en: {
-    back: '← Home',
-    subtitle: 'Migration Passport Calculator',
-    page_title: 'Passport Calculator — Rise of Kingdoms',
-    input_title: 'Input',
-    power_label: 'Total power',
-    passports_label: 'Passports needed',
-    credits_label: 'Total credits',
-    time_label: 'Farming days',
-    cost_per_pass: 'Credits / passport',
-    table_title: 'Passport cost by power',
-    power_th: 'Power', passports_th: 'Passports', credits_th: 'Credits', farming_th: 'Farming days',
-    calendar_btn: '📅 Calendar',
-    days: 'days',
+    back: '← Home', title: 'Passport Calculator — Rise of Kingdoms',
+    power: 'Power', hosp: 'Hospital', need: 'Passports needed',
+    credits: 'Credits', days: 'Days', cpp: 'Credits/pass',
+    hospPow: 'Hospital power', effPow: 'Power without hospital',
+    powCol: 'Power', passCol: 'Passports', credCol: 'Credits', dayCol: 'Days',
+    cal: '📅 Calendar',
+    troops_die: 'will die',
   },
 };
 
-const detected = navigator.language.startsWith('ru') ? 'ru' : 'en';
-let lang = localStorage.getItem('lang') || detected;
-
-function t(key) { return LANG[lang][key] || key; }
-
+const det = navigator.language.startsWith('ru') ? 'ru' : 'en';
+let lang = localStorage.getItem('lang') || det;
+function t(k) { return LANG[lang][k] || k; }
 function applyLang() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.dataset.i18n;
-    if (LANG[lang][key]) el.textContent = LANG[lang][key];
+    const k = el.dataset.i18n;
+    if (LANG[lang][k]) el.textContent = LANG[lang][k];
   });
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.lang === lang);
-  });
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
   document.documentElement.lang = lang;
 }
-
-document.querySelectorAll('.lang-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    lang = btn.dataset.lang;
-    localStorage.setItem('lang', lang);
-    applyLang();
-    calculate();
-  });
+document.querySelectorAll('.lang-btn').forEach(b => {
+  b.addEventListener('click', () => { lang = b.dataset.lang; localStorage.setItem('lang', lang); applyLang(); calc(); });
 });
-
 applyLang();
 
-function fmtNum(n) { return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+function fn(n) { return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
 
-function parseRaw(str) {
-  return parseInt(str.replace(/\s/g, '')) || 0;
-}
+const pi = document.getElementById('powerInput');
+pi.addEventListener('input', function() {
+  const r = this.value.replace(/\s/g, '').replace(/[^\d]/g, '');
+  this.value = r ? fn(parseInt(r)) : '';
+  calc();
+});
+pi.addEventListener('focus', function() { this.select(); });
 
-// Auto-format input with spaces
-const powerInput = document.getElementById('powerInput');
-
-powerInput.addEventListener('input', function() {
-  const raw = this.value.replace(/\s/g, '').replace(/[^\d]/g, '');
-  const num = parseInt(raw) || 0;
-  if (raw) {
-    this.value = fmtNum(num);
-  } else {
-    this.value = '';
-  }
-  calculate();
+['hospCap','t4Count','t5Count'].forEach(id => {
+  document.getElementById(id).addEventListener('input', calc);
 });
 
-// Select all on focus for easy replacement
-powerInput.addEventListener('focus', function() {
-  this.select();
-});
-
-function calculate() {
-  const raw = powerInput.value.replace(/\s/g, '');
+function calc() {
+  const raw = pi.value.replace(/\s/g, '');
   const powerRaw = parseFloat(raw) || 0;
-  const powerM = powerRaw / 1000000;
+  let pm = powerRaw / 1000000;
 
-  const passes = calcPassports(powerM);
-  const credits = passes * CREDITS_PER_PASS;
-  const days = passes * DAYS_PER_PASS;
+  const t4 = parseInt(document.getElementById('t4Count').value) || 0;
+  const t5 = parseInt(document.getElementById('t5Count').value) || 0;
+  const cap = parseInt(document.getElementById('hospCap').value) || 0;
+  const total = t4 + t5;
+  const hp = t4 * 4 + t5 * 10;
 
-  document.getElementById('passportsResult').textContent = passes;
-  document.getElementById('creditsResult').textContent = fmtNum(credits);
-  document.getElementById('timeResult').textContent = '~' + days;
-  document.getElementById('costPerPass').textContent = fmtNum(CREDITS_PER_PASS);
-
-  renderTable(powerM);
-}
-
-function renderTable(powerM) {
-  const tbody = document.getElementById('passTableBody');
-  let html = '';
-
-  for (const t of THRESHOLDS) {
-    const credits = t.passes * CREDITS_PER_PASS;
-    const days = t.passes * DAYS_PER_PASS;
-    const active = powerM < t.max ? 'active' : '';
-    const from = (t.max - 5) * 1000000;
-    const to = t.max * 1000000 - 1;
-    html += `<tr class="${active}"><td>${fmtNum(from)} – ${fmtNum(to)}</td><td>${t.passes}</td><td>${fmtNum(credits)}</td><td>~${days}</td></tr>`;
+  const dw = document.getElementById('deathWarn');
+  const dt = document.getElementById('deathText');
+  if (cap > 0 && total > cap) {
+    dt.textContent = (total - cap) + ' ' + (LANG[lang].troops_die || 'погибнет');
+    dw.classList.add('visible');
+  } else {
+    dw.classList.remove('visible');
   }
 
-  if (powerM >= 60) {
-    for (let m = 60; m <= Math.min(powerM + 5, 99999); m += 5) {
-      const passes = calcPassports(m);
-      const activeRow = powerM < m + 5 && powerM >= m ? 'active' : '';
-      const from = (m - 5) * 1000000;
-      const to = m * 1000000 - 1;
-      html += `<tr class="${activeRow}"><td>${fmtNum(from)} – ${fmtNum(to)}</td><td>${passes}</td><td>${fmtNum(passes * CREDITS_PER_PASS)}</td><td>~${passes * DAYS_PER_PASS}</td></tr>`;
+  const hg = document.getElementById('hospGrid');
+  if (total > 0) {
+    hg.style.display = 'grid';
+    document.getElementById('hospPower').textContent = fn(hp);
+    const eff = Math.max(0, powerRaw - hp);
+    pm = eff / 1000000;
+    document.getElementById('effPower').textContent = fn(eff);
+    if (pm <= 0) {
+      document.getElementById('passResult').textContent = '0';
+      document.getElementById('credResult').textContent = '0';
+      document.getElementById('timeResult').textContent = '~0';
+      document.getElementById('cppResult').textContent = fn(CPP);
+      render(0);
+      return;
+    }
+  } else {
+    hg.style.display = 'none';
+  }
+
+  const p = pass(pm);
+  document.getElementById('passResult').textContent = p;
+  document.getElementById('credResult').textContent = fn(p * CPP);
+  document.getElementById('timeResult').textContent = '~' + (p * DP);
+  document.getElementById('cppResult').textContent = fn(CPP);
+  render(pm);
+}
+
+function render(pm) {
+  const tb = document.getElementById('tableBody');
+  let h = '';
+  for (const t of THR) {
+    const c = t.p * CPP, d = t.p * DP;
+    const a = pm < t.max ? 'active' : '';
+    h += `<tr class="${a}"><td>${fn((t.max-5)*1000000)} – ${fn(t.max*1000000-1)}</td><td>${t.p}</td><td>${fn(c)}</td><td>~${d}</td></tr>`;
+  }
+  if (pm >= 60) {
+    for (let m = 65; m <= Math.min(pm + 5, 99999); m += 5) {
+      if (m === 65) {
+        const a = pm < 65 ? 'active' : '';
+        h += `<tr class="${a}"><td>${fn(60000000)} – ${fn(64999999)}</td><td>30</td><td>${fn(30*CPP)}</td><td>~${30*DP}</td></tr>`;
+      }
+      const pp = pass(m);
+      const a = pm < m + 5 && pm >= m ? 'active' : '';
+      h += `<tr class="${a}"><td>${fn((m-5)*1000000)} – ${fn(m*1000000-1)}</td><td>${pp}</td><td>${fn(pp*CPP)}</td><td>~${pp*DP}</td></tr>`;
     }
   }
-
-  tbody.innerHTML = html;
+  tb.innerHTML = h;
 }
 
-calculate();
+calc();
 </script>
 </body>
 </html>
