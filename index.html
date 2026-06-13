@@ -198,6 +198,10 @@ body::after {
 .card-calendar { border-color: rgba(204, 102, 255, 0.3); }
 .card-calendar:hover { border-color: #cc66ff !important; }
 
+.card-vip .card-title { color: var(--neon-gold); }
+.card-vip { border-color: rgba(255, 221, 0, 0.3); }
+.card-vip:hover { border-color: var(--neon-gold) !important; }
+
 .footer {
   margin-top: 40px;
   font-family: var(--font-mono);
@@ -410,6 +414,14 @@ body::after {
         <div class="tag" data-i18n="card5_tag">MGE · WoF · MTG · Ark</div>
       </a>
     </div>
+    <div class="card-wrap">
+      <a class="card card-vip" href="vipcalc.html">
+        <div class="card-icon">👑</div>
+        <div class="card-title" data-i18n="card6_title">VIP Calculator</div>
+        <div class="card-desc" data-i18n="card6_desc">Расчёт уровня VIP и очков, необходимых до целевого уровня (1–18)</div>
+        <div class="tag" data-i18n="card6_tag">VIP 1–18 · Прогресс · Очки</div>
+      </a>
+    </div>
   </div>
 
   <div class="footer">
@@ -438,6 +450,9 @@ const LANG = {
     card5_title: 'Events Calendar',
     card5_desc: 'Календарь событий Rise of Kingdoms с паттернами MGE, WoF, MTG и других ивентов',
     card5_tag: 'MGE · WoF · MTG · Ark',
+    card6_title: 'VIP Calculator',
+    card6_desc: 'Расчёт уровня VIP и очков, необходимых до целевого уровня (1–18)',
+    card6_tag: 'VIP 1–18 · Прогресс · Очки',
     calendar_btn: '📅 Календарь',
   },
   en: {
@@ -457,6 +472,9 @@ const LANG = {
     card5_title: 'Events Calendar',
     card5_desc: 'Rise of Kingdoms events calendar with MGE, WoF, MTG and other event patterns',
     card5_tag: 'MGE · WoF · MTG · Ark',
+    card6_title: 'VIP Calculator',
+    card6_desc: 'VIP level calculation and points needed to reach target (1–18)',
+    card6_tag: 'VIP 1–18 · Progress · Points',
     calendar_btn: '📅 Calendar',
   },
 };
