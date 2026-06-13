@@ -194,10 +194,6 @@ body::after {
 .card-training { border-color: rgba(0, 240, 255, 0.3); }
 .card-training:hover { border-color: var(--neon-cyan) !important; }
 
-.card-calendar .card-title { color: #cc66ff; }
-.card-calendar { border-color: rgba(204, 102, 255, 0.3); }
-.card-calendar:hover { border-color: #cc66ff !important; }
-
 .footer {
   margin-top: 40px;
   font-family: var(--font-mono);
@@ -239,7 +235,7 @@ body::after {
 /* LANG SWITCHER */
 .lang-switch {
   position: fixed;
-  top: 2px; right: 8px;
+  top: 4px; right: 8px;
   display: flex;
   gap: 2px;
   z-index: 20;
@@ -264,29 +260,6 @@ body::after {
   border-color: var(--neon-yellow);
 }
 .lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
-
-.cal-btn {
-  position: fixed;
-  top: 4px; right: 68px;
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  padding: 3px 8px;
-  background: var(--input-bg);
-  border: 1px solid rgba(255, 230, 0, 0.2);
-  color: var(--text-muted);
-  cursor: pointer;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border-radius: 3px;
-  z-index: 20;
-  transition: all 0.2s;
-}
-.cal-btn:hover {
-  border-color: var(--neon-yellow);
-  color: var(--neon-yellow);
-  box-shadow: 0 0 15px rgba(255, 230, 0, 0.1);
-}
 
 /* CYBER BANNER (Small Logo) */
 .cyber-banner-small {
@@ -344,9 +317,6 @@ body::after {
   .header h1 { font-size: 1.6rem; letter-spacing: 3px; }
   .cards { grid-template-columns: 1fr; }
   .card { padding: 20px 16px; }
-  .cal-btn { right: 56px; font-size: 0.5rem; padding: 2px 5px; }
-  .lang-btn { font-size: 0.5rem; padding: 2px 5px; }
-  .app { padding: 10px; }
 }
 </style>
 </head>
@@ -355,7 +325,6 @@ body::after {
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
-<a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
 <div class="app">
   <header class="header flicker">
     <h1 class="flicker-glow-text">ADAMANTIZATOR</h1>
@@ -401,14 +370,6 @@ body::after {
         <div class="tag" data-i18n="card4_tag">T4 · T5 · Ресурсы · Время</div>
       </a>
     </div>
-    <div class="card-wrap">
-      <a class="card card-calendar" href="calendar.html">
-        <div class="card-icon">📅</div>
-        <div class="card-title" data-i18n="card5_title">Events Calendar</div>
-        <div class="card-desc" data-i18n="card5_desc">Календарь событий Rise of Kingdoms с паттернами MGE, WoF, MTG и других ивентов</div>
-        <div class="tag" data-i18n="card5_tag">MGE · WoF · MTG · Ark</div>
-      </a>
-    </div>
   </div>
 
   <div class="footer">
@@ -434,10 +395,6 @@ const LANG = {
     card4_title: 'Training Calculator',
     card4_desc: 'Расчёт стоимости и времени обучения T4 / T5, переобучение T4→T5',
     card4_tag: 'T4 · T5 · Ресурсы · Время',
-    card5_title: 'Events Calendar',
-    card5_desc: 'Календарь событий Rise of Kingdoms с паттернами MGE, WoF, MTG и других ивентов',
-    card5_tag: 'MGE · WoF · MTG · Ark',
-    calendar_btn: '📅 Календарь',
   },
   en: {
     subtitle: 'Tools for Rise of Kingdoms', page_title: 'Adamantizator — Home',
@@ -453,10 +410,6 @@ const LANG = {
     card4_title: 'Training Calculator',
     card4_desc: 'T4 / T5 training cost and time, T4→T5 retraining',
     card4_tag: 'T4 · T5 · Resources · Time',
-    card5_title: 'Events Calendar',
-    card5_desc: 'Rise of Kingdoms events calendar with MGE, WoF, MTG and other event patterns',
-    card5_tag: 'MGE · WoF · MTG · Ark',
-    calendar_btn: '📅 Calendar',
   },
 };
 
