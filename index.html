@@ -214,6 +214,10 @@ body::after {
 .card-covenant { border-color: rgba(255, 179, 0, 0.3); }
 .card-covenant:hover { border-color: var(--neon-amber) !important; }
 
+.card-equip .card-title { color: #00ffcc; }
+.card-equip { border-color: rgba(0, 255, 204, 0.3); }
+.card-equip:hover { border-color: #00ffcc !important; }
+
 .footer {
   margin-top: 40px;
   font-family: var(--font-mono);
@@ -462,6 +466,14 @@ body::after {
         <div class="tag" data-i18n="card9_tag">Книги · Уровни · Прогрессия</div>
       </a>
     </div>
+    <div class="card-wrap">
+      <a class="card card-equip" href="equips.html">
+        <div class="card-icon">🛡️</div>
+        <div class="card-title" data-i18n="card10_title">Equipment</div>
+        <div class="card-desc" data-i18n="card10_desc">Equipment builder & set viewer for commanders</div>
+        <div class="tag" data-i18n="card10_tag">Builder · Sets · Search</div>
+      </a>
+    </div>
   </div>
 
   <div class="footer">
@@ -502,6 +514,9 @@ const LANG = {
     card9_title: 'Книги Соглашений',
     card9_desc: 'Расчёт книг соглашений для Центра Альянса (ур. 1–25)',
     card9_tag: 'Книги · Уровни · Прогрессия',
+    card10_title: 'Экипировка',
+    card10_desc: 'Выбор экипировки для командиров: билды, сеты, статы',
+    card10_tag: 'Конструктор · Сеты · Поиск',
     calendar_btn: '📅 Календарь',
   },
   en: {
@@ -533,6 +548,9 @@ const LANG = {
     card9_title: 'Covenant',
     card9_desc: 'Book of Covenant calculator for Alliance Center (Lv. 1–25)',
     card9_tag: 'Books · Levels · Progression',
+    card10_title: 'Equipment',
+    card10_desc: 'Equipment builder & set viewer for commanders',
+    card10_tag: 'Builder · Sets · Search',
     calendar_btn: '📅 Calendar',
   },
 };
