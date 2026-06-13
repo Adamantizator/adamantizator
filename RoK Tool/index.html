@@ -194,6 +194,10 @@ body::after {
 .card-training { border-color: rgba(0, 240, 255, 0.3); }
 .card-training:hover { border-color: var(--neon-cyan) !important; }
 
+.card-equip .card-title { color: #00ffcc; }
+.card-equip { border-color: rgba(0, 255, 204, 0.3); }
+.card-equip:hover { border-color: #00ffcc !important; }
+
 .footer {
   margin-top: 40px;
   font-family: var(--font-mono);
@@ -370,6 +374,14 @@ body::after {
         <div class="tag" data-i18n="card4_tag">T4 · T5 · Ресурсы · Время</div>
       </a>
     </div>
+    <div class="card-wrap">
+      <a class="card card-equip" href="equips.html">
+        <div class="card-icon">🛡️</div>
+        <div class="card-title" data-i18n="card5_title">Equipment</div>
+        <div class="card-desc" data-i18n="card5_desc">Equipment builder & set viewer for commanders</div>
+        <div class="tag" data-i18n="card5_tag">Builder · Sets · Search</div>
+      </a>
+    </div>
   </div>
 
   <div class="footer">
@@ -395,6 +407,9 @@ const LANG = {
     card4_title: 'Training Calculator',
     card4_desc: 'Расчёт стоимости и времени обучения T4 / T5, переобучение T4→T5',
     card4_tag: 'T4 · T5 · Ресурсы · Время',
+    card5_title: 'Equipment',
+    card5_desc: 'Выбор экипировки для командиров: билды, сеты, статы',
+    card5_tag: 'Конструктор · Сеты · Поиск',
   },
   en: {
     subtitle: 'Tools for Rise of Kingdoms', page_title: 'Adamantizator — Home',
@@ -410,6 +425,9 @@ const LANG = {
     card4_title: 'Training Calculator',
     card4_desc: 'T4 / T5 training cost and time, T4→T5 retraining',
     card4_tag: 'T4 · T5 · Resources · Time',
+    card5_title: 'Equipment',
+    card5_desc: 'Equipment builder & set viewer for commanders',
+    card5_tag: 'Builder · Sets · Search',
   },
 };
 
