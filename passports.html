@@ -528,12 +528,8 @@ function renderTable(powerM) {
     html += `<tr class="${active}"><td>${fmtNum(from)} – ${fmtNum(to)}</td><td>${t.passes}</td><td>${fmtNum(credits)}</td><td>~${days}</td></tr>`;
   }
 
-  const pass60 = 30;
-  const active60 = powerM >= 60 && powerM < 65 ? 'active' : '';
-  html += `<tr class="${active60}"><td>${fmtNum(55000000)} – ${fmtNum(60000000)}</td><td>${pass60}</td><td>${fmtNum(pass60 * CREDITS_PER_PASS)}</td><td>~${pass60 * DAYS_PER_PASS}</td></tr>`;
-
-  if (powerM >= 65) {
-    for (let m = 65; m <= Math.min(powerM + 5, 99999); m += 5) {
+  if (powerM >= 60) {
+    for (let m = 60; m <= Math.min(powerM + 5, 99999); m += 5) {
       const passes = calcPassports(m);
       const activeRow = powerM < m + 5 && powerM >= m ? 'active' : '';
       const from = (m - 5) * 1000000;
