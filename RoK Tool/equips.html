@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="page_title">Экипировка — Rise of Kingdoms</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--neon-yellow:#ffe600;--neon-gold:#ffdd00;--neon-amber:#ffb300;--neon-red:#ff1030;--neon-green:#00ff88;--dark-bg:#0a0a0f;--panel-bg:#12121a;--input-bg:#0d0d1a;--border-glow:rgba(255,230,0,0.3);--text-primary:#fff8dc;--text-dim:#e0d8b0;--text-muted:#c0b080;--font-display:'Orbitron',monospace;--font-body:'Rajdhani',sans-serif;--font-mono:'Fira Code',monospace}
+body{background:var(--dark-bg);color:var(--text-primary);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(rgba(255,230,0,0.05)1px,transparent 1px),linear-gradient(90deg,rgba(255,230,0,0.05)1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12)2px,rgba(0,0,0,0.12)4px);pointer-events:none;z-index:1}
+.app{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:20px}
+.header{text-align:center;padding:30px 0 20px}
+.header h1{font-family:var(--font-display);font-size:2rem;font-weight:900;text-transform:uppercase;letter-spacing:4px;background:linear-gradient(135deg,var(--neon-yellow),var(--neon-amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 30px rgba(255,230,0,0.4))}
+.header .subtitle{font-family:var(--font-display);font-size:0.7rem;letter-spacing:6px;color:var(--text-dim);margin-top:6px;text-transform:uppercase}
+.glitch-line{height:2px;margin:12px 0 0;background:linear-gradient(90deg,transparent,var(--neon-yellow),var(--neon-gold),transparent);box-shadow:0 0 20px rgba(255,230,0,0.4)}
+.flicker-glow-text{animation:flicker-glow-text 4s infinite}
+@keyframes flicker-glow-text{0%,82%{-webkit-text-stroke:0 transparent}86%{-webkit-text-stroke:1.5px #ff1030}90%{-webkit-text-stroke:0 transparent}94%{-webkit-text-stroke:1.5px #ff1030}98%{-webkit-text-stroke:0 transparent}100%{-webkit-text-stroke:0 transparent}}
+.lang-switch{position:fixed;top:2px;right:8px;display:flex;gap:2px;z-index:10}
+.lang-btn{font-family:var(--font-mono);font-size:0.6rem;padding:3px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.2);color:var(--text-muted);cursor:pointer;transition:all 0.2s;text-transform:uppercase;letter-spacing:1px}
+.lang-btn:first-child{border-radius:3px 0 0 3px}
+.lang-btn:last-child{border-radius:0 3px 3px 0}
+.lang-btn.active{background:var(--neon-yellow);color:#000;border-color:var(--neon-yellow)}
+.lang-btn:hover:not(.active){border-color:var(--neon-yellow)}
+.cal-btn{font-family:var(--font-display);font-size:0.6rem;padding:3px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.2);color:var(--text-muted);cursor:pointer;text-decoration:none;text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;margin-right:2px}
+.cal-btn:hover{border-color:var(--neon-yellow);color:var(--neon-yellow)}
+.cyber-banner-small{width:100%;max-width:120px;margin:0 auto 20px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,230,0,0.3);box-shadow:0 0 30px rgba(255,230,0,0.2),inset 0 0 40px rgba(255,230,0,0.05);position:relative;background:var(--panel-bg);padding:8px}
+.cyber-banner-small::before{content:'';position:absolute;top:-5px;left:-5px;right:-5px;bottom:-5px;border-radius:50%;background:linear-gradient(45deg,rgba(255,230,0,0.1),transparent,rgba(255,230,0,0.1));animation:rotate 8s linear infinite;pointer-events:none}
+.cyber-banner-small img{display:block;width:100%;height:auto;border-radius:50%;position:relative;z-index:1}
+.cyber-banner-small::after{content:'';position:absolute;top:8px;left:8px;right:8px;bottom:8px;border-radius:50%;background:linear-gradient(135deg,rgba(255,230,0,0.1),transparent 45%,transparent 55%,rgba(255,230,0,0.03));animation:shimmer 6s linear infinite;pointer-events:none;z-index:2}
+@keyframes shimmer{to{transform:rotate(360deg)}}@keyframes rotate{to{transform:rotate(360deg)}}
+.tabs{display:flex;gap:4px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.tab-btn{font-family:var(--font-display);font-size:0.7rem;padding:8px 18px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.15);color:var(--text-muted);cursor:pointer;text-transform:uppercase;letter-spacing:2px;transition:all 0.2s}
+.tab-btn:first-child{border-radius:4px 0 0 4px}
+.tab-btn:last-child{border-radius:0 4px 4px 0}
+.tab-btn.active{background:var(--neon-yellow);color:#000;border-color:var(--neon-yellow);box-shadow:0 0 20px rgba(255,230,0,0.25)}
+.tab-btn:hover:not(.active){border-color:var(--neon-yellow);color:var(--neon-yellow)}
+.tab-content{display:none}.tab-content.active{display:block}
+.sets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+.section-title{font-family:var(--font-display);font-size:0.85rem;letter-spacing:3px;text-transform:uppercase;color:var(--neon-amber);margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;width:100%}
+.section-subtitle{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-bottom:12px;letter-spacing:1px}
+.set-grid-wrap{background:rgba(255,230,0,0.03);border:1px solid rgba(255,230,0,0.08);border-radius:4px;padding:14px;margin-bottom:10px;display:flex;justify-content:center;min-height:290px}
+@media(max-width:1100px){.sets-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.header{padding-top:36px}.header h1{font-size:1.4rem;letter-spacing:2px}.app{padding:10px}.tab-btn{font-size:0.6rem;padding:6px 12px}.sets-grid{grid-template-columns:1fr}}
+.placeholder-msg{text-align:center;padding:60px 20px;font-family:var(--font-body);font-size:1.2rem;color:var(--text-muted);letter-spacing:2px}
+.placeholder-msg .tag{display:inline-block;font-family:var(--font-mono);font-size:0.65rem;padding:4px 12px;border:1px solid var(--border-glow);border-radius:2px;color:var(--text-dim);margin-top:12px}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--dark-bg)}
+::-webkit-scrollbar-thumb{background:var(--neon-yellow);border-radius:3px}
+.stats-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.2);color:var(--text-muted);cursor:pointer;font-size:0.6rem;border-radius:2px;vertical-align:middle;margin-left:6px;transition:all 0.2s;font-family:var(--font-mono)}
+.stats-btn:hover{background:var(--neon-yellow);color:#000;border-color:var(--neon-yellow)}
+.stats-tooltip{position:fixed;z-index:100;background:var(--panel-bg);border:1px solid var(--neon-yellow);border-radius:4px;padding:10px 14px;min-width:160px;box-shadow:0 0 30px rgba(255,230,0,0.2);pointer-events:none;font-family:var(--font-mono);font-size:0.6rem;line-height:1.8;display:none}
+.stats-tooltip .stat-row{display:flex;justify-content:space-between;gap:16px}
+.stats-tooltip .stat-row .val{color:var(--neon-green)}
+.stats-tooltip .id-title{font-family:var(--font-display);font-size:0.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--neon-amber);margin-bottom:4px}
+.stats-tooltip .id-name{font-size:0.65rem;color:var(--neon-yellow);margin-bottom:4px}
+.stats-tooltip .id-stat{display:flex;justify-content:space-between;gap:12px;line-height:1.6}
+.stats-tooltip .id-stat .val{margin-left:auto}
+.stats-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:center;justify-content:center}
+.stats-modal{background:var(--panel-bg);border:1px solid var(--neon-yellow);border-radius:6px;padding:24px 28px;min-width:260px;max-width:340px;box-shadow:0 0 40px rgba(255,230,0,0.25);position:relative}
+.stats-modal-close{position:absolute;top:6px;right:10px;background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;font-family:var(--font-mono)}
+.stats-modal-close:hover{color:var(--neon-yellow)}
+.stats-modal-title{font-family:var(--font-display);font-size:0.7rem;letter-spacing:3px;color:var(--neon-yellow);margin-bottom:10px}
+.stats-modal .stat-row{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:0.65rem;line-height:2;border-bottom:1px solid rgba(255,230,0,0.08)}
+.stats-modal .stat-row .val{color:var(--neon-green)}
+.mode-tabs{display:flex;gap:0;justify-content:center;margin:4px 0 16px}
+.mode-btn{font-family:var(--font-display);font-size:0.65rem;padding:5px 16px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.12);color:var(--text-muted);cursor:pointer;text-transform:uppercase;letter-spacing:2px;transition:all 0.2s}
+.mode-btn:first-child{border-radius:3px 0 0 3px}
+.mode-btn:last-child{border-radius:0 3px 3px 0}
+.mode-btn.active{background:var(--neon-yellow);color:#000;border-color:var(--neon-yellow);box-shadow:0 0 12px rgba(255,230,0,0.2)}
+.mode-btn:hover:not(.active){border-color:var(--neon-yellow);color:var(--neon-yellow)}
+#builderWrap{display:none;padding:4px 0}
+#builderWrap.active{display:block}
+.b-top{display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.preset-label{font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);letter-spacing:1px;white-space:nowrap}
+.preset-btn{font-family:var(--font-mono);font-size:0.55rem;padding:3px 10px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.12);color:var(--text-dim);cursor:pointer;transition:all 0.2s;border-radius:2px}
+.preset-btn:hover{background:rgba(255,230,0,0.1);border-color:var(--neon-yellow);color:var(--neon-yellow)}
+.preset-btn.clear{border-color:rgba(255,16,48,0.3);color:var(--neon-red)}
+.preset-btn.clear:hover{background:rgba(255,16,48,0.1);border-color:var(--neon-red)}
+@media(max-width:768px){.mode-tabs{margin-top:20px}}
+.r-Legendary{border-color:#ff8c00!important;box-shadow:0 0 8px rgba(255,140,0,0.2)!important}
+.r-Epic{border-color:#a855f7!important;box-shadow:0 0 8px rgba(168,85,247,0.2)!important}
+.r-Elite{border-color:#3b82f6!important;box-shadow:0 0 8px rgba(59,130,246,0.2)!important}
+.r-Advanced{border-color:#22c55e!important;box-shadow:0 0 8px rgba(34,197,94,0.2)!important}
+.r-Normal{border-color:#6b7280!important}
+.b-slot-grid{display:grid;grid-template-columns:84px 84px 84px;gap:2px;justify-content:center;margin:0 auto 16px;max-width:260px}
+.b-mid{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;justify-items:stretch}
+.b-slot-cell{background:var(--panel-bg);border:1px solid rgba(255,230,0,0.1);border-radius:4px;padding:4px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.b-slot-cell:hover{border-color:var(--neon-yellow);box-shadow:0 0 12px rgba(255,230,0,0.1)}
+.b-slot-cell.selected{border-color:var(--neon-yellow);box-shadow:0 0 16px rgba(255,230,0,0.3);background:rgba(255,230,0,0.06)}
+.b-item-detail{background:var(--panel-bg);border:1px solid rgba(255,230,0,0.08);border-radius:4px;padding:8px;min-width:180px;min-height:40px;font-family:var(--font-mono);font-size:0.55rem;justify-self:start;align-self:start}
+.b-item-detail:empty{padding:8px;min-height:40px;display:flex;align-items:center;justify-content:center}
+.b-item-detail:empty::after{content:attr(data-placeholder);color:var(--text-muted);font-size:0.5rem}
+.b-item-detail .id-title{font-family:var(--font-display);font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--neon-amber);margin-bottom:6px;white-space:nowrap}
+.b-item-detail .id-name{font-size:0.65rem;color:var(--neon-yellow);margin-bottom:6px;word-break:break-word}
+.b-item-detail .id-stat{color:var(--text-dim);padding:1px 0;display:flex;justify-content:space-between;gap:6px}
+.b-item-detail .id-stat .val{margin-left:auto}
+.b-stats{background:var(--panel-bg);border:1px solid rgba(255,230,0,0.08);border-radius:4px;padding:8px;min-width:160px;font-family:var(--font-mono);font-size:0.55rem;justify-self:end;align-self:start}
+.b-stats .section-title{margin-bottom:6px;white-space:nowrap}
+.stat-inf{color:#3b82f6!important}
+.stat-cav{color:#22c55e!important}
+.stat-arch{color:#ef4444!important}
+.stat-march{color:#f97316!important}
+.stat-barb{color:#eab308!important}
+.stat-siege{color:#a855f7!important}
+.b-slot-cell .sc-icon{width:36px;height:36px;background:var(--input-bg);border-radius:3px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.b-slot-cell .sc-icon img{width:100%;height:100%;object-fit:contain}
+.b-slot-cell .sc-label{font-family:var(--font-mono);font-size:0.5rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px}
+.b-slot-cell .sc-name{font-family:var(--font-mono);font-size:0.4rem;color:var(--text-dim);line-height:1.2;word-break:break-word;max-width:70px}
+.set-grid-wrap .b-slot-cell{height:80px}
+.b-slot-cell .sc-remove{position:absolute;top:1px;right:3px;background:none;border:none;color:var(--neon-red);cursor:pointer;font-size:0.7rem;opacity:0;transition:opacity 0.2s;font-family:var(--font-mono);line-height:1}
+.b-slot-cell:hover .sc-remove{opacity:0.5}.b-slot-cell .sc-remove:hover{opacity:1}
+.b-item-list{background:var(--panel-bg);border:1px solid rgba(255,230,0,0.08);border-radius:4px;padding:10px}
+.b-item-list .il-header{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+.il-search{flex:1;min-width:120px;padding:5px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.15);color:var(--text-primary);font-family:var(--font-mono);font-size:0.6rem;border-radius:3px;outline:none}
+.il-search:focus{border-color:var(--neon-yellow)}
+.il-filters{display:flex;gap:4px;flex-wrap:wrap}
+.il-filter{font-family:var(--font-mono);font-size:0.5rem;padding:3px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.1);color:var(--text-muted);cursor:pointer;border-radius:2px;transition:all 0.15s}
+.il-filter:hover{border-color:var(--neon-yellow);color:var(--neon-yellow)}
+.il-filter.on{background:var(--neon-yellow);color:#000;border-color:var(--neon-yellow)}
+.il-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:5px;max-height:400px;overflow-y:auto}
+.il-item{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.06);border-radius:3px;cursor:pointer;transition:all 0.15s;min-height:46px}
+.il-item:hover{border-color:var(--neon-yellow);background:rgba(255,230,0,0.04)}
+.il-item.eq{border-color:var(--neon-yellow)!important;background:rgba(255,230,0,0.08)}
+.il-item img{width:36px;height:36px;object-fit:contain;flex-shrink:0}
+.il-item .il-name{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim);line-height:1.2;word-break:break-word;flex:1}
+.il-item .il-tag{font-size:0.55rem;padding:2px 5px;border-radius:2px;color:var(--text-muted);flex-shrink:0}
+.il-sep{color:var(--text-muted);font-family:var(--font-mono);font-size:0.5rem;padding:0 2px}
+@media(max-width:800px){.b-mid{grid-template-columns:1fr;justify-items:center}.b-mid>*{justify-self:center!important}}
+@media(max-width:600px){.b-slot-grid{grid-template-columns:74px 74px 74px;max-width:226px}.il-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}.il-item{min-height:40px}.il-item img{width:30px;height:30px}}
+.hint-ru{text-align:center;font-family:var(--font-mono);font-size:0.45rem;color:var(--text-muted);padding:16px 10px 4px;opacity:0.6;letter-spacing:0.5px}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <button class="lang-btn" data-lang="ru">RU</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
+<div class="app">
+  <header class="header">
+    <div style="text-align:left;margin-bottom:4px">
+      <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px" data-i18n="back_home">← Главная</a>
+    </div>
+    <h1 class="flicker-glow-text" data-i18n="h1">ЭКИПИРОВКА</h1>
+    <div class="subtitle" data-i18n="subtitle">Equipment Builds</div>
+    <div class="glitch-line"></div>
+  </header>
+  <div class="cyber-banner-small flicker-glow"><img src="logo.png" alt="EQUIP" loading="lazy" onerror="this.style.display='none'"></div>
+
+  <div class="tabs" id="troopTabs"></div>
+  <div class="mode-tabs" id="modeTabs">
+    <button class="mode-btn active" data-mode="sets" data-i18n="mode_sets">Сеты</button>
+    <button class="mode-btn" data-mode="builder" data-i18n="mode_builder">Конструктор</button>
+  </div>
+  <div id="troopContent"></div>
+<div id="builderWrap">
+  <div class="b-top" id="presetBar"></div>
+  <div class="b-mid">
+    <div class="b-stats" id="builderStats"></div>
+    <div class="b-slot-grid" id="slotGrid"></div>
+    <div class="b-item-detail" id="builderItemDetail"></div>
+  </div>
+  <div class="b-item-list">
+  <div class="il-header">
+    <input class="il-search" id="ilSearch" type="text" placeholder="Search...">
+    <div class="il-filters" id="ilFilters"></div>
+  </div>
+  <div class="il-grid" id="ilGrid"></div>
+</div>
+</div>
+<div class="hint-ru" data-i18n="disclaimer"></div>
+</div>
+
+<div class="stats-modal-overlay" id="statsModal">
+  <div class="stats-modal">
+    <button class="stats-modal-close" id="statsModalClose">&times;</button>
+    <div class="stats-modal-title" id="statsModalTitle"></div>
+    <div id="statsModalBody"></div>
+  </div>
+</div>
+<div class="stats-tooltip" id="statsTooltip"></div>
+
+<script>
+const S = (s,n) => ({s,n,i:''});
+const EQUIP = {
+  infantry: {
+    label: {ru:'Пехота',en:'Infantry'},
+    sets:[
+      {id:'early',label:{ru:'Ранняя игра',en:'Earlygame'},subtitle:{ru:'',en:''},slots:[S('helmet','Windswept War Helm'),S('chest','Windswept Breastplate'),S('weapon','Gatekeepers Shield'),S('gloves',"Calvin's Hand"),S('pants','Sentry Breeches'),S('acc1',''),S('acc2',''),S('boots','The Scarlet Hounds')]},
+      {id:'mid',label:{ru:'Середина игры',en:'Midgame'},subtitle:{ru:'',en:''},slots:[S('helmet',"Witch's Lineage"),S('chest',"Quinn's Soul"),S('weapon','Sakura Fubuki'),S('gloves',"Seth's Brutality"),S('pants',"Karuak's Humility"),S('acc1',''),S('acc2',''),S('boots','Frost Treads')]},
+      {id:'end1',label:{ru:'Эндгейм Сет 1',en:'Endgame Set 1'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Hope Cloak'),S('weapon','Shield of the Eternal Empire'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Eternal Night'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
+      {id:'end2',label:{ru:'Эндгейм Сет 2',en:'Endgame Set 2'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Helm of the Conqueror'),S('chest','Plate of the Eternal Empire'),S('weapon','Hammer of the Sun and Moon'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Greaves of the Eternal Empire'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
+      {id:'end3',label:{ru:'Эндгейм Сет 3',en:'Endgame Set 3'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Hope Cloak'),S('weapon','Shield of the Eternal Empire'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]},
+      {id:'end4',label:{ru:'Эндгейм Сет 4',en:'Endgame Set 4'},subtitle:{ru:'(Рейд/Гарнизон)',en:'(Rally/Garrison)'},slots:[S('helmet','Helm of the Conqueror'),S('chest','Hope Cloak'),S('weapon','Hammer of the Sun and Moon'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Eternal Night'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
+      {id:'end5',label:{ru:'Эндгейм Сет 5',en:'Endgame Set 5'},subtitle:{ru:'(Рейд/Гарнизон)',en:'(Rally/Garrison)'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Plate of the Eternal Empire'),S('weapon','Shield of the Eternal Empire'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Greaves of the Eternal Empire'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
+      {id:'end6',label:{ru:'Эндгейм Сет 6',en:'Endgame Set 6'},subtitle:{ru:'(Рейд/Гарнизон)',en:'(Rally/Garrison)'},slots:[S('helmet','Helm of the Conqueror'),S('chest','Hope Cloak'),S('weapon','Hammer of the Sun and Moon'),S('gloves','Sacred Grips'),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]}
+    ]
+  },
+  cavalry: {
+    label:{ru:'Кавалерия',en:'Cavalry'},
+    sets:[
+      {id:'early',label:{ru:'Ранняя игра',en:'Earlygame'},subtitle:{ru:'',en:''},slots:[S('helmet','Windswept War Helm'),S('chest','Windswept Breastplate'),S('weapon','Vanguard Halberd'),S('gloves','Windswept Bracers'),S('pants','Vanguard Greaves'),S('acc1',''),S('acc2',''),S('boots','Windswept Boots')]},
+      {id:'mid',label:{ru:'Середина игры',en:'Midgame'},subtitle:{ru:'',en:''},slots:[S('helmet','Abyssal Visage'),S('chest',"Dark Lord's Blessing"),S('weapon','Heart of the Saint'),S('gloves',"Iset's Sufferance"),S('pants','Gladiator'),S('acc1',''),S('acc2',''),S('boots','Cloud Racers')]},
+      {id:'end1',label:{ru:'Эндгейм Сет 1',en:'Endgame Set 1'},subtitle:{ru:'(Поле/Рейд/Гарнизон)',en:'(Open Field/Rally/Garrison)'},slots:[S('helmet','Pride of the Khan'),S('chest','Heavy Armor of the Hellish Wasteland'),S('weapon','Sacred Dominion'),S('gloves',"Navar's Control"),S('pants','Ash of the Dawn'),S('acc1',''),S('acc2',''),S('boots','Boots of the Hellish Wasteland')]},
+      {id:'end2',label:{ru:'Эндгейм Сет 2',en:'Endgame Set 2'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','War Helm of the Hellish Wasteland'),S('chest','Heavy Armor of the Hellish Wasteland'),S('weapon','Lance of the Hellish Wasteland'),S('gloves',"Navar's Control"),S('pants','Ash of the Dawn'),S('acc1',''),S('acc2',''),S('boots','Boots of the Hellish Wasteland')]}
+    ]
+  },
+  archer: {
+    label:{ru:'Лучники',en:'Archer'},
+    sets:[
+      {id:'early',label:{ru:'Ранняя игра',en:'Earlygame'},subtitle:{ru:'',en:''},slots:[S('helmet','Helm of Phoenix'),S('chest',"Commander's Heavy Armor"),S('weapon','Staff of the Lost'),S('gloves',"Saint's Song"),S('pants',"Greaves of the Exile"),S('acc1',''),S('acc2',''),S('boots','Edged Boots')]},
+      {id:'mid',label:{ru:'Середина игры',en:'Midgame'},subtitle:{ru:'',en:''},slots:[S('helmet','Revival Helm'),S('chest','Revival Plate'),S('weapon','Golden Age'),S('gloves','Revival Gauntlets'),S('pants','Revival Greaves'),S('acc1',''),S('acc2',''),S('boots','Flame Treads')]},
+      {id:'end1',label:{ru:'Эндгейм Сет 1',en:'Endgame Set 1'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet',"Dragon's Breath Helm"),S('chest',"Dragon's Breath Plate"),S('weapon',"Dragon's Breath Bow"),S('gloves',"Dragon's Breath Vambraces"),S('pants',"Dragon's Breath Tassets"),S('acc1',''),S('acc2',''),S('boots',"Dragon's Breath Boots")]},
+      {id:'end2',label:{ru:'Эндгейм Сет 2',en:'Endgame Set 2'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Ancestral Mask of Night'),S('chest',"Dragon's Breath Plate"),S('weapon',"The Hydra's Blast"),S('gloves',"Dragon's Breath Vambraces"),S('pants',"Dragon's Breath Tassets"),S('acc1',''),S('acc2',''),S('boots',"Dragon's Breath Boots")]},
+      {id:'end3',label:{ru:'Эндгейм Сет 3',en:'Endgame Set 3'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Ancestral Mask of Night'),S('chest','The Milky Way'),S('weapon',"The Hydra's Blast"),S('gloves',"Ian's Choice"),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]},
+      {id:'end4',label:{ru:'Эндгейм Сет 4',en:'Endgame Set 4'},subtitle:{ru:'(Рейд/Гарнизон)',en:'(Rally/Garrison)'},slots:[S('helmet','Ancestral Mask of Night'),S('chest',"Dragon's Breath Plate"),S('weapon',"The Hydra's Blast"),S('gloves',"Dragon's Breath Vambraces"),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]}
+    ]
+  },
+  siege: {
+    label:{ru:'Осадные',en:'Siege'},
+    sets:[
+      {id:'early',label:{ru:'Ранняя игра',en:'Earlygame'},subtitle:{ru:'',en:''},slots:[S('helmet',"Harvester's Headscarf"),S('chest','Harvester Robes'),S('weapon','Scepter of the Forest Guardian'),S('gloves','Claws of the Forest Guardian'),S('pants','Harvester Breeches'),S('acc1',''),S('acc2',''),S('boots','Harvester Boots')]},
+      {id:'mid',label:{ru:'Середина игры',en:'Midgame'},subtitle:{ru:'',en:''},slots:[S('helmet',"Knight's Steel Diadem"),S('chest',"Knight's Valorous Cloak"),S('weapon',"Knight's Oathsworn Bow"),S('gloves',"Knight's Battleworn Gauntlets"),S('pants',"Knight's Triumphant Tassets"),S('acc1',''),S('acc2',''),S('boots',"Knight's Winter Sabatons")]},
+      {id:'end1',label:{ru:'Эндгейм Сет',en:'Endgame Set'},subtitle:{ru:'',en:''},slots:[S('helmet',"Fierce Wolf's Helmet"),S('chest',"Vigilant Wolf's Leather Armor"),S('weapon','Twilight Epiphany'),S('gloves',"Wailing Wolf's Gauntlets"),S('pants',"Lone Wolf's Leather Tassets"),S('acc1',''),S('acc2',''),S('boots',"Roaring Wolf's Claws")]}
+    ]
+  }
+};
+const NAMES_RU = {
+  'Sharp Longsword':'Острый длинный меч','Blessed Blade':'Благословенный клинок','Staff of the Lost':'Посох потерянных',
+  'Gatekeepers Shield':'Щит вратаря','Blazing Axe':'Пылающий топор',"Knight's Oathsworn Bow":"Лук клятвы рыцаря",
+  'Heart of the Saint':'Сердце святого','Sakura Fubuki':'Сакура Фубки','Golden Age':'Золотой век',
+  'Twilight Epiphany':'Сумеречное прозрение','Trial of the Lost Kingdom':'Испытание потерянного королевства',
+  "The Hydra's Blast":"Вспышка гидры",'Hammer of the Sun and Moon':'Молот солнца и луны','Sacred Dominion':'Святая власть',
+  'Pride of the Khan':'Гордость хана','Helm of the Conqueror':'Шлем завоевателя','Ancestral Mask of Night':'Древняя маска ночи',
+  'Abyssal Visage':'Бездонный лик',"Witch's Lineage":"Родословная ведьмы","Knight's Steel Diadem":"Стальная диадема рыцаря",
+  'Expedition War Helm':'Шлем экспедиции','Helm of Fear':'Шлем страха','Helm of Phoenix':'Шлем феникса','Iron Helm':'Железный шлем',
+  "Shadow Legion's Retribution":"Возмездие теневого легиона",'The Milky Way':'Млечный путь','Hope Cloak':'Накидка надежды',
+  "Quinn's Soul":"Душа Куинна","Dark Lord's Blessing":"Благословение темного лорда",
+  "Commander's Heavy Armor":"Тяжелая броня командира",'Milanese Plate':'Миланский доспех','Infantry Breastplate':'Пехотный нагрудник',
+  'Chain Mail':'Кольчуга',"Knight's Valorous Cloak":"Доблестный плащ рыцаря","Navar's Control":"Хватка Навара",
+  'Sacred Grips':'Священная хватка',"Ian's Choice":"Выбор Иана","Iset's Sufferance":"Страдание Исет",
+  "Seth's Brutality":"Брутальность Сета","Calvin's Hand":"Рука Кальвина","Saint's Song":"Песнь святого",
+  'Leather Gloves':'Кожаные перчатки','Cloth Gloves':'Тканевые перчатки',
+  "Knight's Battleworn Gauntlets":"Поношенные рукавицы рыцаря",'Bronze Bracers':'Бронзовые наручи',
+  'Tassets of the War God':'Набедренники бога войны','Eternal Night':'Вечная ночь','Ash of the Dawn':'Рассветный пепел',
+  "Karuak's Humility":"Смирение Каруака",'Gladiator':'Гладиатор',"Fanatic's Tassets":"Набедренники фанатика",
+  'Greaves of the Exile':'Поножи изгнанника','Sentry Breeches':'Штаны часового','Coarse Breeches':'Грубые штаны',
+  'Ranger Trousers':'Штаны рейнджера',"Knight's Triumphant Tassets":"Триумфальные набедренники рыцаря",
+  'Mountain Crushers':'Горные дробители',"Shio's Return":"Возвращение Шио","Commander's Boots":"Сапоги командира",
+  'Cloud Racers':'Облачные бегуны','Frost Treads':'Морозные стопы','Flame Treads':'Пламенные стопы',
+  'The Scarlet Hounds':'Алые гончие','Edged Boots':'Острые сапоги','Boots of Reverence':'Сапоги почитания',
+  'Sturdy Boots':'Прочные сапоги',"Knight's Winter Sabatons":"Зимние сабатоны рыцаря",
+  "Dragon's Breath Helm":"Шлем дыхания дракона","Dragon's Breath Plate":"Доспех дыхания дракона",
+  "Dragon's Breath Bow":"Лук дыхания дракона","Dragon's Breath Vambraces":"Наручи дыхания дракона",
+  "Dragon's Breath Tassets":"Набедренники дыхания дракона","Dragon's Breath Boots":"Сапоги дыхания дракона",
+  'Gold Helm of the Eternal Empire':'Золотой шлем вечной империи','Plate of the Eternal Empire':'Доспех вечной империи',
+  'Shield of the Eternal Empire':'Щит вечной империи','Vambraces of the Eternal Empire':'Наручи вечной империи',
+  'Greaves of the Eternal Empire':'Поножи вечной империи','Sturdy Boots of the Eternal Empire':'Крепкие башмаки вечной империи',
+  'Mask of the Forest Guardian':'Маска лесного стража','Robe of the Forest Guardian':'Одеяние лесного стража',
+  'Scepter of the Forest Guardian':'Скипетр лесного стража','Claws of the Forest Guardian':'Когти лесного стража',
+  'Diadem of the Glorious Goddess':'Диадема Милостливой богини','Plate of the Glorious Goddess':'Доспех Милостливой богини',
+  'Scepter of the Glorious Goddess':'Скипетр Милостливой богини','Gauntlets of the Glorious Goddess':'Рукавицы Милостливой богини',
+  'Chausses of the Glorious Goddess':'Кольчужные чулки Милостливой богини','Greaves of the Glorious Goddess':'Поножи Милостливой богини',
+  "Harvester's Headscarf":"Платок жнеца","Harvester Robes":"Одеяние жнеца","Harvester Breeches":"Штаны жнеца",
+  'Harvester Boots':'Сапоги жнеца','War Helm of the Hellish Wasteland':'Боевой шлем адской пустоши',
+  'Heavy Armor of the Hellish Wasteland':'Тяжелая броня адской пустоши','Lance of the Hellish Wasteland':'Копье адской пустоши',
+  'Armband of the Hellish Wasteland':'Нарукавник адской пустоши','Tassets of the Hellish Wasteland':'Набедренники адской пустоши',
+  'Boots of the Hellish Wasteland':'Башмаки адской пустоши','Revival Helm':'Шлем возрождения','Revival Plate':'Доспех возрождения',
+  'Revival Gauntlets':'Рукавицы возрождения','Revival Greaves':'Поножи возрождения','Vanguard Halberd':'Алебарда авангарда',
+  'Vanguard Greaves':'Поножи авангарда','Windswept War Helm':'Шлем ветра','Windswept Breastplate':'Кираса ветра',
+  'Windswept Bracers':'Наручи ветра','Windswept Boots':'Сапоги ветра',"Fierce Wolf's Helmet":"Шлем свирепого волка",
+  "Vigilant Wolf's Leather Armor":"Кожаная броня бдительного волка","Wailing Wolf's Gauntlets":"Рукавицы воющего волка",
+  "Lone Wolf's Leather Tassets":"Кожаные набедренники одинокого волка","Roaring Wolf's Claws":"Когти рычащего волка",
+  "Witch's Deadwood Crown":"Корона из мертвой древесины ведьмы","Witch's Hexed Cloak":"Проклятый плащ ведьмы",
+  "Witch's Feathered Staff":"Перьевой посох ведьмы","Witch's Crimson Bracers":"Багровые наручи ведьмы",
+  "Witch's Ornamented Pants":"Украшенные штаны ведьмы","Witch's Mire-Waders":"Болотоходы ведьмы",
+  "The Bard's Pendant":"Кулон барда",'Call of the Loyal':'Зов верных','Concealed Dagger':'Скрытый кинжал',
+  'Crimson Ring':'Багровое кольцо',"Delane's Amulet":"Амулет Делейна",'Pendant of Eternal Night':'Кулон вечной ночи',
+  'Greatest Glory':'Величайшая слава','Horn of Fury':'Рог ярости','Immolating Plume':'Пылающее перо',
+  "Lohar's Bone Necklace":"Костяное ожерелье Лохара","Scola's Lucky Coin":"Удачная монета Сколы",
+  "Mora's Web":"Паутина Моры","Peter's Sickle":"Серп Питера",'Ring of Doom':'Кольцо рока','Wind Scars':'Шрамы ветра',
+  "Seth's Call":"Зов Сета",'Silent Trial':'Безмолвное испытание','Ancient Strategems':'Древние стратагемы',
+  'Savage Totem':'Дикий тотем','Vengeance':'Возмездие',"Karuak's War Drums":"Боевые барабаны Каруака",
+  'Saddle of a Thousand Blessings':'Седло тысячи благословений',"Hero's Hilt":"Рукоять героя"
+};
+const STAT_KEYS_RU = {
+  'Infantry Attack':'Атака пехоты','Infantry Defense':'Защита пехоты','Infantry Health':'Здоровье пехоты',
+  'Cavalry Attack':'Атака кавалерии','Cavalry Defense':'Защита кавалерии','Cavalry Health':'Здоровье кавалерии',
+  'Archer Attack':'Атака лучников','Archer Defense':'Защита лучников','Archer Health':'Здоровье лучников',
+  'Siege Unit Attack':'Атака осадных','Siege Unit Defense':'Защита осадных','Siege Unit Health':'Здоровье осадных',
+  'All Troops Attack':'Атака всех войск','All Troops Defense':'Защита всех войск','All Troops Health':'Здоровье всех войск',
+  'All Troops Load':'Грузоподъемность войск','All Troops March Speed':'Скорость на марше всех войск',
+  'March Speed':'Скорость на марше','March Speed (Cavalry)':'Скорость на марше (кавалерия)',
+  'March Speed (Siege Units)':'Скорость на марше (осадные)','March Speed (Infantry)':'Скорость на марше (пехота)',
+  'Gathering Speed':'Скорость сбора','Resource Gathered Bonus':'Бонус сбора ресурсов',
+  'EXP Gain':'Опыт','DMG to Barbarians':'Урон по варварам',
+  'Skill Damage':'Урон навыками','Skill Damage Reduction':'Уменьшение урона навыками',
+  'Counterattack Damage':'Урон от контратаки','Ranged Skill Damage':'Урон дальними навыками',
+  'Troop Attack':'Атака войск','Troop Defense':'Защита войск','Troop Health':'Здоровье войск',
+  'Troop Load':'Грузоподъемность войск','Unit Capacity':'Вместимость войск',
+  'Normal Attack Damage':'Урон обычной атаки','Basic Attack':'Обычная атака'
+};
+const ITEM_SET_MAP = {
+  'Gold Helm of the Eternal Empire':'Eternal Empire','Plate of the Eternal Empire':'Eternal Empire','Shield of the Eternal Empire':'Eternal Empire','Vambraces of the Eternal Empire':'Eternal Empire','Greaves of the Eternal Empire':'Eternal Empire','Sturdy Boots of the Eternal Empire':'Eternal Empire',
+  'War Helm of the Hellish Wasteland':'Hellish Wasteland','Heavy Armor of the Hellish Wasteland':'Hellish Wasteland','Lance of the Hellish Wasteland':'Hellish Wasteland','Armband of the Hellish Wasteland':'Hellish Wasteland','Tassets of the Hellish Wasteland':'Hellish Wasteland','Boots of the Hellish Wasteland':'Hellish Wasteland',
+  "Dragon's Breath Helm":"Dragon's Breath","Dragon's Breath Plate":"Dragon's Breath","Dragon's Breath Bow":"Dragon's Breath","Dragon's Breath Vambraces":"Dragon's Breath","Dragon's Breath Tassets":"Dragon's Breath","Dragon's Breath Boots":"Dragon's Breath",
+  "Witch's Deadwood Crown":"Witch's Wardrobe","Witch's Hexed Cloak":"Witch's Wardrobe","Witch's Feathered Staff":"Witch's Wardrobe","Witch's Crimson Bracers":"Witch's Wardrobe","Witch's Ornamented Pants":"Witch's Wardrobe","Witch's Mire-Waders":"Witch's Wardrobe",
+  'Diadem of the Glorious Goddess':'Glorious Goddess','Plate of the Glorious Goddess':'Glorious Goddess','Scepter of the Glorious Goddess':'Glorious Goddess','Gauntlets of the Glorious Goddess':'Glorious Goddess','Chausses of the Glorious Goddess':'Glorious Goddess','Greaves of the Glorious Goddess':'Glorious Goddess',
+  "Fierce Wolf's Helmet":"Wolf's Clothing","Vigilant Wolf's Leather Armor":"Wolf's Clothing","Wailing Wolf's Gauntlets":"Wolf's Clothing","Lone Wolf's Leather Tassets":"Wolf's Clothing","Roaring Wolf's Claws":"Wolf's Clothing"
+};
+const SET_BONUSES = {
+  'Eternal Empire':{2:'All Troops Defense +3%',4:'All Troops March Speed +10%',6:'Infantry Attack +5%'},
+  'Hellish Wasteland':{2:'All Troops Health +3%',4:'Counterattack Damage +3%',6:'Cavalry Defense +5%'},
+  "Dragon's Breath":{2:'All Troops Attack +3%',4:'Skill Damage +3%',6:'Archer Health +5%'},
+  "Witch's Wardrobe":{2:'All Troops Load +25%',4:'Gathering Speed +5%',6:'March Speed +10%'},
+  'Glorious Goddess':{2:'All Troops Defense +3%',4:'Skill Damage Reduction +3%',6:'All Troops Health +5%'},
+  "Wolf's Clothing":{2:'Siege Unit Defense +5%',4:'Ranged Skill Damage +5%, Ranged Attack Damage +5%'}
+};
+
+const ICON_MAP = {
+  'Sharp Longsword':'снаряга/sharplongsword.png',
+  'Blessed Blade':'снаряга/blessedblade.png',
+  'Staff of the Lost':'снаряга/staffofthelost.png',
+  'Gatekeepers Shield':'снаряга/gatekeepers.png',
+  'Blazing Axe':'снаряга/blazingaxe.png',
+  "Knight's Oathsworn Bow":'снаряга/oathsworn.png',
+  'Heart of the Saint':'снаряга/heartsaint.png',
+  'Sakura Fubuki':'снаряга/sakura.png',
+  'Golden Age':'снаряга/goldenage.png',
+  'Twilight Epiphany':'снаряга/twilightepiphany.png',
+  'Trial of the Lost Kingdom':'снаряга/trial.png',
+  "The Hydra's Blast":'снаряга/hydrablast.png',
+  'Hammer of the Sun and Moon':'снаряга/sunandmoon.png',
+  'Sacred Dominion':'снаряга/dominion.png',
+  'Pride of the Khan':'снаряга/khan.png',
+  'Helm of the Conqueror':'снаряга/conqueror.png',
+  'Ancestral Mask of Night':'снаряга/night.png',
+  'Abyssal Visage':'снаряга/visage.png',
+  "Witch's Lineage":'снаряга/lineage.png',
+  "Knight's Steel Diadem":'снаряга/diadem.png',
+  'Expedition War Helm':'снаряга/expedition.png',
+  'Helm of Fear':'снаряга/fear.png',
+  'Helm of Phoenix':'снаряга/phoenix.png',
+  'Iron Helm':'снаряга/iron.png',
+  "Shadow Legion's Retribution":'снаряга/retribution.png',
+  'The Milky Way':'снаряга/milky.png',
+  'Hope Cloak':'снаряга/hope.png',
+  "Quinn's Soul":'снаряга/quinn.png',
+  "Dark Lord's Blessing":'снаряга/blessing.png',
+  "Commander's Heavy Armor":'снаряга/heavy.png',
+  'Milanese Plate':'снаряга/milanese.png',
+  'Infantry Breastplate':'снаряга/infantry_breastplate.png',
+  'Chain Mail':'снаряга/chainmail.png',
+  "Knight's Valorous Cloak":'снаряга/valorous.png',
+  "Navar's Control":'снаряга/navar.png',
+  'Sacred Grips':'снаряга/grips.png',
+  "Ian's Choice":'снаряга/ian.png',
+  "Iset's Sufferance":'снаряга/sufferance.png',
+  "Seth's Brutality":'снаряга/brutality.png',
+  "Calvin's Hand":'снаряга/calvin.png',
+  "Saint's Song":'снаряга/saintsong.png',
+  'Leather Gloves':'снаряга/leathergloves.png',
+  'Cloth Gloves':'снаряга/clothgloves.png',
+  "Knight's Battleworn Gauntlets":'снаряга/battleworn.png',
+  'Bronze Bracers':'снаряга/bronzebracers.png',
+  'Tassets of the War God':'снаряга/tassetswargod.png',
+  'Eternal Night':'снаряга/eternalnight.png',
+  'Ash of the Dawn':'снаряга/ashdawn.png',
+  "Karuak's Humility":'снаряга/humility.png',
+  'Gladiator':'снаряга/gladiator.png',
+  "Fanatic's Tassets":'снаряга/fanatic.png',
+  'Greaves of the Exile':'снаряга/greaves.png',
+  'Sentry Breeches':'снаряга/sentry.png',
+  'Coarse Breeches':'снаряга/coarse.png',
+  'Ranger Trousers':'снаряга/ranger.png',
+  "Knight's Triumphant Tassets":'снаряга/triumphant.png',
+  'Mountain Crushers':'снаряга/mountain.png',
+  "Shio's Return":'снаряга/shio.png',
+  "Commander's Boots":'снаряга/commanderboots.png',
+  'Cloud Racers':'снаряга/cloud.png',
+  'Frost Treads':'снаряга/frost.png',
+  'Flame Treads':'снаряга/flame.png',
+  'The Scarlet Hounds':'снаряга/scarlethounds.png',
+  'Edged Boots':'снаряга/edged.png',
+  'Boots of Reverence':'снаряга/reverence.png',
+  'Sturdy Boots':'снаряга/sturdy.png',
+  "Knight's Winter Sabatons":'снаряга/sabatons.png',
+  "Dragon's Breath Helm":'снаряга/db_helmet.png',
+  "Dragon's Breath Plate":'снаряга/db_chest.png',
+  "Dragon's Breath Bow":'снаряга/db_weapon.png',
+  "Dragon's Breath Vambraces":'снаряга/db_gloves.png',
+  "Dragon's Breath Tassets":'снаряга/db_pants.png',
+  "Dragon's Breath Boots":'снаряга/db_boots.png',
+  'Gold Helm of the Eternal Empire':'снаряга/ee_helmet.png',
+  'Plate of the Eternal Empire':'снаряга/ee_chest.png',
+  'Shield of the Eternal Empire':'снаряга/ee_weapon.png',
+  'Vambraces of the Eternal Empire':'снаряга/ee_gloves.png',
+  'Greaves of the Eternal Empire':'снаряга/ee_pants.png',
+  'Sturdy Boots of the Eternal Empire':'снаряга/ee_boots.png',
+  'Mask of the Forest Guardian':'снаряга/fg_helmet.png',
+  'Robe of the Forest Guardian':'снаряга/fg_chest.png',
+  'Scepter of the Forest Guardian':'снаряга/fg_weapon.png',
+  'Claws of the Forest Guardian':'снаряга/fg_gloves.png',
+  'Diadem of the Glorious Goddess':'снаряга/gg_helmet.png',
+  'Plate of the Glorious Goddess':'снаряга/gg_chest.png',
+  'Scepter of the Glorious Goddess':'снаряга/gg_weapon.png',
+  'Gauntlets of the Glorious Goddess':'снаряга/gg_gloves.png',
+  'Chausses of the Glorious Goddess':'снаряга/gg_pants.png',
+  'Greaves of the Glorious Goddess':'снаряга/gg_boots.png',
+  "Harvester's Headscarf":'снаряга/harvester_helmet.png',
+  'Harvester Robes':'снаряга/harvester_chest.png',
+  'Harvester Breeches':'снаряга/harvester_pants.png',
+  'Harvester Boots':'снаряга/harvester_boots.png',
+  'War Helm of the Hellish Wasteland':'снаряга/hw_helmet.png',
+  'Heavy Armor of the Hellish Wasteland':'снаряга/hw_chest.png',
+  'Lance of the Hellish Wasteland':'снаряга/hw_weapon.png',
+  'Armband of the Hellish Wasteland':'снаряга/hw_gloves.png',
+  'Tassets of the Hellish Wasteland':'снаряга/hw_pants.png',
+  'Boots of the Hellish Wasteland':'снаряга/hw_boots.png',
+  'Revival Helm':'снаряга/revival_helmet.png',
+  'Revival Plate':'снаряга/revival_chest.png',
+  'Revival Gauntlets':'снаряга/revival_gloves.png',
+  'Revival Greaves':'снаряга/revival_pants.png',
+  'Vanguard Halberd':'снаряга/vanguard_weapon.png',
+  'Vanguard Greaves':'снаряга/vanguard_pants.png',
+  'Windswept War Helm':'снаряга/windswept_helmet.png',
+  'Windswept Breastplate':'снаряга/windswept_chest.png',
+  'Windswept Bracers':'снаряга/windswept_gloves.png',
+  'Windswept Boots':'снаряга/windswept_boots.png',
+  "Fierce Wolf's Helmet":'снаряга/wolf_helmet.png',
+  "Vigilant Wolf's Leather Armor":'снаряга/wolf_chest.png',
+  "Wailing Wolf's Gauntlets":'снаряга/wolf_gloves.png',
+  "Lone Wolf's Leather Tassets":'снаряга/wolf_pants.png',
+  "Roaring Wolf's Claws":'снаряга/wolf_boots.png',
+  "Witch's Deadwood Crown":'снаряга/ww_helmet.png',
+  "Witch's Hexed Cloak":'снаряга/ww_chest.png',
+  "Witch's Feathered Staff":'снаряга/ww_weapon.png',
+  "Witch's Crimson Bracers":'снаряга/ww_gloves.png',
+  "Witch's Ornamented Pants":'снаряга/ww_pants.png',
+  "Witch's Mire-Waders":'снаряга/ww_boots.png',
+  "The Bard's Pendant":'снаряга/accessory_bards.png',
+  'Call of the Loyal':'снаряга/accessory_call.png',
+  'Concealed Dagger':'снаряга/accessory_concealed.png',
+  'Crimson Ring':'снаряга/accessory_crimson.png',
+  "Delane's Amulet":'снаряга/accessory_delanes.png',
+  'Pendant of Eternal Night':'снаряга/accessory_eternal.png',
+  'Greatest Glory':'снаряга/accessory_greatest.png',
+  'Horn of Fury':'снаряга/accessory_horn.png',
+  'Immolating Plume':'снаряга/accessory_immo.png',
+  "Lohar's Bone Necklace":'снаряга/accessory_lohar.png',
+  "Scola's Lucky Coin":'снаряга/accessory_lucky.png',
+  "Mora's Web":'снаряга/accessory_moras.png',
+  "Peter's Sickle":'снаряга/accessory_peters.png',
+  'Ring of Doom':'снаряга/accessory_ring.png',
+  'Wind Scars':'снаряга/accessory_scars.png',
+  "Seth's Call":'снаряга/accessory_seths.png',
+  'Silent Trial':'снаряга/accessory_silent.png',
+  'Ancient Strategems':'снаряга/accessory_strategems.png',
+  'Savage Totem':'снаряга/accessory_totem.png',
+  'Vengeance':'снаряга/accessory_vengeance.png',
+  "Karuak's War Drums":'снаряга/accessory_wardrum.png',
+  'Saddle of a Thousand Blessings':'снаряга/saddle.png',
+  "Hero's Hilt":'снаряга/heroshilt.png'
+};
+const BASE_ICONS = {
+  helmet:'снаряга/helmet.png',
+  chest:'снаряга/chest.png',
+  weapon:'снаряга/weapon.png',
+  gloves:'снаряга/gloves.png',
+  pants:'снаряга/pants.png',
+  boots:'снаряга/boots.png',
+  acc1:'снаряга/accessory1.png',
+  acc2:'снаряга/accessory2.png'
+};
+Object.values(EQUIP).forEach(troop => {
+  (troop.sets||[]).forEach(set => {
+    (set.slots||[]).forEach(slot => {
+      if (ICON_MAP[slot.n]) slot.i = ICON_MAP[slot.n];
+    });
+  });
+});
+
+const SLOT_KEYS = {
+  helmet:{ru:'Шлем',en:'Helmet'},
+  chest:{ru:'Грудь',en:'Chest'},
+  weapon:{ru:'Оружие',en:'Weapon'},
+  gloves:{ru:'Перчатки',en:'Gloves'},
+  pants:{ru:'Штаны',en:'Pants'},
+  acc1:{ru:'Аксессуар 1',en:'Accessory 1'},
+  acc2:{ru:'Аксессуар 2',en:'Accessory 2'},
+  boots:{ru:'Сапоги',en:'Boots'}
+};
+
+const STATS_MAP = {
+  'Sharp Longsword':'Cavalry Defense +5%, Gathering Speed +2%',
+  'Blessed Blade':'Infantry Health +6%, Archer Attack +4%, DMG to Barbarians +3%',
+  'Staff of the Lost':'Archer Defense +8%, Infantry Defense +5%, Cavalry Defense +3%',
+  'Gatekeepers Shield':'Infantry Health +8%, Cavalry Health +5%, EXP Gain +3%',
+  'Blazing Axe':'Cavalry Attack +8%, Archer Attack +5%, Infantry Attack +3%',
+  "Knight's Oathsworn Bow":'Siege Unit Attack +13%, March Speed (Siege Units) +2%',
+  'Heart of the Saint':'Cavalry Defense +13%, Archer Health +6%, Infantry Health +4%',
+  'Sakura Fubuki':'Infantry Attack +13%, Cavalry Health +6%, Archer Attack +4%',
+  'Golden Age':'Archer Defense +13%, Infantry Defense +6%, Cavalry Attack +4%',
+  'Twilight Epiphany':'Siege Unit Attack +25%, March Speed (Siege Units) +6%',
+  'Trial of the Lost Kingdom':'Cavalry Defense +15%, Infantry Health +5%, Archer Attack +5%',
+  "The Hydra's Blast":'Archer Defense +25%, Cavalry Defense +5%',
+  'Hammer of the Sun and Moon':'Infantry Attack +25%, Archer Health +5%',
+  'Sacred Dominion':'Cavalry Attack +25%, Archer Defense +5%',
+  'Pride of the Khan':'Cavalry Defense +15%, Archer Health +8%',
+  'Helm of the Conqueror':'Infantry Defense +15%, Cavalry Health +8%',
+  'Ancestral Mask of Night':'Archer Attack +15%, Infantry Attack +8%',
+  'Abyssal Visage':'Cavalry Attack +8%, Infantry Attack +3%, Archer Attack +3%',
+  "Witch's Lineage":'Infantry Attack +8%, Cavalry Attack +3%, Archer Defense +3%',
+  "Knight's Steel Diadem":'Siege Unit Health +8%, March Speed (Siege Units) +2%',
+  'Expedition War Helm':'Cavalry Defense +6%, Infantry Defense +2%, EXP Gain +3%',
+  'Helm of Fear':'Cavalry Attack +4%, Infantry Defense +2%, DMG to Barbarians +3%',
+  'Helm of Phoenix':'Archer Defense +4%, Infantry Health +2%, DMG to Barbarians +3%',
+  'Iron Helm':'Infantry Attack +3%',
+  "Shadow Legion's Retribution":'Cavalry Attack +12%, Infantry Attack +5%, Archer Attack +5%',
+  'The Milky Way':'Archer Health +12%, Cavalry Health +6%, EXP Gain +5%',
+  'Hope Cloak':'Infantry Defense +12%, Cavalry Defense +5%, Archer Defense +5%',
+  "Quinn's Soul":'Infantry Attack +8%, Archer Health +4%, DMG to Barbarians +5%',
+  "Dark Lord's Blessing":'Cavalry Defense +8%, Archer Attack +5%',
+  "Commander's Heavy Armor":'Archer Health +6%, Infantry Attack +3%, EXP Gain +3%',
+  'Milanese Plate':'Cavalry Defense +4%, Archer Attack +2%',
+  'Infantry Breastplate':'Infantry Defense +4%, Cavalry Health +2%, DMG to Barbarians +3%',
+  'Chain Mail':'Archer Attack +3%',
+  "Knight's Valorous Cloak":'Siege Unit Attack +8%, March Speed (Siege Units) +2%',
+  "Navar's Control":'Cavalry Health +8%, Infantry Defense +5%',
+  'Sacred Grips':'Infantry Defense +8%, Archer Attack +5%',
+  "Ian's Choice":'Archer Attack +8%, EXP Gain +5%',
+  "Iset's Sufferance":'Cavalry Attack +3%, Cavalry Health +3%',
+  "Seth's Brutality":'Infantry Defense +5.5%, Archer Defense +2%, DMG to Barbarians +5%',
+  "Calvin's Hand":'Infantry Attack +4%, Infantry Health +1%, Archer Attack +1%',
+  "Saint's Song":'Archer Attack +4%, Cavalry Attack +2%, EXP Gain +3%',
+  'Leather Gloves':'Archer Health +2.5%, Infantry Defense +1%',
+  'Cloth Gloves':'Infantry Defense +2%',
+  "Knight's Battleworn Gauntlets":'Siege Unit Defense +5.5%, March Speed (Siege Units) +2%',
+  'Bronze Bracers':'Cavalry Defense +2.5%, Infantry Health +1%, DMG to Barbarians +3%',
+  'Tassets of the War God':'Archer Attack +12%, Cavalry Attack +5%, Infantry Attack +5%',
+  'Eternal Night':'Infantry Defense +12%, Archer Defense +5%, Cavalry Defense +5%',
+  'Ash of the Dawn':'Cavalry Health +12%, Infantry Health +5%, EXP Gain +5%',
+  "Karuak's Humility":'Infantry Health +8%, Cavalry Attack +5%',
+  'Gladiator':'Cavalry Health +8%, Archer Defense +4%, DMG to Barbarians +5%',
+  "Fanatic's Tassets":'Archer Defense +8%, Cavalry Defense +5%',
+  "Greaves of the Exile":'Archer Defense +6%, Infantry Defense +3%, EXP Gain +3%',
+  'Sentry Breeches':'Infantry Attack +6%, Archer Attack +3%, Cavalry Defense +1%',
+  'Coarse Breeches':'Cavalry Attack +2%, Gathering Speed +1%',
+  'Ranger Trousers':'Infantry Attack +4%, Archer Defense +2%, DMG to Barbarians +3%',
+  "Knight's Triumphant Tassets":'Siege Unit Defense +8%, DMG to Barbarians +5%',
+  'Mountain Crushers':'Cavalry Attack +8%, Archer Attack +5%',
+  "Shio's Return":'Infantry Defense +8%, Archer Health +5%',
+  "Commander's Boots":'Archer Attack +8%, EXP Gain +5%',
+  'Cloud Racers':'Cavalry Attack +5.5%, Archer Health +2%, Gathering Speed +6%',
+  'Frost Treads':'Infantry Defense +5.5%, DMG to Barbarians +5%',
+  'Flame Treads':'Archer Health +5.5%, Cavalry Attack +3%',
+  'The Scarlet Hounds':'Infantry Health +4%, EXP Gain +3%',
+  'Edged Boots':'Archer Attack +2.5%, Cavalry Attack +1%, DMG to Barbarians +3%',
+  'Boots of Reverence':'Infantry Attack +2.5%, Archer Defense +1%',
+  'Sturdy Boots':'Archer Defense +2%, Gathering Speed +1%',
+  "Knight's Winter Sabatons":'Siege Unit Health +5.5%, DMG to Barbarians +5%',
+  "Dragon's Breath Helm":'Archer Attack +11%, Cavalry Attack +3%, Infantry Defense +4%',
+  "Dragon's Breath Plate":'Archer Health +11%, Cavalry Defense +5%',
+  "Dragon's Breath Bow":'Archer Defense +20%, Infantry Health +5%, Cavalry Health +5%',
+  "Dragon's Breath Vambraces":'Archer Attack +7.5%, Infantry Attack +3%',
+  "Dragon's Breath Tassets":'Archer Attack +11%, Cavalry Attack +5%',
+  "Dragon's Breath Boots":'Archer Defense +7.5%, Infantry Defense +3%',
+  'Gold Helm of the Eternal Empire':'Infantry Defense +11%, Archer Health +4%, Cavalry Health +3%',
+  'Plate of the Eternal Empire':'Infantry Attack +11%, Archer Defense +5%',
+  'Shield of the Eternal Empire':'Infantry Attack +20%, Archer Attack +5%, Cavalry Attack +5%',
+  'Vambraces of the Eternal Empire':'Infantry Defense +7.5%, Cavalry Attack +3%',
+  'Greaves of the Eternal Empire':'Infantry Attack +11%, Archer Defense +5%',
+  'Sturdy Boots of the Eternal Empire':'Infantry Defense +7.5%, Cavalry Defense +3%',
+  'Mask of the Forest Guardian':'Gathering Speed +8%, Siege Unit Attack +4%, Infantry Attack +4%',
+  'Robe of the Forest Guardian':'Gathering Speed +8%, Siege Unit Attack +4%, Archer Attack +4%',
+  'Scepter of the Forest Guardian':'Gathering Speed +10%, Siege Unit Defense +6%, Cavalry Attack +4%',
+  'Claws of the Forest Guardian':'Gathering Speed +6%, Siege Unit Defense +2%, Siege Unit Attack +2%',
+  'Diadem of the Glorious Goddess':'Troop Attack +8%, March Speed (Cavalry) +2%',
+  'Plate of the Glorious Goddess':'Troop Defense +8%, March Speed (Infantry) +2%',
+  'Scepter of the Glorious Goddess':'Troop Attack +15%, March Speed (Infantry) +3%',
+  'Gauntlets of the Glorious Goddess':'Troop Defense +6%, March Speed (Siege Units) +2%',
+  'Chausses of the Glorious Goddess':'Troop Health +8%, March Speed (Archer) +2%',
+  'Greaves of the Glorious Goddess':'Troop Health +6%, March Speed (Siege Units) +2%',
+  "Harvester's Headscarf":'Gathering Speed +5%, Siege Unit Attack +3%, Siege Unit Defense +3%',
+  'Harvester Robes':'Gathering Speed +5%, Siege Unit Defense +3%, Siege Unit Health +3%',
+  'Harvester Breeches':'Gathering Speed +5%, Siege Unit Attack +3%, Siege Unit Defense +3%',
+  'Harvester Boots':'Gathering Speed +5%, Siege Unit Defense +2%, Siege Unit Health +2%',
+  'War Helm of the Hellish Wasteland':'Cavalry Defense +11%, Infantry Attack +4%, Archer Defense +3%',
+  'Heavy Armor of the Hellish Wasteland':'Cavalry Health +11%, Infantry Attack +5%',
+  'Lance of the Hellish Wasteland':'Cavalry Attack +20%, Infantry Health +5%, Archer Attack +5%',
+  'Armband of the Hellish Wasteland':'Cavalry Defense +7.5%, Archer Health +3%',
+  'Tassets of the Hellish Wasteland':'Cavalry Attack +11%, Infantry Defense +5%',
+  'Boots of the Hellish Wasteland':'Cavalry Health +7.5%, Archer Attack +3%',
+  'Revival Helm':'Archer Defense +7.5%, Infantry Defense +5%',
+  'Revival Plate':'Archer Attack +7.5%, Cavalry Defense +5%',
+  'Revival Gauntlets':'Archer Attack +4.5%, Infantry Attack +3%, Cavalry Attack +3%',
+  'Revival Greaves':'Archer Defense +7.5%, Cavalry Attack +5%',
+  'Vanguard Halberd':'Cavalry Defense +5%, Cavalry Health +4%',
+  'Vanguard Greaves':'Cavalry Attack +4%, Cavalry Health +1%',
+  'Windswept War Helm':'Infantry Attack +4.5%, Cavalry Attack +4.5%, March Speed +3%',
+  'Windswept Breastplate':'Infantry Defense +4.5%, Cavalry Defense +4.5%, March Speed +3%',
+  'Windswept Bracers':'Cavalry Health +2.5%, Infantry Health +2.5%, March Speed +3%',
+  'Windswept Boots':'Cavalry Health +2.5%, Infantry Defense +2.5%, March Speed +3%',
+  "Fierce Wolf's Helmet":'Siege Unit Attack +14.5%, March Speed (Siege Units) +4%',
+  "Vigilant Wolf's Leather Armor":'Siege Unit Attack +14.5%, March Speed (Siege Units) +4%',
+  "Wailing Wolf's Gauntlets":'Siege Unit Defense +10%, March Speed (Siege Units) +3%',
+  "Lone Wolf's Leather Tassets":'Siege Unit Health +14.5%, March Speed (Siege Units) +4%',
+  "Roaring Wolf's Claws":'Siege Unit Defense +10%, March Speed (Siege Units) +3%',
+  "Witch's Deadwood Crown":'Gathering Speed +12%, Siege Unit Attack +4%, March Speed (Siege Units) +2%',
+  "Witch's Hexed Cloak":'Gathering Speed +12%, Siege Unit Defense +4%, March Speed (Siege Units) +2%',
+  "Witch's Feathered Staff":'Gathering Speed +15%, Siege Unit Defense +6%, March Speed (Siege Units) +3%',
+  "Witch's Crimson Bracers":'Gathering Speed +8%, Siege Unit Health +3%, March Speed (Siege Units) +2%',
+  "Witch's Ornamented Pants":'Gathering Speed +12%, Siege Unit Health +4%, March Speed (Siege Units) +2%',
+  "Witch's Mire-Waders":'Gathering Speed +8%, Siege Unit Attack +3%, March Speed (Siege Units) +2%',
+  "The Bard's Pendant":'Resource Gathered Bonus +5%',
+  'Call of the Loyal':'March Speed +5%',
+  'Concealed Dagger':'30% chance to reduce target health by 5% (proc)',
+  'Crimson Ring':'EXP Gain +15%',
+  "Delane's Amulet":'Counterattack Damage Taken -5%',
+  'Pendant of Eternal Night':'Skill Damage +5%',
+  'Greatest Glory':'Normal Attack Damage +5%',
+  'Horn of Fury':'Basic Attack 30% chance to gain 50 Rage (proc)',
+  'Immolating Plume':'Ranged/smite 50% chance +30% damage (proc)',
+  "Lohar's Bone Necklace":'EXP Gain +10%',
+  "Scola's Lucky Coin":'10% chance shield DF 500 for 2s (proc)',
+  "Mora's Web":'30% chance reduce target defense 4% (proc)',
+  "Peter's Sickle":'Gathering Speed +10%',
+  'Ring of Doom':'10% chance +50% damage for 2s (proc)',
+  'Wind Scars':'March Speed (Infantry) +8%',
+  "Seth's Call":'10% chance +10% Attack self+2 allies 3s (proc)',
+  'Silent Trial':'Basic Attack decreases target rage by 10 (proc)',
+  'Ancient Strategems':'Unit Capacity +3%',
+  'Savage Totem':'DMG to Barbarians +10%',
+  'Vengeance':'Counterattack Damage +8%',
+  "Karuak's War Drums":'10% chance 50 rage self+2 troops 3s (proc)',
+  'Saddle of a Thousand Blessings':'3% more smite damage, 50% chance heal 5% (proc)',
+  "Hero's Hilt":'50% chance +3% combo attack 5s, stacks 5x (proc)'
+};
+const RARITY_MAP = {
+  'Sharp Longsword':'Normal','Blessed Blade':'Advanced','Staff of the Lost':'Elite',
+  'Gatekeepers Shield':'Elite','Blazing Axe':'Elite',"Knight's Oathsworn Bow":'Epic',
+  'Heart of the Saint':'Epic','Sakura Fubuki':'Epic','Golden Age':'Epic',
+  'Twilight Epiphany':'Legendary','Trial of the Lost Kingdom':'Legendary',
+  "The Hydra's Blast":'Legendary','Hammer of the Sun and Moon':'Legendary',
+  'Sacred Dominion':'Legendary','Pride of the Khan':'Legendary','Helm of the Conqueror':'Legendary',
+  'Ancestral Mask of Night':'Legendary','Abyssal Visage':'Epic',"Witch's Lineage":'Epic',
+  "Knight's Steel Diadem":'Epic','Expedition War Helm':'Elite','Helm of Fear':'Advanced',
+  'Helm of Phoenix':'Advanced','Iron Helm':'Normal',"Shadow Legion's Retribution":'Legendary',
+  'The Milky Way':'Legendary','Hope Cloak':'Legendary',"Quinn's Soul":'Epic',
+  "Dark Lord's Blessing":'Epic',"Commander's Heavy Armor":'Elite','Milanese Plate':'Advanced',
+  'Infantry Breastplate':'Advanced','Chain Mail':'Normal',"Knight's Valorous Cloak":'Epic',
+  "Navar's Control":'Legendary','Sacred Grips':'Legendary',"Ian's Choice":'Legendary',
+  "Iset's Sufferance":'Epic',"Seth's Brutality":'Epic',"Calvin's Hand":'Elite',
+  "Saint's Song":'Elite','Leather Gloves':'Advanced','Cloth Gloves':'Normal',
+  "Knight's Battleworn Gauntlets":'Epic','Bronze Bracers':'Advanced',
+  'Tassets of the War God':'Legendary','Eternal Night':'Legendary','Ash of the Dawn':'Legendary',
+  "Karuak's Humility":'Epic','Gladiator':'Epic',"Fanatic's Tassets":'Epic',
+  "Greaves of the Exile":'Elite','Sentry Breeches':'Elite','Coarse Breeches':'Normal',
+  'Ranger Trousers':'Advanced',"Knight's Triumphant Tassets":'Epic',
+  'Mountain Crushers':'Legendary',"Shio's Return":'Legendary',"Commander's Boots":'Legendary',
+  'Cloud Racers':'Epic','Frost Treads':'Epic','Flame Treads':'Epic','The Scarlet Hounds':'Elite',
+  'Edged Boots':'Advanced','Boots of Reverence':'Advanced','Sturdy Boots':'Normal',
+  "Knight's Winter Sabatons":'Epic',"Dragon's Breath Helm":'Legendary',
+  "Dragon's Breath Plate":'Legendary',"Dragon's Breath Bow":'Legendary',
+  "Dragon's Breath Vambraces":'Legendary',"Dragon's Breath Tassets":'Legendary',
+  "Dragon's Breath Boots":'Legendary','Gold Helm of the Eternal Empire':'Legendary',
+  'Plate of the Eternal Empire':'Legendary','Shield of the Eternal Empire':'Legendary',
+  'Vambraces of the Eternal Empire':'Legendary','Greaves of the Eternal Empire':'Legendary',
+  'Sturdy Boots of the Eternal Empire':'Legendary','Mask of the Forest Guardian':'Epic',
+  'Robe of the Forest Guardian':'Epic','Scepter of the Forest Guardian':'Epic',
+  'Claws of the Forest Guardian':'Epic','Diadem of the Glorious Goddess':'Legendary',
+  'Plate of the Glorious Goddess':'Legendary','Scepter of the Glorious Goddess':'Legendary',
+  'Gauntlets of the Glorious Goddess':'Legendary','Chausses of the Glorious Goddess':'Legendary',
+  'Greaves of the Glorious Goddess':'Legendary',"Harvester's Headscarf":'Elite',
+  'Harvester Robes':'Elite','Harvester Breeches':'Elite','Harvester Boots':'Elite',
+  'War Helm of the Hellish Wasteland':'Legendary','Heavy Armor of the Hellish Wasteland':'Legendary',
+  'Lance of the Hellish Wasteland':'Legendary','Armband of the Hellish Wasteland':'Legendary',
+  'Tassets of the Hellish Wasteland':'Legendary','Boots of the Hellish Wasteland':'Legendary',
+  'Revival Helm':'Epic','Revival Plate':'Epic','Revival Gauntlets':'Epic','Revival Greaves':'Epic',
+  'Vanguard Halberd':'Advanced','Vanguard Greaves':'Advanced','Windswept War Helm':'Elite',
+  'Windswept Breastplate':'Elite','Windswept Bracers':'Elite','Windswept Boots':'Elite',
+  "Fierce Wolf's Helmet":'Legendary',"Vigilant Wolf's Leather Armor":'Legendary',
+  "Wailing Wolf's Gauntlets":'Legendary',"Lone Wolf's Leather Tassets":'Legendary',
+  "Roaring Wolf's Claws":'Legendary',"Witch's Deadwood Crown":'Legendary',
+  "Witch's Hexed Cloak":'Legendary',"Witch's Feathered Staff":'Legendary',
+  "Witch's Crimson Bracers":'Legendary',"Witch's Ornamented Pants":'Legendary',
+  "Witch's Mire-Waders":'Legendary',"The Bard's Pendant":'Epic','Call of the Loyal':'Elite',
+  'Concealed Dagger':'Legendary','Crimson Ring':'Epic',"Delane's Amulet":'Epic',
+  'Pendant of Eternal Night':'Legendary','Greatest Glory':'Legendary','Horn of Fury':'Legendary',
+  'Immolating Plume':'Legendary',"Lohar's Bone Necklace":'Elite',"Scola's Lucky Coin":'Legendary',
+  "Mora's Web":'Legendary',"Peter's Sickle":'Epic','Ring of Doom':'Legendary',
+  'Wind Scars':'Epic',"Seth's Call":'Legendary','Silent Trial':'Epic','Ancient Strategems':'Epic',
+  'Savage Totem':'Elite','Vengeance':'Legendary',"Karuak's War Drums":'Legendary',
+  'Saddle of a Thousand Blessings':'Legendary',"Hero's Hilt":'Legendary'
+};
+
+const LANG = {
+  ru:{
+    page_title:'Экипировка — Rise of Kingdoms',
+    back_home:'← Главная',
+    h1:'ЭКИПИРОВКА',
+    subtitle:'Equipment Builds',
+    mode_sets:'Сеты',
+    mode_builder:'Конструктор',
+    disclaimer:'Некоторые названия предметов на русском могут не совпадать с оригинальными',
+    placeholder:'Данные скоро появятся',
+    placeholder_tag:'Следите за обновлениями',
+  },
+  en:{
+    page_title:'Equipment — Rise of Kingdoms',
+    back_home:'← Home',
+    h1:'EQUIPMENT',
+    subtitle:'Best Equipment Builds',
+    mode_sets:'Sets',
+    mode_builder:'Builder',
+    disclaimer:'',
+    placeholder:'Data coming soon',
+    placeholder_tag:'Stay tuned',
+  },
+};
+
+const detected=navigator.language.startsWith('ru')?'ru':'en';
+let lang=localStorage.getItem('lang')||detected;
+window.lang=lang;
+function t(k){return LANG[lang][k]||k}
+function tt(o){return o&&o[lang]?o[lang]:o}
+function tn(n){return lang==='ru'?(NAMES_RU[n]||n):n}
+function ts(s){const k=s.trim();return lang==='ru'?(STAT_KEYS_RU[k]||k):k}
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.dataset.i18n;
+    if(LANG[lang][k])el.textContent=LANG[lang][k];
+  });
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  document.documentElement.lang=lang;
+  document.getElementById('ilSearch').placeholder=lang==='ru'?'Поиск...':'Search...';
+}
+
+const ORDER=['infantry','cavalry','archer','siege'];
+let activeTroop='infantry';
+const tabsEl=document.getElementById('troopTabs');
+const contentEl=document.getElementById('troopContent');
+
+function getSetStats(troop, setId){
+  const td=EQUIP[troop];
+  const set=td&&td.sets.find(s=>s.id===setId);
+  if(!set)return[];
+  const agg={},procs=[],names=[];
+  set.slots.forEach(sl=>{
+    if(!sl.n)return;
+    names.push(sl.n);
+    const raw=STATS_MAP[sl.n];
+    if(!raw)return;
+    raw.split(', ').forEach(stat=>{
+      const m=stat.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)%$/);
+      if(m){const k=m[1];const v=parseFloat(m[2]);agg[k]=(agg[k]||0)+v}
+      else if(stat.includes('(proc)'))procs.push(stat);
+      else{const m2=stat.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)$/);if(m2){const k=m2[1];const v=parseFloat(m2[2]);agg[k]=(agg[k]||0)+v}}
+    });
+  });
+  applySetBonuses(agg,procs,names);
+  return {agg,procs};
+}
+function renderStatsHtml(data){
+  const{agg,procs}=data;
+  const sorted=Object.entries(agg).sort((a,b)=>{
+    const ka=statSortKey(a[0]),kb=statSortKey(b[0]);
+    return ka!==kb?ka-kb:Math.abs(b[1])-Math.abs(a[1]);
+  });
+  let h=sorted.map(([k,v])=>`<div class="stat-row"><span class="${statColorClass(k)}">${ts(k)}</span><span class="val ${statColorClass(k)}">${v>0?'+':''}${v}%</span></div>`).join('');
+  procs.forEach(p=>{h+=`<div class="stat-row"><span>${p}</span><span class="val">⚡</span></div>`});
+  return h;
+}
+function renderTabs(){
+  let h='';
+  ORDER.forEach(k=>{
+    const d=EQUIP[k];
+    const lbl=d?tt(d.label):k;
+    h+=`<button class="tab-btn${k===activeTroop?' active':''}" data-troop="${k}">${lbl}</button>`;
+  });
+  tabsEl.innerHTML=h;
+  tabsEl.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      activeTroop=btn.dataset.troop;
+      builder.activeTroop=activeTroop;
+      renderTabs();
+      renderContent();
+      if(builder.active)renderBuilder();
+    });
+  });
+  renderContent();
+}
+
+function renderSetGridHtml(set){
+  const slots={};
+  set.slots.forEach(sl=>{slots[sl.s]=sl});
+  function cellHtml(sk){
+    const sl=slots[sk];
+    const n=sl?sl.n:null;
+    const lbl=lang==='ru'?(SLOT_KEYS_RU[sk]||sk):tt(SLOT_KEYS[sk]);
+    const baseSrc=BASE_ICONS[sk]||'';
+    const iconSrc=n?(ICON_MAP[n]||baseSrc):baseSrc;
+    const rarity=n?RARITY_MAP[n]||'':'';
+    let h=`<div class="b-slot-cell${rarity?' r-'+rarity:''}" style="cursor:default">`;
+    h+=`<div class="sc-icon"><img src="${iconSrc}" alt="${n||lbl}" loading="lazy"></div>`;
+    h+=`<div class="sc-label">${lbl}</div>`;
+    if(n)h+=`<div class="sc-name" data-en="${n}">${tn(n)}</div>`;
+    h+=`</div>`;
+    return h;
+  }
+  let gh='<div class="b-slot-grid" style="margin:0 auto">';
+  gh+=`<div style="grid-column:2;grid-row:1">${cellHtml('helmet')}</div>`;
+  gh+=`<div style="grid-column:1;grid-row:2/span 2;align-self:center">${cellHtml('weapon')}</div>`;
+  gh+=`<div style="grid-column:1;grid-row:3/span 2;align-self:center">${cellHtml('acc1')}</div>`;
+  gh+=`<div style="grid-column:2;grid-row:2">${cellHtml('chest')}</div>`;
+  gh+=`<div style="grid-column:2;grid-row:3">${cellHtml('pants')}</div>`;
+  gh+=`<div style="grid-column:2;grid-row:4">${cellHtml('boots')}</div>`;
+  gh+=`<div style="grid-column:3;grid-row:2/span 2;align-self:center">${cellHtml('gloves')}</div>`;
+  gh+=`<div style="grid-column:3;grid-row:3/span 2;align-self:center">${cellHtml('acc2')}</div>`;
+  gh+='</div>';
+  return gh;
+}
+function renderContent(){
+  const d=EQUIP[activeTroop];
+  if(!d){
+    contentEl.innerHTML=`<div class="tab-content active"><div class="placeholder-msg">${t('placeholder')}<div class="tag">${t('placeholder_tag')}</div></div></div>`;
+    return;
+  }
+  let h='<div class="sets-grid">';
+  d.sets.forEach((set,i)=>{
+    const lbl=tt(set.label);
+    const subl=tt(set.subtitle);
+    h+=`<div class="section"><div class="section-title">${lbl}<button class="stats-btn" data-troop="${activeTroop}" data-set="${set.id}">⚙</button></div>`;
+    if(subl)h+=`<div class="section-subtitle">${subl}</div>`;
+    h+=`<div class="set-grid-wrap">${renderSetGridHtml(set)}</div></div>`;
+  });
+  h+='</div>';
+  contentEl.innerHTML=`<div class="tab-content active">${h}</div>`;
+}
+
+document.querySelectorAll('.lang-btn').forEach(b=>{
+  b.addEventListener('click',()=>{lang=b.dataset.lang;window.lang=lang;localStorage.setItem('lang',lang);applyLang();renderTabs();if(builder.active)renderBuilder()});
+});
+contentEl.addEventListener('mouseover',e=>{
+  const btn=e.target.closest('.stats-btn');
+  if(btn){
+    const stats=getSetStats(btn.dataset.troop,btn.dataset.set);
+    showTooltip(btn,renderStatsHtml(stats));
+    return;
+  }
+  const cell=e.target.closest('.b-slot-cell');
+  if(cell){
+    const nameEl=cell.querySelector('.sc-name');
+    if(nameEl)showTooltip(cell,itemDetailHtml(nameEl.dataset.en||nameEl.textContent));
+    return;
+  }
+  hideTooltip();
+});
+contentEl.addEventListener('mouseout',e=>{
+  if(e.target.closest('.stats-btn')||e.target.closest('.b-slot-cell'))hideTooltip()
+});
+contentEl.addEventListener('click',e=>{
+  const btn=e.target.closest('.stats-btn'); if(!btn)return;
+  const stats=getSetStats(btn.dataset.troop,btn.dataset.set);
+  showModal(btn.dataset.troop+'-'+btn.dataset.set,renderStatsHtml(stats));
+});
+function showTooltip(btn,html){
+  const tip=document.getElementById('statsTooltip');
+  tip.innerHTML=html; const r=btn.getBoundingClientRect();
+  tip.style.display='block'; tip.style.left=(r.left+r.width+6)+'px'; tip.style.top=r.top+'px';
+}
+function hideTooltip(){document.getElementById('statsTooltip').style.display='none'}
+function showModal(title,html){
+  document.getElementById('statsModalTitle').textContent=title;
+  document.getElementById('statsModalBody').innerHTML=html;
+  document.getElementById('statsModal').style.display='flex';
+}
+document.getElementById('statsModal').addEventListener('click',e=>{
+  if(e.target===e.currentTarget||e.target.id==='statsModalClose')
+    document.getElementById('statsModal').style.display='none';
+});
+// === BUILDER ===
+const SLOT_MAP = {
+  'Sharp Longsword':'weapon','Blessed Blade':'weapon','Staff of the Lost':'weapon',
+  'Gatekeepers Shield':'weapon','Blazing Axe':'weapon',"Knight's Oathsworn Bow":'weapon',
+  'Heart of the Saint':'weapon','Sakura Fubuki':'weapon','Golden Age':'weapon',
+  'Twilight Epiphany':'weapon','Trial of the Lost Kingdom':'weapon',"The Hydra's Blast":'weapon',
+  'Hammer of the Sun and Moon':'weapon','Sacred Dominion':'weapon','Pride of the Khan':'helmet',
+  'Helm of the Conqueror':'helmet','Ancestral Mask of Night':'helmet','Abyssal Visage':'helmet',
+  "Witch's Lineage":'helmet',"Knight's Steel Diadem":'helmet','Expedition War Helm':'helmet',
+  'Helm of Fear':'helmet','Helm of Phoenix':'helmet','Iron Helm':'helmet',
+  "Shadow Legion's Retribution":'chest','The Milky Way':'chest','Hope Cloak':'chest',
+  "Quinn's Soul":'chest',"Dark Lord's Blessing":'chest',"Commander's Heavy Armor":'chest',
+  'Milanese Plate':'chest','Infantry Breastplate':'chest','Chain Mail':'chest',
+  "Knight's Valorous Cloak":'chest',"Navar's Control":'gloves','Sacred Grips':'gloves',
+  "Ian's Choice":'gloves',"Iset's Sufferance":'gloves',"Seth's Brutality":'gloves',
+  "Calvin's Hand":'gloves',"Saint's Song":'gloves','Leather Gloves':'gloves','Cloth Gloves':'gloves',
+  "Knight's Battleworn Gauntlets":'gloves','Bronze Bracers':'gloves','Tassets of the War God':'pants',
+  'Eternal Night':'pants','Ash of the Dawn':'pants',"Karuak's Humility":'pants','Gladiator':'pants',
+  "Fanatic's Tassets":'pants',"Greaves of the Exile":'pants','Sentry Breeches':'pants',
+  'Coarse Breeches':'pants','Ranger Trousers':'pants',"Knight's Triumphant Tassets":'pants',
+  'Mountain Crushers':'boots',"Shio's Return":'boots',"Commander's Boots":'boots',
+  'Cloud Racers':'boots','Frost Treads':'boots','Flame Treads':'boots','The Scarlet Hounds':'boots',
+  'Edged Boots':'boots','Boots of Reverence':'boots','Sturdy Boots':'boots',
+  "Knight's Winter Sabatons":'boots',"Dragon's Breath Helm":'helmet',"Dragon's Breath Plate":'chest',
+  "Dragon's Breath Bow":'weapon',"Dragon's Breath Vambraces":'gloves',"Dragon's Breath Tassets":'pants',
+  "Dragon's Breath Boots":'boots','Gold Helm of the Eternal Empire':'helmet',
+  'Plate of the Eternal Empire':'chest','Shield of the Eternal Empire':'weapon',
+  'Vambraces of the Eternal Empire':'gloves','Greaves of the Eternal Empire':'pants',
+  'Sturdy Boots of the Eternal Empire':'boots','Mask of the Forest Guardian':'helmet',
+  'Robe of the Forest Guardian':'chest','Scepter of the Forest Guardian':'weapon',
+  'Claws of the Forest Guardian':'gloves','Diadem of the Glorious Goddess':'helmet',
+  'Plate of the Glorious Goddess':'chest','Scepter of the Glorious Goddess':'weapon',
+  'Gauntlets of the Glorious Goddess':'gloves','Chausses of the Glorious Goddess':'pants',
+  'Greaves of the Glorious Goddess':'boots',"Harvester's Headscarf":'helmet','Harvester Robes':'chest',
+  'Harvester Breeches':'pants','Harvester Boots':'boots','War Helm of the Hellish Wasteland':'helmet',
+  'Heavy Armor of the Hellish Wasteland':'chest','Lance of the Hellish Wasteland':'weapon',
+  'Armband of the Hellish Wasteland':'gloves','Tassets of the Hellish Wasteland':'pants',
+  'Boots of the Hellish Wasteland':'boots','Revival Helm':'helmet','Revival Plate':'chest',
+  'Revival Gauntlets':'gloves','Revival Greaves':'pants','Vanguard Halberd':'weapon',
+  'Vanguard Greaves':'pants','Windswept War Helm':'helmet','Windswept Breastplate':'chest',
+  'Windswept Bracers':'gloves','Windswept Boots':'boots',"Fierce Wolf's Helmet":'helmet',
+  "Vigilant Wolf's Leather Armor":'chest',"Wailing Wolf's Gauntlets":'gloves',
+  "Lone Wolf's Leather Tassets":'pants',"Roaring Wolf's Claws":'boots',
+  "Witch's Deadwood Crown":'helmet',"Witch's Hexed Cloak":'chest',"Witch's Feathered Staff":'weapon',
+  "Witch's Crimson Bracers":'gloves',"Witch's Ornamented Pants":'pants',"Witch's Mire-Waders":'boots',
+  "The Bard's Pendant":'acc1','Call of the Loyal':'acc1','Concealed Dagger':'acc1',
+  'Crimson Ring':'acc1',"Delane's Amulet":'acc1','Pendant of Eternal Night':'acc1',
+  'Greatest Glory':'acc1','Horn of Fury':'acc1','Immolating Plume':'acc1',
+  "Lohar's Bone Necklace":'acc1',"Scola's Lucky Coin":'acc1',"Mora's Web":'acc1',
+  "Peter's Sickle":'acc1','Ring of Doom':'acc1','Wind Scars':'acc1',"Seth's Call":'acc1',
+  'Silent Trial':'acc1','Ancient Strategems':'acc1','Savage Totem':'acc1','Vengeance':'acc1',
+  "Karuak's War Drums":'acc1','Saddle of a Thousand Blessings':'acc1',"Hero's Hilt":'acc1'
+};
+const SLOT_ORDER=['helmet','chest','weapon','gloves','pants','acc1','acc2','boots'];
+const SLOT_KEYS_RU={'helmet':'Шлем','chest':'Нагрудник','weapon':'Оружие','gloves':'Перчатки','pants':'Поножи','boots':'Ботинки','acc1':'Акс. 1','acc2':'Акс. 2'};
+const builder={active:false,slots:{},selectedSlot:null,viewingItem:null,filters:{troop:new Set,slot:new Set,rarity:new Set,search:''}};
+
+function getItemTroop(name){
+  const raw=STATS_MAP[name]; if(!raw)return'';
+  const matches=[...raw.matchAll(/([A-Za-z\s/]+?)\s+([+-]\d+(?:\.\d+)?)%?/g)];
+  let maxV=-Infinity,best='';
+  matches.forEach(([,k,v])=>{
+    const val=parseFloat(v);
+    if(val>maxV){maxV=val;best=k.trim()}
+  });
+  const t=best.toLowerCase();
+  if(t.includes('infantry'))return'infantry';
+  if(t.includes('cavalry'))return'cavalry';
+  if(t.includes('archer'))return'archer';
+  if(t.includes('siege'))return'siege';
+  return'';
+}
+
+function switchMode(mode){
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+  const isB=mode==='builder';
+  document.getElementById('troopContent').style.display=isB?'none':'';
+  document.getElementById('troopTabs').style.display=isB?'none':'';
+  document.getElementById('builderWrap').classList.toggle('active',isB);
+  builder.active=isB;
+  if(isB)renderBuilder();
+}
+
+function statColorClass(k){
+  const kl=k.toLowerCase();
+  if(kl.includes('infantry'))return'stat-inf';
+  if(kl.includes('cavalry'))return'stat-cav';
+  if(kl.includes('archer'))return'stat-arch';
+  if(kl.includes('siege'))return'stat-siege';
+  if(kl.includes('march'))return'stat-march';
+  if(kl.includes('barbarian')||kl.includes('xp')||kl.includes('exp gain'))return'stat-barb';
+  return'stat-march';
+}
+function statSortKey(k){
+  const kl=k.toLowerCase();
+  if(kl.includes('infantry'))return 0;
+  if(kl.includes('cavalry'))return 1;
+  if(kl.includes('archer'))return 2;
+  if(kl.includes('siege'))return 3;
+  if(kl.includes('barbarian')||kl.includes('xp')||kl.includes('exp gain'))return 5;
+  return 4;
+}
+function applySetBonuses(agg,procs,names){
+  const counts={};
+  names.forEach(n=>{
+    const set=ITEM_SET_MAP[n];
+    if(set)counts[set]=(counts[set]||0)+1;
+  });
+  Object.entries(counts).forEach(([set,cnt])=>{
+    const bonuses=SET_BONUSES[set]; if(!bonuses)return;
+    const thresholds=[6,4,2].filter(t=>cnt>=t);
+    thresholds.forEach(t=>{
+      const raw=bonuses[t]; if(!raw)return;
+      raw.split(', ').forEach(stat=>{
+        const m=stat.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)%$/);
+        if(m){const k=m[1];const v=parseFloat(m[2]);agg[k]=(agg[k]||0)+v}
+        else if(stat.includes('(proc)'))procs.push(stat);
+        else{const m2=stat.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)$/);if(m2){const k=m2[1];const v=parseFloat(m2[2]);agg[k]=(agg[k]||0)+v}}
+      });
+    });
+  });
+}
+function calcBuilderStats(){
+  const agg={},procs=[],names=[];
+  SLOT_ORDER.forEach(sk=>{
+    const n=builder.slots[sk]; if(!n)return;
+    names.push(n);
+    const raw=STATS_MAP[n]; if(!raw)return;
+    raw.split(', ').forEach(s=>{
+      const m=s.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)%$/);
+      if(m){const k=m[1];const v=parseFloat(m[2]);agg[k]=(agg[k]||0)+v}
+      else if(s.includes('(proc)'))procs.push(s);
+      else{const m2=s.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)$/);if(m2){const k=m2[1];const v=parseFloat(m2[2]);agg[k]=(agg[k]||0)+v}}
+    });
+  });
+  applySetBonuses(agg,procs,names);
+  const sorted=Object.entries(agg).sort((a,b)=>{
+    const ka=statSortKey(a[0]),kb=statSortKey(b[0]);
+    return ka!==kb?ka-kb:Math.abs(b[1])-Math.abs(a[1]);
+  });
+  let h=sorted.map(([k,v])=>`<div class="stat-row"><span class="${statColorClass(k)}">${ts(k)}</span><span class="val ${statColorClass(k)}">${v>0?'+':''}${v}%</span></div>`).join('');
+  procs.forEach(p=>{h+=`<div class="stat-row proc"><span>${p}</span><span class="val">⚡</span></div>`});
+  return h;
+}
+function itemDetailHtml(name){
+  const raw=STATS_MAP[name]; if(!raw)return'';
+  const stats=raw.split(', ').map(s=>{
+    const m=s.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)%?$/);
+    if(m){const k=m[1],v=m[2];return{name:ts(k),value:v,cls:statColorClass(k)}}
+    return{name:s,value:'',cls:''};
+  });
+  const rarity=RARITY_MAP[name]||'';
+  let h=`<div class="id-title">${lang==='ru'?'Характеристики предмета':'Item Stats'}</div>`;
+  h+=`<div class="id-name">${tn(name)}</div>`;
+  if(rarity)h+=`<div style="color:var(--text-muted);margin-bottom:4px;font-size:0.5rem">${rarity}</div>`;
+  stats.forEach(st=>{
+    if(st.value)h+=`<div class="id-stat"><span class="${st.cls}">${st.name}</span><span class="val ${st.cls}">${st.value.startsWith('-')?'':'+'}${st.value}%</span></div>`;
+    else h+=`<div class="id-stat"><span>${st.name}</span></div>`;
+  });
+  return h;
+}
+
+function clearSlots(){builder.slots={};builder.selectedSlot=null;builder.viewingItem=null;renderBuilder()}
+
+function renderBuilder(){
+  const bar=document.getElementById('presetBar');
+  bar.innerHTML=`<button class="preset-btn clear" id="clearSlots">${lang==='ru'?'Очистить':'Clear'}</button>`;
+  const clearBtn=document.getElementById('clearSlots');
+  if(clearBtn)clearBtn.onclick=clearSlots;
+
+  const grid=document.getElementById('slotGrid');
+  function slotHtml(sk){
+    const n=builder.slots[sk];
+    const sel=builder.selectedSlot===sk?' selected':'';
+    const lbl=lang==='ru'?(SLOT_KEYS_RU[sk]||sk):tt(SLOT_KEYS[sk]);
+    const baseSrc=BASE_ICONS[sk]||'';
+    const iconSrc=n?(ICON_MAP[n]||baseSrc):baseSrc;
+    const rarity=n?RARITY_MAP[n]||'':'';
+    let h=`<div class="b-slot-cell${sel}${rarity?' r-'+rarity:''}" data-sk="${sk}">`;
+    if(n)h+=`<button class="sc-remove" data-sk="${sk}">×</button>`;
+    h+=`<div class="sc-icon"><img src="${iconSrc}" alt="${n||lbl}" loading="lazy"></div>`;
+    h+=`<div class="sc-label">${lbl}</div>`;
+    if(n)h+=`<div class="sc-name" data-en="${n}">${tn(n)}</div>`;
+    h+=`</div>`;
+    return h;
+  }
+  let gh='';
+  gh+=`<div style="grid-column:2;grid-row:1">${slotHtml('helmet')}</div>`;
+  gh+=`<div style="grid-column:1;grid-row:2/span 2;align-self:center">${slotHtml('weapon')}</div>`;
+  gh+=`<div style="grid-column:1;grid-row:3/span 2;align-self:center">${slotHtml('acc1')}</div>`;
+  gh+=`<div style="grid-column:2;grid-row:2">${slotHtml('chest')}</div>`;
+  gh+=`<div style="grid-column:2;grid-row:3">${slotHtml('pants')}</div>`;
+  gh+=`<div style="grid-column:2;grid-row:4">${slotHtml('boots')}</div>`;
+  gh+=`<div style="grid-column:3;grid-row:2/span 2;align-self:center">${slotHtml('gloves')}</div>`;
+  gh+=`<div style="grid-column:3;grid-row:3/span 2;align-self:center">${slotHtml('acc2')}</div>`;
+  grid.innerHTML=gh;
+  grid.querySelectorAll('.b-slot-cell').forEach(c=>{
+    c.addEventListener('click',e=>{
+      if(e.target.closest('.sc-remove'))return;
+      const sk=c.dataset.sk;
+      const current=builder.slots[sk];
+      builder.selectedSlot=sk;
+      if(current)builder.viewingItem=current;
+      else builder.viewingItem=null;
+      renderBuilder();
+    });
+  });
+  grid.querySelectorAll('.sc-remove').forEach(b=>{
+    b.addEventListener('click',e=>{
+      e.stopPropagation();
+      const sk=b.dataset.sk;
+      delete builder.slots[sk];
+      if(builder.viewingItem&&!builder.slots[sk])builder.viewingItem=null;
+      renderBuilder();
+    });
+  });
+
+  const statsHtml=calcBuilderStats();
+  const emptyMsg=lang==='ru'?'Снарядите предметы для просмотра статов':'Equip items to see stats';
+  document.getElementById('builderStats').innerHTML=`<div class="section-title">${lang==='ru'?'Суммарные статы':'Total Stats'}</div>${statsHtml||`<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);padding:8px 4px">${emptyMsg}</div>`}`;
+
+  const detailEl=document.getElementById('builderItemDetail');
+  detailEl.dataset.placeholder=lang==='ru'?'Нажмите на предмет в слоте':'Click an item in a slot';
+  if(builder.viewingItem)detailEl.innerHTML=itemDetailHtml(builder.viewingItem);
+  else detailEl.innerHTML='';
+
+  renderItemList();
+}
+
+function renderItemList(){
+  const allNames=Object.keys(SLOT_MAP);
+  const troopTypes=['infantry','cavalry','archer','siege'];
+  const slotTypes=[...new Set(Object.values(SLOT_MAP))];
+  const rarityTypes=['Legendary','Epic','Elite','Advanced','Normal'];
+
+  const f=builder.filters;
+  const filtered=allNames.filter(n=>{
+    if(f.search && !n.toLowerCase().includes(f.search.toLowerCase()) && !tn(n).toLowerCase().includes(f.search.toLowerCase()))return false;
+    if(f.troop.size && !f.troop.has(getItemTroop(n)))return false;
+    if(f.slot.size && !f.slot.has(SLOT_MAP[n]))return false;
+    if(f.rarity.size && !f.rarity.has(RARITY_MAP[n]||''))return false;
+    return true;
+  }).sort((a,b)=>{
+    const ra=RARITY_MAP[a]||'',rb=RARITY_MAP[b]||'';
+    const order={Legendary:5,Epic:4,Elite:3,Advanced:2,Normal:1};
+    return (order[rb]||0)-(order[ra]||0) || a.localeCompare(b);
+  });
+
+  const esc=str=>str.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  // render filter buttons
+  let fh='';
+  troopTypes.forEach(t=>{
+    const on=f.troop.has(t);
+    const label=lang==='ru'?{infantry:'Пехота',cavalry:'Кавалерия',archer:'Лучники',siege:'Осадные'}[t]:t.charAt(0).toUpperCase()+t.slice(1);
+    fh+=`<button class="il-filter${on?' on':''}" data-filter-type="troop" data-filter-val="${t}">${label}</button>`;
+  });
+  fh+=`<span class="il-sep">|</span>`;
+  slotTypes.forEach(sk=>{
+    const on=f.slot.has(sk);
+    const label=lang==='ru'?(SLOT_KEYS_RU[sk]||sk):(tt(SLOT_KEYS[sk])||sk);
+    fh+=`<button class="il-filter${on?' on':''}" data-filter-type="slot" data-filter-val="${sk}">${label}</button>`;
+  });
+  fh+=`<span class="il-sep">|</span>`;
+  rarityTypes.forEach(r=>{
+    const on=f.rarity.has(r);
+    fh+=`<button class="il-filter${on?' on':''}" data-filter-type="rarity" data-filter-val="${r}">${r}</button>`;
+  });
+  document.getElementById('ilFilters').innerHTML=fh;
+
+  document.querySelectorAll('#ilFilters .il-filter').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const type=b.dataset.filterType;
+      const val=b.dataset.filterVal;
+      if(builder.filters[type].has(val))builder.filters[type].delete(val);
+      else builder.filters[type].add(val);
+      renderItemList();
+    });
+  });
+
+  // render item grid
+  let gh='';
+  filtered.forEach(n=>{
+    const sk=SLOT_MAP[n];
+    const rarity=RARITY_MAP[n]||'';
+    const icon=ICON_MAP[n]||BASE_ICONS[sk]||'';
+    const eq=Object.values(builder.slots).includes(n);
+    gh+=`<div class="il-item${eq?' eq':''} r-${rarity}" data-item-name="${esc(n)}" data-item-slot="${sk}">`;
+    if(icon)gh+=`<img src="${icon}" alt="" loading="lazy">`;
+    gh+=`<span class="il-name">${esc(tn(n))}</span>`;
+    if(rarity)gh+=`<span class="il-tag">${rarity.charAt(0)}</span>`;
+    gh+=`</div>`;
+  });
+  document.getElementById('ilGrid').innerHTML=gh;
+
+  document.querySelectorAll('#ilGrid .il-item').forEach(c=>{
+    c.addEventListener('click',()=>{
+      const name=c.dataset.itemName;
+      const itemSlot=c.dataset.itemSlot;
+      const sk=builder.selectedSlot&&itemSlot===builder.selectedSlot?builder.selectedSlot:itemSlot;
+      if(builder.slots[sk]===name){delete builder.slots[sk];builder.viewingItem=null}
+      else{builder.slots[sk]=name;builder.viewingItem=null;builder.selectedSlot=null}
+      renderBuilder();
+    });
+  });
+}
+
+document.querySelectorAll('.mode-btn').forEach(b=>{
+  b.addEventListener('click',()=>switchMode(b.dataset.mode));
+});
+document.getElementById('ilSearch').addEventListener('input',e=>{
+  builder.filters.search=e.target.value;
+  renderItemList();
+});
+document.getElementById('ilSearch').placeholder=lang==='ru'?'Поиск...':'Search...';
+applyLang();
+renderTabs();
+</script>
+</body>
+</html>
