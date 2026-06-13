@@ -88,6 +88,8 @@ tr.between td{color:var(--neon-amber)}
   <div class="panel result-panel">
     <div class="result-value" id="booksNeed">0</div>
     <div class="result-label" data-i18n="need_label">Нужно книг</div>
+    <div class="result-value small" id="gemsNeed">0</div>
+    <div class="result-label" data-i18n="gems_label">Или в гемах</div>
     <div style="margin-top:6px;">
       <span class="result-label" style="font-size:0.55rem"><span data-i18n="total_need">Требуется всего</span>: <span id="totalNeed" style="font-family:var(--font-display);color:var(--neon-amber)">0</span></span>
       <span class="result-label" style="font-size:0.55rem;margin-left:12px;"><span data-i18n="have_display">Есть</span>: <span id="haveDisplay" style="font-family:var(--font-display);color:var(--neon-amber)">0</span></span>
@@ -119,6 +121,7 @@ const LANG={
     target_label:'Цель',
     have_label:'Книг в наличии',
     need_label:'Нужно книг',
+    gems_label:'Или в гемах',
     total_need:'Требуется всего',
     have_display:'Есть',
     th_lvl:'Уровень',
@@ -134,6 +137,7 @@ const LANG={
     target_label:'Target',
     have_label:'Books on hand',
     need_label:'Books needed',
+    gems_label:'Or in gems',
     total_need:'Total required',
     have_display:'Have',
     th_lvl:'Level',
@@ -188,6 +192,7 @@ function calc(){
   document.getElementById('booksNeed').textContent=fn(need);
   document.getElementById('totalNeed').textContent=fn(total);
   document.getElementById('haveDisplay').textContent=fn(h);
+  document.getElementById('gemsNeed').textContent=fn(need*10);
   const pct=total>0?Math.min(100,h/total*100):0;
   document.getElementById('progressFill').style.width=pct+'%';
   document.getElementById('progressLabel').textContent=fn(Math.floor(h))+' / '+fn(total)+' ('+pct.toFixed(1)+'%)';
