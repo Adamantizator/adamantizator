@@ -57,10 +57,6 @@ body::after {
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 30px rgba(255,230,0,0.4));
 }
-.header .subtitle {
-  font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 6px;
-  color: var(--text-dim); margin-top: 6px; text-transform: uppercase;
-}
 .glitch-line {
   height: 2px; margin: 12px 0 0;
   background: linear-gradient(90deg, transparent, var(--neon-yellow), var(--neon-gold), transparent);
@@ -128,13 +124,15 @@ label {
   text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 4px;
 }
 
-input {
+input, select {
   font-family: var(--font-body); font-size: 1.1rem; padding: 10px 14px;
   background: var(--input-bg); border: 1px solid rgba(255,230,0,0.25);
   color: var(--text-primary); border-radius: 3px; outline: none;
   transition: border-color 0.2s; width: 100%; letter-spacing: 0.5px;
 }
-input:focus { border-color: var(--neon-yellow); box-shadow: 0 0 15px rgba(255,230,0,0.15); }
+input:focus, select:focus { border-color: var(--neon-yellow); box-shadow: 0 0 15px rgba(255,230,0,0.15); }
+select { cursor: pointer; }
+select option { background: var(--dark-bg); color: var(--text-primary); }
 
 .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
 .col { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px; }
@@ -147,12 +145,21 @@ input:focus { border-color: var(--neon-yellow); box-shadow: 0 0 15px rgba(255,23
 }
 .warning-box.visible { display: block; }
 
+.success-box {
+  background: rgba(0,255,136,0.08); border: 1px solid var(--neon-green);
+  border-radius: 3px; padding: 12px 16px; margin-bottom: 12px;
+  color: var(--neon-green); font-family: var(--font-mono); font-size: 0.8rem;
+  display: none;
+}
+.success-box.visible { display: block; }
+
 .result-panel { text-align: center; padding: 24px 20px; }
 .result-value {
   font-family: var(--font-display); font-size: 2.5rem; font-weight: 900;
   color: var(--neon-yellow); text-shadow: 0 0 30px rgba(255,230,0,0.3);
   margin: 4px 0;
 }
+.result-value.small { font-size: 1.6rem; }
 .result-label {
   font-family: var(--font-display); font-size: 0.65rem; letter-spacing: 2px;
   color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;
@@ -171,21 +178,12 @@ input:focus { border-color: var(--neon-yellow); box-shadow: 0 0 15px rgba(255,23
   text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;
 }
 
-.table-wrap { overflow-x: auto; }
-table {
-  width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.75rem;
+.tip-box {
+  background: rgba(255,230,0,0.05); border: 1px solid rgba(255,230,0,0.15);
+  border-radius: 3px; padding: 16px; margin-top: 12px;
+  font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.6;
 }
-th {
-  font-family: var(--font-display); font-size: 0.5rem; letter-spacing: 1px;
-  color: var(--text-muted); text-transform: uppercase; padding: 6px 8px;
-  border-bottom: 1px solid rgba(255,230,0,0.15); text-align: right;
-}
-th:first-child { text-align: left; }
-td {
-  padding: 6px 8px; border-bottom: 1px solid rgba(255,230,0,0.06); text-align: right;
-}
-td:first-child { text-align: left; }
-tr.active td { color: var(--neon-yellow); font-weight: 700; }
+.tip-box .num { color: var(--neon-yellow); font-weight: 700; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--dark-bg); }
@@ -200,6 +198,7 @@ tr.active td { color: var(--neon-yellow); font-weight: 700; }
   .col { min-width: 120px; }
   .result-grid { grid-template-columns: 1fr 1fr; }
   .result-value { font-size: 2rem; }
+  .result-value.small { font-size: 1.3rem; }
 }
 </style>
 </head>
@@ -231,6 +230,10 @@ tr.active td { color: var(--neon-yellow); font-weight: 700; }
     </div>
     <div class="row" style="margin-top:12px;">
       <div class="col">
+        <label data-i18n="target">Цель (паспортов)</label>
+        <select id="targetSelect"></select>
+      </div>
+      <div class="col">
         <label data-i18n="hosp">Госпиталь</label>
         <input type="number" id="hospCap" value="0" min="0">
       </div>
@@ -245,59 +248,68 @@ tr.active td { color: var(--neon-yellow); font-weight: 700; }
     </div>
   </div>
 
+  <div class="panel result-panel">
+    <div class="result-grid cols-2">
+      <div class="result-item">
+        <div class="ri-value" id="curPass">—</div>
+        <div class="ri-label" data-i18n="current">Сейчас</div>
+      </div>
+      <div class="result-item">
+        <div class="ri-value" id="tgtPass">—</div>
+        <div class="ri-label" data-i18n="targetLabel">Цель</div>
+      </div>
+    </div>
+
+    <div class="tip-box" id="tipBox">
+      <div data-i18n="tip_need_power">Нужно снизить мощь до</div>
+      <span id="targetMaxPower" class="num"></span>
+      <div style="margin-top:6px;">
+        <span data-i18n="tip_power_shed">Сбросить мощи</span>
+        <span id="powerShed" class="num"></span>
+      </div>
+      <div style="margin-top:6px;">
+        <span data-i18n="tip_t4">T4 в госпиталь</span>
+        <span id="tipT4" class="num"></span>
+        <span style="color:var(--text-dim);">  или  </span>
+        <span data-i18n="tip_t5">T5</span>
+        <span id="tipT5" class="num"></span>
+      </div>
+    </div>
+    <div class="tip-box" id="manualBox" style="display:none;margin-top:8px;">
+      <span data-i18n="manual_power">Мощь с заполнением госпиталя</span>
+      <span id="manualEffPower" class="num"></span>
+      <span style="color:var(--text-dim);margin:0 6px;">|</span>
+      <span data-i18n="pass_after">Паспортов</span>
+      <span id="manualPass" class="num"></span>
+    </div>
+  </div>
+
   <div class="warning-box" id="deathWarn">
     <span id="deathText"></span>
   </div>
-
-  <div class="panel result-panel">
-    <div class="result-label" data-i18n="need">Нужно паспортов</div>
-    <div class="result-value" id="passResult">1</div>
-
-    <div class="result-grid cols-2" id="hospGrid" style="display:none;">
-      <div class="result-item">
-        <div class="ri-value" id="hospPower">0</div>
-        <div class="ri-label" data-i18n="hospPow">Мощь в госпитале</div>
-      </div>
-      <div class="result-item">
-        <div class="ri-value" id="effPower">—</div>
-        <div class="ri-label" data-i18n="effPow">Мощь без госпиталя</div>
-      </div>
-    </div>
-
-    <div class="result-grid">
-      <div class="result-item">
-        <div class="ri-value" id="credResult">600 000</div>
-        <div class="ri-label" data-i18n="credits">Кредиты</div>
-      </div>
-      <div class="result-item">
-        <div class="ri-value" id="timeResult">~15</div>
-        <div class="ri-label" data-i18n="days">Дней</div>
-      </div>
-      <div class="result-item">
-        <div class="ri-value" id="cppResult">600 000</div>
-        <div class="ri-label" data-i18n="cpp">Кредитов/пасс</div>
-      </div>
-    </div>
+  <div class="success-box" id="okWarn">
+    <span id="okText"></span>
   </div>
 
   <div class="panel" style="padding:20px 20px 4px;">
-    <table>
-      <thead>
-        <tr>
-          <th data-i18n="powCol">Мощь</th>
-          <th data-i18n="passCol">Паспортов</th>
-          <th data-i18n="credCol">Кредитов</th>
-          <th data-i18n="dayCol">Дней</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:0.75rem;">
+        <thead>
+          <tr>
+            <th style="font-family:var(--font-display);font-size:0.5rem;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;padding:6px 8px;border-bottom:1px solid rgba(255,230,0,0.15);text-align:left;" data-i18n="powCol">Мощь</th>
+            <th style="font-family:var(--font-display);font-size:0.5rem;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;padding:6px 8px;border-bottom:1px solid rgba(255,230,0,0.15);text-align:right;" data-i18n="passCol">Паспортов</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
 <script>
 const CPP = 600000;
 const DP = 15;
+const P4 = 4, P5 = 10;
 const THR = [
   {max:10,p:1},{max:15,p:2},{max:20,p:3},{max:25,p:4},{max:30,p:6},
   {max:35,p:9},{max:40,p:12},{max:45,p:15},{max:50,p:20},{max:55,p:25},{max:60,p:30},
@@ -309,24 +321,46 @@ function pass(pm) {
   return 30 + Math.ceil((pm - 60) / 5) * 5;
 }
 
+function maxPowerForPass(targetP) {
+  if (targetP <= 0) return 0;
+  for (const t of THR) { if (t.p === targetP) return t.max * 1000000 - 1; }
+  if (targetP > 30) {
+    const extra = targetP - 30;
+    return (60 + extra) * 1000000 - 1;
+  }
+  return 0;
+}
+
+function fn(n) { return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
 const LANG = {
   ru: {
     back: '← Главная', title: 'Passport Calculator — Rise of Kingdoms',
-    power: 'Мощь', hosp: 'Госпиталь', need: 'Нужно паспортов',
-    credits: 'Кредиты', days: 'Дней', cpp: 'Кредитов/пасс',
-    hospPow: 'Мощь в госпитале', effPow: 'Мощь без госпиталя',
-    powCol: 'Мощь', passCol: 'Паспортов', credCol: 'Кредитов', dayCol: 'Дней',
+    power: 'Мощь', target: 'Цель (паспортов)', hosp: 'Госпиталь',
+    current: 'Сейчас', targetLabel: 'Цель',
+    tip_need_power: 'Нужно снизить мощь до',
+    tip_power_shed: 'Сбросить мощи',
+    tip_t4: 'T4 в госпиталь', tip_t5: 'T5',
+    manual_power: 'Мощь с заполнением госпиталя',
+    pass_after: 'Паспортов',
+    powCol: 'Мощь', passCol: 'Паспортов',
     cal: '📅 Calendar',
     troops_die: 'погибнет',
+    ok_text: 'Вмещается в госпиталь',
   },
   en: {
     back: '← Home', title: 'Passport Calculator — Rise of Kingdoms',
-    power: 'Power', hosp: 'Hospital', need: 'Passports needed',
-    credits: 'Credits', days: 'Days', cpp: 'Credits/pass',
-    hospPow: 'Hospital power', effPow: 'Power without hospital',
-    powCol: 'Power', passCol: 'Passports', credCol: 'Credits', dayCol: 'Days',
+    power: 'Power', target: 'Target (passports)', hosp: 'Hospital',
+    current: 'Current', targetLabel: 'Target',
+    tip_need_power: 'Reduce power to',
+    tip_power_shed: 'Power to shed',
+    tip_t4: 'T4 to hospital', tip_t5: 'T5',
+    manual_power: 'Power with hospital',
+    pass_after: 'Passports',
+    powCol: 'Power', passCol: 'Passports',
     cal: '📅 Calendar',
     troops_die: 'will die',
+    ok_text: 'Fits in hospital',
   },
 };
 
@@ -346,84 +380,119 @@ document.querySelectorAll('.lang-btn').forEach(b => {
 });
 applyLang();
 
-function fn(n) { return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
-
 const pi = document.getElementById('powerInput');
+const ts = document.getElementById('targetSelect');
+
+// Populate target dropdown
+const allPassValues = [];
+for (const t of THR) { if (!allPassValues.includes(t.p)) allPassValues.push(t.p); }
+for (let extra = 35; extra <= 300; extra += 5) { allPassValues.push(extra); }
+for (const v of allPassValues) {
+  const opt = document.createElement('option');
+  opt.value = v; opt.textContent = v;
+  ts.appendChild(opt);
+}
+
 pi.addEventListener('input', function() {
   const r = this.value.replace(/\s/g, '').replace(/[^\d]/g, '');
   this.value = r ? fn(parseInt(r)) : '';
   calc();
 });
 pi.addEventListener('focus', function() { this.select(); });
-
-['hospCap','t4Count','t5Count'].forEach(id => {
-  document.getElementById(id).addEventListener('input', calc);
-});
+ts.addEventListener('change', calc);
+document.getElementById('hospCap').addEventListener('input', calc);
+document.getElementById('t4Count').addEventListener('input', calc);
+document.getElementById('t5Count').addEventListener('input', calc);
 
 function calc() {
   const raw = pi.value.replace(/\s/g, '');
   const powerRaw = parseFloat(raw) || 0;
-  let pm = powerRaw / 1000000;
-
-  const t4 = parseInt(document.getElementById('t4Count').value) || 0;
-  const t5 = parseInt(document.getElementById('t5Count').value) || 0;
+  const pm = powerRaw / 1000000;
+  const curPass = pass(pm);
+  const tgt = parseInt(ts.value) || 1;
   const cap = parseInt(document.getElementById('hospCap').value) || 0;
-  const total = t4 + t5;
-  const hp = t4 * 4 + t5 * 10;
+  const t4m = parseInt(document.getElementById('t4Count').value) || 0;
+  const t5m = parseInt(document.getElementById('t5Count').value) || 0;
 
+  document.getElementById('curPass').textContent = curPass;
+  document.getElementById('tgtPass').textContent = tgt;
+
+  const maxP = maxPowerForPass(tgt);
+  const tb = document.getElementById('tipBox');
   const dw = document.getElementById('deathWarn');
-  const dt = document.getElementById('deathText');
-  if (cap > 0 && total > cap) {
-    dt.textContent = (total - cap) + ' ' + (LANG[lang].troops_die || 'погибнет');
-    dw.classList.add('visible');
+  const ow = document.getElementById('okWarn');
+
+  if (tgt >= curPass) {
+    tb.style.display = 'none';
   } else {
-    dw.classList.remove('visible');
+    tb.style.display = 'block';
+    document.getElementById('targetMaxPower').textContent = fn(maxP);
+    const shed = powerRaw - maxP;
+    document.getElementById('powerShed').textContent = fn(shed);
+
+    const t4need = Math.ceil(shed / P4);
+    const t5need = Math.ceil(shed / P5);
+    document.getElementById('tipT4').textContent = fn(t4need);
+    document.getElementById('tipT5').textContent = fn(t5need);
+
+    // Hospital check against recommendation
+    if (cap > 0) {
+      if (t4need > cap) {
+        dw.classList.add('visible');
+        document.getElementById('deathText').textContent =
+          fn(t4need - cap) + ' ' + t('troops_die');
+        ow.classList.remove('visible');
+      } else {
+        dw.classList.remove('visible');
+        ow.classList.add('visible');
+        document.getElementById('okText').textContent = t('ok_text');
+      }
+    } else {
+      dw.classList.remove('visible');
+      ow.classList.remove('visible');
+    }
   }
 
-  const hg = document.getElementById('hospGrid');
-  if (total > 0) {
-    hg.style.display = 'grid';
-    document.getElementById('hospPower').textContent = fn(hp);
-    const eff = Math.max(0, powerRaw - hp);
-    pm = eff / 1000000;
-    document.getElementById('effPower').textContent = fn(eff);
-    if (pm <= 0) {
-      document.getElementById('passResult').textContent = '0';
-      document.getElementById('credResult').textContent = '0';
-      document.getElementById('timeResult').textContent = '~0';
-      document.getElementById('cppResult').textContent = fn(CPP);
-      render(0);
-      return;
+  // Manual T4/T5 check
+  const mb = document.getElementById('manualBox');
+  if (t4m > 0 || t5m > 0) {
+    const hp = t4m * P4 + t5m * P5;
+    const totalTroops = t4m + t5m;
+    const effRaw = Math.max(0, powerRaw - hp);
+    document.getElementById('manualEffPower').textContent = fn(effRaw);
+    document.getElementById('manualPass').textContent = pass(effRaw / 1000000);
+    mb.style.display = 'block';
+    if (cap > 0 && totalTroops > cap) {
+      dw.classList.add('visible');
+      document.getElementById('deathText').textContent =
+        fn(totalTroops - cap) + ' ' + t('troops_die') + ' (T4+T5)';
+      ow.classList.remove('visible');
     }
   } else {
-    hg.style.display = 'none';
+    mb.style.display = 'none';
   }
 
-  const p = pass(pm);
-  document.getElementById('passResult').textContent = p;
-  document.getElementById('credResult').textContent = fn(p * CPP);
-  document.getElementById('timeResult').textContent = '~' + (p * DP);
-  document.getElementById('cppResult').textContent = fn(CPP);
-  render(pm);
+  render(pm, curPass);
 }
 
-function render(pm) {
+function render(pm, curP) {
   const tb = document.getElementById('tableBody');
   let h = '';
   for (const t of THR) {
-    const c = t.p * CPP, d = t.p * DP;
     const a = pm < t.max ? 'active' : '';
-    h += `<tr class="${a}"><td>${fn((t.max-5)*1000000)} – ${fn(t.max*1000000-1)}</td><td>${t.p}</td><td>${fn(c)}</td><td>~${d}</td></tr>`;
+    const style = a ? 'color:var(--neon-yellow);font-weight:700;' : '';
+    h += `<tr><td style="padding:4px 8px;border-bottom:1px solid rgba(255,230,0,0.06);text-align:left;${style}">${fn((t.max-5)*1000000)}–${fn(t.max*1000000-1)}</td><td style="padding:4px 8px;border-bottom:1px solid rgba(255,230,0,0.06);text-align:right;${style}">${t.p}</td></tr>`;
   }
+  // Show current additional rows
   if (pm >= 60) {
-    for (let m = 65; m <= Math.min(pm + 5, 99999); m += 5) {
-      if (m === 65) {
-        const a = pm < 65 ? 'active' : '';
-        h += `<tr class="${a}"><td>${fn(60000000)} – ${fn(64999999)}</td><td>30</td><td>${fn(30*CPP)}</td><td>~${30*DP}</td></tr>`;
-      }
+    const a60 = pm < 65 ? 'active' : '';
+    const s60 = a60 ? 'color:var(--neon-yellow);font-weight:700;' : '';
+    h += `<tr><td style="padding:4px 8px;border-bottom:1px solid rgba(255,230,0,0.06);text-align:left;${s60}">${fn(60000000)}–${fn(64999999)}</td><td style="padding:4px 8px;border-bottom:1px solid rgba(255,230,0,0.06);text-align:right;${s60}">30</td></tr>`;
+    for (let m = 65; m <= pm + 5; m += 5) {
       const pp = pass(m);
       const a = pm < m + 5 && pm >= m ? 'active' : '';
-      h += `<tr class="${a}"><td>${fn((m-5)*1000000)} – ${fn(m*1000000-1)}</td><td>${pp}</td><td>${fn(pp*CPP)}</td><td>~${pp*DP}</td></tr>`;
+      const s = a ? 'color:var(--neon-yellow);font-weight:700;' : '';
+      h += `<tr><td style="padding:4px 8px;border-bottom:1px solid rgba(255,230,0,0.06);text-align:left;${s}">${fn((m-5)*1000000)}–${fn(m*1000000-1)}</td><td style="padding:4px 8px;border-bottom:1px solid rgba(255,230,0,0.06);text-align:right;${s}">${pp}</td></tr>`;
     }
   }
   tb.innerHTML = h;
