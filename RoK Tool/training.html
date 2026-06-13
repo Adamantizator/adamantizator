@@ -248,6 +248,16 @@ input:focus {
 .lang-btn.active { background: var(--neon-yellow); color: #000; border-color: var(--neon-yellow); }
 .lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
+.cal-btn {
+  font-family: var(--font-display); font-size: 0.6rem;
+  padding: 3px 8px; background: var(--input-bg);
+  border: 1px solid rgba(255, 230, 0, 0.2);
+  color: var(--text-muted); cursor: pointer; text-decoration: none;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.cal-btn:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); }
+
 .cyber-banner-small {
   width: 100%; max-width: 160px;
   margin: 0 auto 20px; border-radius: 50%; overflow: hidden;
@@ -280,15 +290,24 @@ input:focus {
 ::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
 
 @media (max-width: 768px) {
+  .header { padding-top: 36px; }
   .header h1 { font-size: 1.4rem; letter-spacing: 2px; }
   .troop-inputs { flex-wrap: wrap; }
   .troop-input-group { min-width: 120px; }
   .result-main { font-size: 1.4rem; }
+  .app { padding: 10px; }
+  .panel { padding: 12px; }
+  .result-table { font-size: 0.7rem; }
+  .result-table th { font-size: 0.5rem; padding: 4px 6px; }
+  .result-table td { padding: 4px 6px; }
+  .row { gap: 10px; }
+  .row-smp { gap: 16px !important; }
 }
 </style>
 </head>
 <body>
 <div class="lang-switch">
+  <a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
   <button class="lang-btn" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
@@ -297,7 +316,7 @@ input:focus {
     <div style="text-align:left;margin-bottom:4px;">
       <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px;" data-i18n="back">← Главная</a>
     </div>
-    <h1 class="flicker-glow-text">TRAINING CALCULATOR</h1>
+    <h1 class="flicker-glow-text" data-i18n="h1">TRAINING CALCULATOR</h1>
     <div class="subtitle" data-i18n="subtitle">T4 / T5 Troop Training</div>
     <div class="glitch-line"></div>
   </header>
@@ -403,7 +422,7 @@ input:focus {
       <tfoot id="costFoot"></tfoot>
     </table>
 
-    <div class="row" style="justify-content:center;gap:40px;margin-top:16px;">
+    <div class="row row-smp" style="justify-content:center;gap:40px;margin-top:16px;">
       <div>
         <div class="result-label" data-i18n="smp_title">СМП очки</div>
         <div class="result-main" id="smpPoints" style="font-size:1.5rem;">0</div>
@@ -430,7 +449,7 @@ input:focus {
 <script>
 const LANG = {
   ru: {
-    back: '← Главная', subtitle: 'T4 / T5 Troop Training',
+    back: '← Главная', subtitle: 'Калькулятор Обучения / Training Calculator', h1:'КАЛЬКУЛЯТОР ОБУЧЕНИЯ',
     train_t5: 'Обучение T5', train_t4: 'Обучение T4',
     retrain: 'Переобучение T4 → T5',
     inf5: '⚔️ Пехота T5', arc5: '🏹 Луки T5', cav5: '🐴 Кони T5', sie5: '💥 Осада T5',
@@ -443,9 +462,10 @@ const LANG = {
     food: '🍖 Пища', wood: '🪵 Дерево', stone: '🪨 Камень', gold: '🪙 Золото',
     total: 'ИТОГО', sec: 'с', min: 'м', hr: 'ч', day: 'д',
     smp_title: 'СМП очки', kvk_title: 'KvK очки',
+    calendar_btn: '📅 Календарь',
   },
   en: {
-    back: '← Home', subtitle: 'T4 / T5 Troop Training',
+    back: '← Home', subtitle: 'Training Calculator / Калькулятор Обучения', h1:'TRAINING CALCULATOR',
     train_t5: 'Train T5', train_t4: 'Train T4',
     retrain: 'Retrain T4 → T5',
     inf5: '⚔️ Infantry T5', arc5: '🏹 Archers T5', cav5: '🐴 Cavalry T5', sie5: '💥 Siege T5',
@@ -458,6 +478,7 @@ const LANG = {
     food: '🍖 Food', wood: '🪵 Wood', stone: '🪨 Stone', gold: '🪙 Gold',
     total: 'TOTAL', sec: 's', min: 'm', hr: 'h', day: 'd',
     smp_title: 'SMP Points', kvk_title: 'KvK Points',
+    calendar_btn: '📅 Calendar',
   },
 };
 
