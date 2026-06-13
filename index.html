@@ -210,6 +210,10 @@ body::after {
 .card-passports { border-color: rgba(0, 240, 170, 0.3); }
 .card-passports:hover { border-color: #00f0aa !important; }
 
+.card-covenant .card-title { color: var(--neon-amber); }
+.card-covenant { border-color: rgba(255, 179, 0, 0.3); }
+.card-covenant:hover { border-color: var(--neon-amber) !important; }
+
 .footer {
   margin-top: 40px;
   font-family: var(--font-mono);
@@ -450,6 +454,14 @@ body::after {
         <div class="tag" data-i18n="card8_tag">Миграция · Паспорта · Кредиты</div>
       </a>
     </div>
+    <div class="card-wrap">
+      <a class="card card-covenant" href="covenant.html">
+        <div class="card-icon">📜</div>
+        <div class="card-title" data-i18n="card9_title">Covenant</div>
+        <div class="card-desc" data-i18n="card9_desc">Расчёт книг соглашений для Центра Альянса (ур. 1–25)</div>
+        <div class="tag" data-i18n="card9_tag">Книги · Уровни · Прогрессия</div>
+      </a>
+    </div>
   </div>
 
   <div class="footer">
@@ -487,6 +499,9 @@ const LANG = {
     card8_title: 'Passports',
     card8_desc: 'Расчёт стоимости миграции: паспорта, кредиты, время фарма',
     card8_tag: 'Миграция · Паспорта · Кредиты',
+    card9_title: 'Covenant',
+    card9_desc: 'Расчёт книг соглашений для Центра Альянса (ур. 1–25)',
+    card9_tag: 'Книги · Уровни · Прогрессия',
     calendar_btn: '📅 Календарь',
   },
   en: {
@@ -515,6 +530,9 @@ const LANG = {
     card8_title: 'Passports',
     card8_desc: 'Migration cost calculator: passports, credits, farming time',
     card8_tag: 'Migration · Passports · Credits',
+    card9_title: 'Covenant',
+    card9_desc: 'Book of Covenant calculator for Alliance Center (Lv. 1–25)',
+    card9_tag: 'Books · Levels · Progression',
     calendar_btn: '📅 Calendar',
   },
 };
