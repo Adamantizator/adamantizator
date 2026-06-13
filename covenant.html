@@ -153,23 +153,15 @@ function applyLang(){
   });
   document.querySelectorAll('.lang-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.lang===lang));
   document.documentElement.lang=lang;
-  fromS.options.forEach((o,i)=>o.textContent=t('lvl_prefix')+' '+i);
-  toS.options.forEach((o,i)=>o.textContent=t('lvl_prefix')+' '+i);
+
+
 }
+
 document.querySelectorAll('.lang-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{lang=btn.dataset.lang;window.lang=lang;localStorage.setItem('lang',lang);applyLang();calc()});
+  btn.addEventListener('click',()=>{lang=btn.dataset.lang;window.lang=lang;localStorage.setItem('lang',lang);applyLang();fillLvlOptions();calc()});
 });
 applyLang();
-
-const fromS=document.getElementById('fromLvl');
-const toS=document.getElementById('toLvl');
-const haveI=document.getElementById('booksHave');
-
-for(let i=1;i<=25;i++){
-  const o1=document.createElement('option');o1.value=i;o1.textContent='Ур. '+i;fromS.appendChild(o1);
-  const o2=document.createElement('option');o2.value=i;o2.textContent='Ур. '+i;toS.appendChild(o2);
-}
-fromS.value=1;toS.value=25;
+fillLvlOptions();
 
 function calc(){
   const f=parseInt(fromS.value)||1;
