@@ -267,7 +267,8 @@ body::after {
   display: flex;
   flex-direction: column;
   position: relative;
-  min-height: 70px;
+  min-height: 64px;
+  overflow: hidden;
 }
 .cal-cell:hover {
   border-color: var(--neon-yellow);
@@ -409,25 +410,32 @@ body::after {
 .expl-content.collapsed {
   display: none;
 }
+.expl-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 .expl-item {
-  padding: 10px 12px;
-  border-left: 3px solid;
-  margin-bottom: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid;
+  border-radius: 3px;
   background: rgba(255,255,255,0.02);
+}
+.expl-item .expl-dot {
+  width: 10px;
+  height: 10px;
   border-radius: 2px;
+  flex-shrink: 0;
 }
 .expl-item .expl-name {
   font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 1.5px;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
   color: var(--text-primary);
-  margin-bottom: 3px;
-}
-.expl-item .expl-desc {
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  line-height: 1.4;
+  white-space: nowrap;
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -449,19 +457,21 @@ body::after {
   .detail-item .detail-range { white-space: normal; margin-left: 24px; }
   .app { padding: 10px; }
   .panel { padding: 12px; }
-  .explanations-panel .expl-item { padding: 8px; }
-  .explanations-panel .expl-desc { font-size: 0.7rem; }
+  .explanations-panel .expl-item { padding: 3px 7px; }
+  .explanations-panel .expl-name { font-size: 0.5rem; }
+  .explanations-panel .expl-dot { width: 7px; height: 7px; }
 }
 @media (max-width: 480px) {
-  .cal-cell { min-height: 36px; padding: 1px; }
-  .cal-cell .day-num { font-size: 0.5rem; }
-  .cal-cell .event-label { font-size: 0.35rem; padding: 0 1px; }
+  .cal-cell { min-height: 28px; padding: 1px; overflow: hidden; }
+  .cal-cell .day-num { font-size: 0.45rem; }
+  .cal-cell .event-labels { flex-direction: row; flex-wrap: wrap; gap: 1px; margin-top: 1px; }
+  .cal-cell .event-label { width: 5px; height: 5px; padding: 0; font-size: 0; overflow: hidden; border-radius: 1px; flex-shrink: 0; }
   .cal-dow { font-size: 0.4rem; padding: 2px 0; }
   .nav-label { font-size: 0.8rem; min-width: 50px; }
   .nav-label-month { min-width: 70px; }
   .nav-btn { font-size: 0.6rem; padding: 3px 5px; }
   .utc-display { font-size: 0.45rem; padding: 3px 5px; }
-  .cal-grid { gap: 2px; }
+  .cal-grid { gap: 1px; }
 }
 </style>
 </head>
@@ -1080,14 +1090,15 @@ document.getElementById('detailClose').addEventListener('click', hideDetail);
 // ===================== EXPLANATIONS =====================
 function renderExplanations() {
   const container = document.getElementById('explContent');
-  let html = '';
+  let html = '<div class="expl-items">';
   for (const def of EVENT_DEFS) {
     html += `
       <div class="expl-item" style="border-color:${def.color}">
-        <div class="expl-name">${t(def.titleKey)}</div>
-        <div class="expl-desc">${t(def.descKey)}</div>
+        <span class="expl-dot" style="background:${def.color}"></span>
+        <span class="expl-name">${t(def.titleKey)}</span>
       </div>`;
   }
+  html += '</div>';
   container.innerHTML = html;
 }
 
