@@ -159,7 +159,7 @@ function calc(){
     document.getElementById('manualPower').textContent=fn(effPw);
     document.getElementById('manualPassOrig').textContent=pass(pm);
     mb.style.display='block';
-    if(cap>0&&tot>cap){dw.classList.add('visible');dt.textContent=fn(tot-cap)+' '+t('tdie')+' (T4+T5)'}
+    if(cap<tot){dw.classList.add('visible');dt.textContent=fn(tot-cap)+' '+t('tdie')+' (T4+T5)'}
   }else{mb.style.display='none'}
   const effPm=effPw/1000000;
   const p=pass(effPm);
@@ -189,7 +189,7 @@ function calc(){
       document.getElementById('t4mix').textContent=t4mix;
       const ms=document.getElementById('mixSpan');
       ms.style.display=(t5cnt>0||t4mix>0)?'inline':'none';
-      if(cap>0&&t4only>cap&&!dw.classList.contains('visible')){
+      if(cap<t4only&&!dw.classList.contains('visible')){
         dw.classList.add('visible');dt.textContent=fn(t4only-cap)+' '+t('tdie')+' (T4)'
       }
     }else{sug.style.display='none'}
