@@ -206,6 +206,10 @@ body::after {
 .card-goldheads { border-color: rgba(255, 140, 0, 0.3); }
 .card-goldheads:hover { border-color: #ff8c00 !important; }
 
+.card-passports .card-title { color: #00f0aa; }
+.card-passports { border-color: rgba(0, 240, 170, 0.3); }
+.card-passports:hover { border-color: #00f0aa !important; }
+
 .footer {
   margin-top: 40px;
   font-family: var(--font-mono);
@@ -438,6 +442,14 @@ body::after {
         <div class="tag" data-i18n="card7_tag">1111–5555 · Навыки · Прогрессия</div>
       </a>
     </div>
+    <div class="card-wrap">
+      <a class="card card-passports" href="passports.html">
+        <div class="card-icon">🛂</div>
+        <div class="card-title" data-i18n="card8_title">Passports</div>
+        <div class="card-desc" data-i18n="card8_desc">Расчёт стоимости миграции: паспорта, кредиты, время фарма</div>
+        <div class="tag" data-i18n="card8_tag">Миграция · Паспорта · Кредиты</div>
+      </a>
+    </div>
   </div>
 
   <div class="footer">
@@ -472,6 +484,9 @@ const LANG = {
     card7_title: 'Gold Heads',
     card7_desc: 'Расчёт золотых голов для легендарного командира: 1111 → 5555',
     card7_tag: '1111–5555 · Навыки · Прогрессия',
+    card8_title: 'Passports',
+    card8_desc: 'Расчёт стоимости миграции: паспорта, кредиты, время фарма',
+    card8_tag: 'Миграция · Паспорта · Кредиты',
     calendar_btn: '📅 Календарь',
   },
   en: {
@@ -497,6 +512,9 @@ const LANG = {
     card7_title: 'Gold Heads',
     card7_desc: 'Golden heads calculator for legendary commanders: 1111 → 5555',
     card7_tag: '1111–5555 · Skills · Progression',
+    card8_title: 'Passports',
+    card8_desc: 'Migration cost calculator: passports, credits, farming time',
+    card8_tag: 'Migration · Passports · Credits',
     calendar_btn: '📅 Calendar',
   },
 };
