@@ -202,6 +202,10 @@ body::after {
 .card-vip { border-color: rgba(255, 221, 0, 0.3); }
 .card-vip:hover { border-color: var(--neon-gold) !important; }
 
+.card-goldheads .card-title { color: #ff8c00; }
+.card-goldheads { border-color: rgba(255, 140, 0, 0.3); }
+.card-goldheads:hover { border-color: #ff8c00 !important; }
+
 .footer {
   margin-top: 40px;
   font-family: var(--font-mono);
@@ -426,6 +430,14 @@ body::after {
         <div class="tag" data-i18n="card5_tag">MGE · WoF · MTG · Ark</div>
       </a>
     </div>
+    <div class="card-wrap">
+      <a class="card card-goldheads" href="goldheads.html">
+        <div class="card-icon">👤</div>
+        <div class="card-title" data-i18n="card7_title">Gold Heads</div>
+        <div class="card-desc" data-i18n="card7_desc">Расчёт золотых голов для легендарного командира: 1111 → 5555</div>
+        <div class="tag" data-i18n="card7_tag">1111–5555 · Навыки · Прогрессия</div>
+      </a>
+    </div>
   </div>
 
   <div class="footer">
@@ -457,6 +469,9 @@ const LANG = {
     card6_title: 'VIP Calculator',
     card6_desc: 'Расчёт уровня VIP и очков, необходимых до целевого уровня (1–18)',
     card6_tag: 'VIP 1–18 · Прогресс · Очки',
+    card7_title: 'Gold Heads',
+    card7_desc: 'Расчёт золотых голов для легендарного командира: 1111 → 5555',
+    card7_tag: '1111–5555 · Навыки · Прогрессия',
     calendar_btn: '📅 Календарь',
   },
   en: {
@@ -479,6 +494,9 @@ const LANG = {
     card6_title: 'VIP Calculator',
     card6_desc: 'VIP level calculation and points needed to reach target (1–18)',
     card6_tag: 'VIP 1–18 · Progress · Points',
+    card7_title: 'Gold Heads',
+    card7_desc: 'Golden heads calculator for legendary commanders: 1111 → 5555',
+    card7_tag: '1111–5555 · Skills · Progression',
     calendar_btn: '📅 Calendar',
   },
 };
