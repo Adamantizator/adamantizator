@@ -51,6 +51,7 @@ input:focus{border-color:var(--neon-yellow);box-shadow:0 0 15px rgba(255,230,0,0
 .suggestion .dim{color:var(--text-dim)}
 .suggestion .sug-death{background:rgba(255,16,48,0.1);border:1px solid var(--neon-red);border-radius:3px;padding:8px 12px;margin-top:8px;color:var(--neon-red);font-family:var(--font-mono);font-size:0.75rem;display:none}
 .suggestion .sug-death.visible{display:block}
+.suggestion .sug-death .green{color:var(--neon-green)}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:var(--dark-bg)}
 ::-webkit-scrollbar-thumb{background:var(--neon-yellow);border-radius:3px}
@@ -204,7 +205,9 @@ function calc(){
         const t5die=Math.max(0,t5cnt-cap);
         const remCap=Math.max(0,cap-t5cnt);
         const t4dieMix=Math.max(0,t4mix-remCap);
+        const mixDie=t5die+t4dieMix;
         sdT5.textContent='Или ⚠ '+fn(t5die)+' '+t('tdie')+' (T5)+'+fn(t4dieMix)+' '+t('tdie')+' (T4)';
+        sdT5.className=mixDie===0?'green':'';
       }else{sd.classList.remove('visible')}
     }else{sug.style.display='none'}
   }else{sug.style.display='none'}
