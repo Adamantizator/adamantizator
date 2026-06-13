@@ -15,6 +15,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
 .header{text-align:center;padding:30px 0 20px}
 .header h1{font-family:var(--font-display);font-size:2rem;font-weight:900;text-transform:uppercase;letter-spacing:4px;background:linear-gradient(135deg,var(--neon-yellow),var(--neon-amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 30px rgba(255,230,0,0.4))}
 .glitch-line{height:2px;margin:12px 0 0;background:linear-gradient(90deg,transparent,var(--neon-yellow),var(--neon-gold),transparent);box-shadow:0 0 20px rgba(255,230,0,0.4)}
+.header .subtitle{font-family:var(--font-display);font-size:0.7rem;letter-spacing:6px;color:var(--text-dim);margin-top:6px;text-transform:uppercase}
 .flicker-glow-text{animation:flicker-glow-text 4s infinite}
 @keyframes flicker-glow-text{0%,82%{-webkit-text-stroke:0 transparent}86%{-webkit-text-stroke:1.5px #ff1030}90%{-webkit-text-stroke:0 transparent}94%{-webkit-text-stroke:1.5px #ff1030}98%{-webkit-text-stroke:0 transparent}100%{-webkit-text-stroke:0 transparent}}
 .lang-switch{position:fixed;top:2px;right:8px;display:flex;gap:2px;z-index:10}
@@ -70,6 +71,7 @@ input:focus{border-color:var(--neon-yellow);box-shadow:0 0 15px rgba(255,230,0,0
       <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px">← Главная</a>
     </div>
     <h1 class="flicker-glow-text">PASSPORTS</h1>
+    <div class="subtitle" data-i18n="subtitle">Migration Passports Calculator</div>
     <div class="glitch-line"></div>
   </header>
   <div class="cyber-banner-small flicker-glow"><img src="logo.png" alt="PASSPORTS" loading="lazy" onerror="this.style.display='none'"></div>
@@ -124,7 +126,7 @@ input:focus{border-color:var(--neon-yellow);box-shadow:0 0 15px rgba(255,230,0,0
 <script>
 const CPP=600000,DP=15,P4=4,P5=10;
 const THR=[{max:10,p:1},{max:15,p:2},{max:20,p:3},{max:25,p:4},{max:30,p:6},{max:35,p:9},{max:40,p:12},{max:45,p:15},{max:50,p:20},{max:55,p:25},{max:60,p:30}];
-const LANG={ru:{cal:'📅 Calendar',tdie:'погибнет'},en:{cal:'📅 Calendar',tdie:'will die'}};
+const LANG={ru:{cal:'📅 Calendar',tdie:'погибнет',subtitle:'Паспорта Миграции / Migration Passports'},en:{cal:'📅 Calendar',tdie:'will die',subtitle:'Migration Passports / Паспорта Миграции'}};
 const det=navigator.language.startsWith('ru')?'ru':'en';
 let lang=localStorage.getItem('lang')||det;
 function t(k){return LANG[lang][k]||k}
