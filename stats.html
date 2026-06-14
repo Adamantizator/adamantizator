@@ -401,24 +401,8 @@ select option { background: var(--card-bg); }
           <option value="">— загрузите файл —</option>
         </select>
       </div>
-      <div class="col" style="min-width:120px;">
-        <label>Сортировка</label>
-        <select id="sortMode">
-          <option value="desc">По убыванию</option>
-          <option value="asc">По возрастанию</option>
-          <option value="none">Без сортировки</option>
-        </select>
-      </div>
     </div>
     <div class="row" style="margin-bottom:12px;">
-      <div class="col" style="min-width:80px;">
-        <label data-i18n="sort">Сортировка</label>
-        <select id="sortMode">
-          <option value="desc" data-i18n="sort_desc">По убыванию</option>
-          <option value="asc" data-i18n="sort_asc">По возрастанию</option>
-          <option value="none" data-i18n="sort_none">Без сортировки</option>
-        </select>
-      </div>
       <div class="col" style="min-width:80px;">
         <label data-i18n="from_place">С места</label>
         <input type="number" id="fromPlace" value="" min="1" style="width:90px;">
@@ -456,9 +440,9 @@ select option { background: var(--card-bg); }
       <table>
         <thead>
           <tr>
-            <th style="width:40px;text-align:center;">#</th>
-            <th style="text-align:left;" data-i18n="th_player">Игрок</th>
-            <th id="thColumn" style="text-align:right;width:100px;">—</th>
+            <th id="thIdx" style="width:40px;text-align:center;cursor:pointer;">#</th>
+            <th id="thName" style="text-align:left;cursor:pointer;" data-i18n="th_player">Игрок</th>
+            <th id="thColumn" style="text-align:right;width:100px;cursor:pointer;">—</th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -477,7 +461,6 @@ const LANG = {
     preloaded: 'Предзагруженные данные',
     filters: 'Фильтры и опции',
     column_label: 'Столбец для анализа',
-    sort: 'Сортировка', sort_desc: 'По убыванию', sort_asc: 'По возрастанию', sort_none: 'Без сортировки',
     from_place: 'С места', to_place: 'По место',
     min_val: 'Нижняя граница (≥)', max_val: 'Верхняя граница (≤)',
     search_nick: 'Поиск по нику', search_placeholder: 'Введите ник...',
@@ -499,7 +482,6 @@ const LANG = {
     preloaded: 'Preloaded Data',
     filters: 'Filters & Options',
     column_label: 'Analysis column',
-    sort: 'Sort', sort_desc: 'Descending', sort_asc: 'Ascending', sort_none: 'No sort',
     from_place: 'From place', to_place: 'To place',
     min_val: 'Min value (≥)', max_val: 'Max value (≤)',
     search_nick: 'Search nickname', search_placeholder: 'Enter nickname...',
@@ -548,6 +530,7 @@ let headers = [];
 let rawData = [];
 let column = '';
 let lastFiltered = [];
+let currentSort = { col: null, dir: 'none' };
 
 // ===== DOM REFS =====
 const $ = id => document.getElementById(id);
@@ -556,7 +539,6 @@ const fileLabel = $('fileLabel');
 const fileInfo = $('fileInfo');
 const loadMsg = $('loadMsg');
 const columnSelect = $('columnSelect');
-const sortMode = $('sortMode');
 const fromPlace = $('fromPlace');
 const toPlace = $('toPlace');
 const minVal = $('minVal');
@@ -590,9 +572,7 @@ function showMsg(el, type, text) {
 const preloadList = $('preloadList');
 const preloadMsg = $('preloadMsg');
 
-const PRELOADED_FILES = [
-  '06-07_3901.xlsx'
-];
+const PRELOADED_FILES = [];
 
 function preloadLabel(filename) {
   return filename.replace(/\.[^.]+$/, '').replace(/_/g, ' ');
@@ -654,6 +634,9 @@ async function loadPreloadedFile(filename) {
 }
 
 function renderPreloadedFiles() {
+  const panel = document.getElementById('preloadPanel');
+  if (!PRELOADED_FILES.length) { panel.style.display = 'none'; return; }
+  panel.style.display = '';
   preloadList.innerHTML = '';
   PRELOADED_FILES.forEach(f => {
     const btn = document.createElement('button');
@@ -673,53 +656,10 @@ loadBtn.addEventListener('click', () => {
   input.onchange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = (ev) => {
-      try {
-        const data = new Uint8Array(ev.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-        if (json.length < 2) {
-          showMsg(loadMsg, 'error', t('err_empty'));
-          return;
-        }
-
-        headers = json[0].map(h => String(h).trim());
-        rawData = json.slice(1).filter(row => row.some(cell => cell !== undefined && cell !== null && cell !== ''));
-
-        if (rawData.length === 0) {
-          showMsg(loadMsg, 'error', t('err_no_data'));
-          return;
-        }
-
-        // Build column select
-        columnSelect.innerHTML = headers.map((h, i) =>
-          `<option value="${i}">${h}</option>`
-        ).join('');
-
-        // Auto-select first numeric column
-        let autoIdx = -1;
-        for (let i = 0; i < headers.length; i++) {
-          const vals = rawData.map(r => Number(r[i])).filter(v => !isNaN(v));
-          if (vals.length > rawData.length * 0.5) { autoIdx = i; break; }
-        }
-        if (autoIdx === -1) autoIdx = 0;
-
-        columnSelect.value = autoIdx;
-        column = headers[autoIdx];
-        thColumn.textContent = column;
-
-        fileLabel.textContent = file.name;
-        fileInfo.textContent = `${t('rows')} ${rawData.length}, ${t('cols')} ${headers.length}`;
-        showMsg(loadMsg, 'info', `${t('ok_loaded')}`);
-
-        applyFilters();
-
-      } catch (err) {
-        showMsg(loadMsg, 'error', `${t('err_parse')}: ${err.message}`);
+      if (!loadExcelFromBuffer(ev.target.result, file.name)) {
+        showMsg(loadMsg, 'error', t('err_empty'));
       }
     };
     reader.readAsArrayBuffer(file);
@@ -739,7 +679,6 @@ function applyFilters() {
 
   column = headers[colIdx];
   thColumn.textContent = column;
-  const sort = sortMode.value;
   const from = parseInt(fromPlace.value) || 1;
   const to = parseInt(toPlace.value) || rawData.length;
   const min = parseFloat(minVal.value);
@@ -757,10 +696,19 @@ function applyFilters() {
     };
   });
 
-  // Sort
-  if (sort === 'desc') data.sort((a, b) => b.val - a.val);
-  else if (sort === 'asc') data.sort((a, b) => a.val - b.val);
-  else data.sort((a, b) => a.idx - b.idx); // original order
+  // Sort by currentSort
+  if (currentSort.dir !== 'none' && currentSort.col) {
+    data.sort((a, b) => {
+      let va, vb;
+      if (currentSort.col === 'idx') { va = a.idx; vb = b.idx; }
+      else if (currentSort.col === 'name') { va = a.name.toLowerCase(); vb = b.name.toLowerCase(); }
+      else { va = a.val; vb = b.val; }
+      if (typeof va === 'number') return currentSort.dir === 'asc' ? va - vb : vb - va;
+      return currentSort.dir === 'asc' ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+    });
+  } else {
+    data.sort((a, b) => a.idx - b.idx);
+  }
 
   // Place range
   const fromIdx = Math.max(0, from - 1);
@@ -775,6 +723,12 @@ function applyFilters() {
   if (search) data = data.filter(d => d.name.toLowerCase().includes(search));
 
   lastFiltered = data;
+
+  // Render header arrows
+  const arrow = (col) => currentSort.col === col ? (currentSort.dir === 'asc' ? ' ▲' : ' ▼') : '';
+  document.getElementById('thIdx').textContent = '#' + arrow('idx');
+  document.getElementById('thName').textContent = t('th_player') + arrow('name');
+  thColumn.textContent = column + arrow('value');
 
   // Render table
   let sum = 0;
@@ -795,8 +749,22 @@ function applyFilters() {
   showMsg(loadMsg, 'info', `${t('count_label')} ${data.length}, ${t('sum_label')} ${fmtNum(sum)}`);
 }
 
+// ===== HEADER SORT CLICK =====
+document.querySelector('#tableWrap thead').addEventListener('click', e => {
+  const th = e.target.closest('th');
+  if (!th) return;
+  const col = th.id === 'thIdx' ? 'idx' : th.id === 'thName' ? 'name' : 'value';
+  if (currentSort.col === col) {
+    currentSort.dir = currentSort.dir === 'none' ? 'asc' : currentSort.dir === 'asc' ? 'desc' : 'none';
+  } else {
+    currentSort.col = col;
+    currentSort.dir = 'asc';
+  }
+  applyFilters();
+});
+
 // ===== EVENTS =====
-[columnSelect, sortMode, fromPlace, toPlace, minVal, maxVal, searchNick].forEach(el => {
+[columnSelect, fromPlace, toPlace, minVal, maxVal, searchNick].forEach(el => {
   el.addEventListener('input', applyFilters);
 });
 calcBtn.addEventListener('click', applyFilters);

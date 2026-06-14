@@ -798,14 +798,6 @@ td.pct { color: var(--neon-yellow); }
   <div class="panel" id="filtersPanel">
     <div class="panel-title" data-i18n="filters_title">Фильтры и опции</div>
     <div class="row row-gap" style="margin-bottom:12px;">
-      <div class="col" style="min-width:100px;">
-        <label data-i18n="sort">Сортировка</label>
-        <select id="sortMode">
-          <option value="desc" data-i18n="sort_desc">По убыванию</option>
-          <option value="asc" data-i18n="sort_asc">По возрастанию</option>
-          <option value="none" data-i18n="sort_none">Без сортировки</option>
-        </select>
-      </div>
       <div class="col" style="min-width:80px;">
         <label data-i18n="multiplier">Множитель нормы</label>
         <input type="number" id="multiplier" value="1" min="1" max="99" style="width:70px;text-align:center;">
@@ -852,17 +844,17 @@ td.pct { color: var(--neon-yellow); }
       <table>
         <thead>
           <tr>
-            <th style="width:35px;text-align:center;">#</th>
-            <th style="text-align:left;" data-i18n="th_name">Имя</th>
-            <th style="text-align:right;" data-i18n="th_power">Мощь (акт.)</th>
-            <th style="text-align:right;" data-i18n="th_maxpower">Макс. мощь</th>
-            <th style="text-align:right;" data-i18n="th_kill4">Убийства T4</th>
-            <th style="text-align:right;" data-i18n="th_kill5">Убийства T5</th>
-            <th style="text-align:right;" data-i18n="th_death4">Смерти T4</th>
-            <th style="text-align:right;" data-i18n="th_death5">Смерти T5</th>
-            <th style="text-align:right;" data-i18n="th_dkp">Текущий ДКП</th>
-            <th style="text-align:right;" data-i18n="th_goal">Цель ДКП</th>
-            <th style="text-align:right;" data-i18n="th_pct">Выполнение цели %</th>
+            <th data-sort="idx" style="width:35px;text-align:center;cursor:pointer;">#</th>
+            <th data-sort="name" style="text-align:left;cursor:pointer;" data-i18n="th_name">Имя</th>
+            <th data-sort="power" style="text-align:right;cursor:pointer;" data-i18n="th_power">Мощь (акт.)</th>
+            <th data-sort="maxpower" style="text-align:right;cursor:pointer;" data-i18n="th_maxpower">Макс. мощь</th>
+            <th data-sort="kill4" style="text-align:right;cursor:pointer;" data-i18n="th_kill4">Убийства T4</th>
+            <th data-sort="kill5" style="text-align:right;cursor:pointer;" data-i18n="th_kill5">Убийства T5</th>
+            <th data-sort="death4" style="text-align:right;cursor:pointer;" data-i18n="th_death4">Смерти T4</th>
+            <th data-sort="death5" style="text-align:right;cursor:pointer;" data-i18n="th_death5">Смерти T5</th>
+            <th data-sort="dkp" style="text-align:right;cursor:pointer;" data-i18n="th_dkp">Текущий ДКП</th>
+            <th data-sort="goal" style="text-align:right;cursor:pointer;" data-i18n="th_goal">Цель ДКП</th>
+            <th data-sort="pct" style="text-align:right;cursor:pointer;" data-i18n="th_pct">Выполнение цели %</th>
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -885,7 +877,6 @@ const LANG = {
     formula_init: '(Смерти T4 + Смерти T5) × 30 + Убийства T4 × 10 + Убийства T5 × 20',
     death4: 'Смерти T4', death5: 'Смерти T5', kill4: 'Убийства T4', kill5: 'Убийства T5',
     filters_title: 'Фильтры и опции',
-    sort: 'Сортировка', sort_desc: 'По убыванию', sort_asc: 'По возрастанию', sort_none: 'Без сортировки',
     multiplier: 'Множитель нормы',
     from_place: 'С места', to_place: 'По место',
     min_val: 'Нижняя граница (≥)', max_val: 'Верхняя граница (≤)',
@@ -911,7 +902,6 @@ const LANG = {
     formula_init: '(Deaths T4 + Deaths T5) × 30 + Kills T4 × 10 + Kills T5 × 20',
     death4: 'Deaths T4', death5: 'Deaths T5', kill4: 'Kills T4', kill5: 'Kills T5',
     filters_title: 'Filters & Options',
-    sort: 'Sort', sort_desc: 'Descending', sort_asc: 'Ascending', sort_none: 'No sort',
     multiplier: 'Norm multiplier',
     from_place: 'From place', to_place: 'To place',
     min_val: 'Min value (≥)', max_val: 'Max value (≤)',
@@ -965,6 +955,7 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 applyLang();
 let df = null;
 let headers = [];
+let currentSort = { col: null, dir: 'none' };
 
 // ===== DOM REFS =====
 const $ = id => document.getElementById(id);
@@ -976,7 +967,6 @@ const formulaPanel = $('formulaPanel');
 const formulaPreview = $('formulaPreview');
 const formulaText = $('formulaText');
 const resetFormulaBtn = $('resetFormulaBtn');
-const sortMode = $('sortMode');
 const multiplier = $('multiplier');
 const fromPlace = $('fromPlace');
 const toPlace = $('toPlace');
@@ -1231,14 +1221,6 @@ calcBtn.addEventListener('click', async () => {
       return;
     }
 
-    // Sort
-    const sortVal = sortMode.value;
-    if (sortVal === 'desc') {
-      data.sort((a, b) => b[column] - a[column]);
-    } else if (sortVal === 'asc') {
-      data.sort((a, b) => a[column] - b[column]);
-    }
-
     // Range
     const totalRows = data.length;
     let from = parseInt(fromPlace.value) || 1;
@@ -1267,14 +1249,10 @@ calcBtn.addEventListener('click', async () => {
       return;
     }
 
-    // Build table
+    // Build data array with computed display values
     const mult = parseInt(multiplier.value) || 1;
     const hasPower = headers.includes('Мощь') || headers.includes('Power');
-    const totalSum = filtered.reduce((s, r) => s + (r[column] || 0), 0);
-
-    tableBody.innerHTML = '';
-    filtered.forEach((row, idx) => {
-      const place = idx + 1;
+    let displayData = filtered.map((row, idx) => {
       const name = getPlayerName(row);
       const dkpVal = parseInt(row[column]) || 0;
       const powerVal = hasPower ? (parseInt(row[col('Мощь')]) || 0) : 0;
@@ -1285,20 +1263,61 @@ calcBtn.addEventListener('click', async () => {
       const killsT5 = parseInt(row[col('Убийства T5')]) || 0;
       const deathsT4 = parseInt(row[col('Смерти T4')]) || 0;
       const deathsT5 = parseInt(row[col('Смерти T5')]) || 0;
+      return { idx, name, dkpVal, powerVal, maxPowerVal, normVal, pct, killsT4, killsT5, deathsT4, deathsT5 };
+    });
 
+    // Apply sort by currentSort
+    if (currentSort.dir !== 'none' && currentSort.col) {
+      displayData.sort((a, b) => {
+        let va, vb;
+        switch (currentSort.col) {
+          case 'idx': va = a.idx; vb = b.idx; break;
+          case 'name': va = a.name.toLowerCase(); vb = b.name.toLowerCase(); break;
+          case 'power': va = a.powerVal; vb = b.powerVal; break;
+          case 'maxpower': va = a.maxPowerVal; vb = b.maxPowerVal; break;
+          case 'kill4': va = a.killsT4; vb = b.killsT4; break;
+          case 'kill5': va = a.killsT5; vb = b.killsT5; break;
+          case 'death4': va = a.deathsT4; vb = b.deathsT4; break;
+          case 'death5': va = a.deathsT5; vb = b.deathsT5; break;
+          case 'dkp': va = a.dkpVal; vb = b.dkpVal; break;
+          case 'goal': va = a.normVal; vb = b.normVal; break;
+          case 'pct': va = a.pct; vb = b.pct; break;
+          default: return 0;
+        }
+        if (typeof va === 'number') return currentSort.dir === 'asc' ? va - vb : vb - va;
+        return currentSort.dir === 'asc' ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+      });
+    }
+
+    // Render header arrows
+    const arrow = (col) => currentSort.col === col ? (currentSort.dir === 'asc' ? ' ▲' : ' ▼') : '';
+    const headerName = (col) => {
+      const m = { name: 'th_name', power: 'th_power', maxpower: 'th_maxpower', kill4: 'th_kill4', kill5: 'th_kill5', death4: 'th_death4', death5: 'th_death5', dkp: 'th_dkp', goal: 'th_goal', pct: 'th_pct' };
+      return t(m[col] || col);
+    };
+    document.querySelectorAll('#tableWrap thead th[data-sort]').forEach(th => {
+      const col = th.dataset.sort;
+      const base = col === 'idx' ? '#' : headerName(col);
+      th.textContent = base + arrow(col);
+    });
+
+    const totalSum = displayData.reduce((s, d) => s + d.dkpVal, 0);
+    tableBody.innerHTML = '';
+    displayData.forEach((d, pos) => {
+      const place = pos + 1;
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td class="center">${place}</td>
-        <td class="player">${name}</td>
-        <td class="num">${hasPower ? fmtNum(powerVal) : 'N/A'}</td>
-        <td class="num">${hasPower ? fmtNum(maxPowerVal) : 'N/A'}</td>
-        <td class="num">${fmtNum(killsT4)}</td>
-        <td class="num">${fmtNum(killsT5)}</td>
-        <td class="num">${fmtNum(deathsT4)}</td>
-        <td class="num">${fmtNum(deathsT5)}</td>
-        <td class="num">${fmtNum(dkpVal)}</td>
-        <td class="num">${hasPower ? fmtNum(normVal) : 'N/A'}</td>
-        <td class="num pct">${hasPower ? pct.toFixed(2) + '%' : 'N/A'}</td>
+        <td class="player">${d.name}</td>
+        <td class="num">${hasPower ? fmtNum(d.powerVal) : 'N/A'}</td>
+        <td class="num">${hasPower ? fmtNum(d.maxPowerVal) : 'N/A'}</td>
+        <td class="num">${fmtNum(d.killsT4)}</td>
+        <td class="num">${fmtNum(d.killsT5)}</td>
+        <td class="num">${fmtNum(d.deathsT4)}</td>
+        <td class="num">${fmtNum(d.deathsT5)}</td>
+        <td class="num">${fmtNum(d.dkpVal)}</td>
+        <td class="num">${hasPower ? fmtNum(d.normVal) : 'N/A'}</td>
+        <td class="num pct">${hasPower ? d.pct.toFixed(2) + '%' : 'N/A'}</td>
       `;
       tableBody.appendChild(tr);
     });
@@ -1308,11 +1327,25 @@ calcBtn.addEventListener('click', async () => {
     currentColumn = column;
 
     sumDisplay.textContent = `${t('sum_dkp')} ${fmtNum(totalSum)}`;
-    countDisplay.textContent = `${t('total_players')} ${filtered.length}`;
+    countDisplay.textContent = `${t('total_players')} ${displayData.length}`;
 
   } catch (err) {
     showMsg('error', `Ошибка при расчете: ${err.message}`);
   }
+});
+
+// ===== HEADER SORT CLICK =====
+document.querySelector('#tableWrap thead').addEventListener('click', e => {
+  const th = e.target.closest('th[data-sort]');
+  if (!th) return;
+  const col = th.dataset.sort;
+  if (currentSort.col === col) {
+    currentSort.dir = currentSort.dir === 'none' ? 'asc' : currentSort.dir === 'asc' ? 'desc' : 'none';
+  } else {
+    currentSort.col = col;
+    currentSort.dir = 'asc';
+  }
+  calcBtn.click();
 });
 
 // ===== DOWNLOAD EXCEL =====
