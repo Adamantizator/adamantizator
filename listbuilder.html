@@ -147,6 +147,15 @@ td.name-col{color:var(--neon-yellow);font-weight:600}
       <span id="fileLabel" style="color:var(--text-dim);font-size:0.85rem" data-i18n="no_file">Файл не выбран</span>
       <span id="fileInfo" style="color:var(--text-dim);font-size:0.8rem;font-family:var(--font-mono)"></span>
     </div>
+    <!-- DKP coefficients -->
+    <div id="dkpCoeffRow" style="display:none;margin-top:8px" class="row">
+      <span style="font-family:var(--font-display);font-size:0.55rem;letter-spacing:1px;color:var(--neon-yellow);text-transform:uppercase;white-space:nowrap" data-i18n="coeff_title">Коэфф. ДКП</span>
+      <div class="col"><label data-i18n="coeff_death_t4">Смерти T4</label><input type="number" id="coefDeathT4" value="30" min="0" step="1" style="width:65px"></div>
+      <div class="col"><label data-i18n="coeff_death_t5">Смерти T5</label><input type="number" id="coefDeathT5" value="30" min="0" step="1" style="width:65px"></div>
+      <div class="col"><label data-i18n="coeff_kill_t4">Убийства T4</label><input type="number" id="coefKillT4" value="10" min="0" step="1" style="width:65px"></div>
+      <div class="col"><label data-i18n="coeff_kill_t5">Убийства T5</label><input type="number" id="coefKillT5" value="20" min="0" step="1" style="width:65px"></div>
+      <button class="btn btn-primary btn-small" id="recalcDkpBtn" data-i18n="calc_dkp">[ ⟳ ДКП ]</button>
+    </div>
     <div id="loadMsg" class="hidden"></div>
   </div>
 
@@ -220,8 +229,13 @@ const LANG={ru:{
   clear:'[ ОЧИСТИТЬ ]',download:'[ СКАЧАТЬ EXCEL ]',
   drag_hint:'🖱 Перетащите строку в правую таблицу или кликните',
   drag_hint_right:'🖱 Перетащите для изменения порядка',
-  records:'Записей:',selected:'Выбрано:',
-  hide:'скрыть',show:'показать',
+    records:'Записей:',selected:'Выбрано:',
+    hide:'скрыть',show:'показать',
+    coeff_title:'Коэфф. ДКП',
+    coeff_death_t4:'Смерти T4',coeff_death_t5:'Смерти T5',
+    coeff_kill_t4:'Убийства T4',coeff_kill_t5:'Убийства T5',
+    calc_dkp:'[ ⟳ ДКП ]',dkp_col:'ДКП',
+    dkp_recalc:'ДКП пересчитан',dkp_fail:'Не удалось рассчитать ДКП',
 },en:{
   back:'← Home',h1:'LIST BUILDER',subtitle:'Составление списка',
   file:'File',open_excel:'[ OPEN EXCEL ]',no_file:'No file selected',
@@ -231,8 +245,13 @@ const LANG={ru:{
   clear:'[ CLEAR ]',download:'[ DOWNLOAD EXCEL ]',
   drag_hint:'🖱 Drag a row to the right table or click',
   drag_hint_right:'🖱 Drag to reorder',
-  records:'Records:',selected:'Selected:',
-  hide:'hide',show:'show',
+    records:'Records:',selected:'Selected:',
+    hide:'hide',show:'show',
+    coeff_title:'DKP Coeff.',
+    coeff_death_t4:'Deaths T4',coeff_death_t5:'Deaths T5',
+    coeff_kill_t4:'Kills T4',coeff_kill_t5:'Kills T5',
+    calc_dkp:'[ ⟳ DKP ]',dkp_col:'DKP',
+    dkp_recalc:'DKP recalculated',dkp_fail:'Could not calculate DKP',
 }};
 const detected=navigator.language.startsWith('ru')?'ru':'en';
 let lang=localStorage.getItem('lang')||detected;
@@ -275,6 +294,53 @@ const rightBody=$('rightBody');
 const rightHead=$('rightHead');
 const preloadList=$('preloadList');
 const preloadMsg=$('preloadMsg');
+
+// ===== DKP CALCULATION =====
+const COL_ALIASES={
+  'Смерти T4':'T4 Deaths','Смерти T5':'T5 Deaths',
+  'Убийства T4':'T4 Kills','Убийства T5':'T5 Kills',
+  'Мощь':'Power','Макс. мощь':'Highest Power',
+};
+let colMap={};
+let dkpColIdx=-1;
+function buildColMap(){
+  colMap={};
+  for(const[ru,en]of Object.entries(COL_ALIASES)){
+    if(headers.includes(ru))colMap[ru]=ru;
+    else if(headers.includes(en))colMap[ru]=en;
+    else colMap[ru]=ru;
+  }
+}
+function col(ru){return colMap[ru]||ru}
+function getFormulaCoefficients(){
+  return{
+    deathT4:parseFloat($('coefDeathT4').value)||0,
+    deathT5:parseFloat($('coefDeathT5').value)||0,
+    killT4:parseFloat($('coefKillT4').value)||0,
+    killT5:parseFloat($('coefKillT5').value)||0,
+  };
+}
+function computeDKPColumn(){
+  const required=['Смерти T4','Смерти T5','Убийства T4','Убийства T5'];
+  const missing=required.filter(c=>!headers.includes(col(c)));
+  if(missing.length){dkpColIdx=-1;$('dkpCoeffRow').style.display='none';return false}
+  const c=getFormulaCoefficients();
+  const dkpName=t('dkp_col');
+  let idx=headers.indexOf(dkpName);
+  if(idx<0){idx=headers.length;headers.push(dkpName)}
+  dkpColIdx=idx;
+  rawData.forEach(row=>{
+    const d4=parseFloat(row[headers.indexOf(col('Смерти T4'))])||0;
+    const d5=parseFloat(row[headers.indexOf(col('Смерти T5'))])||0;
+    const k4=parseFloat(row[headers.indexOf(col('Убийства T4'))])||0;
+    const k5=parseFloat(row[headers.indexOf(col('Убийства T5'))])||0;
+    const dkp=d4*c.deathT4+d5*c.deathT5+k4*c.killT4+k5*c.killT5;
+    while(row.length<=idx)row.push('');
+    row[idx]=Math.round(dkp);
+  });
+  $('dkpCoeffRow').style.display='';
+  return true;
+}
 
 // ===== PRELOADED =====
 const PRELOADED_FILES=[];
@@ -319,8 +385,10 @@ function loadExcelFromBuffer(buf,fn){
     leftHidden=new Set; rightHidden=new Set;
     leftSort={col:-1,dir:'none'}; rightSort={col:-1,dir:'none'};
     rightRows=[];
+    buildColMap();
+    const hasDkp=computeDKPColumn();
     fileLabel.textContent=fn; fileLabel.style.color='var(--neon-yellow)';
-    fileInfo.textContent='| Строк: '+rawData.length+' | Колонок: '+headers.length;
+    fileInfo.textContent='| Строк: '+rawData.length+' | Колонок: '+headers.length+(hasDkp?' + ДКП':'');
     renderTables();
     return true;
   }catch(e){return false}
@@ -578,6 +646,27 @@ toLeft.addEventListener('input',renderLeft);
 // ===== CLEAR RIGHT =====
 $('clearRightBtn').addEventListener('click',()=>{
   rightRows=[];rightSort={col:-1,dir:'none'};renderTables();
+});
+
+// ===== RECALCULATE DKP =====
+$('recalcDkpBtn').addEventListener('click',()=>{
+  if(!fileLoaded||dkpColIdx<0)return;
+  const c=getFormulaCoefficients();
+  const deathT4Idx=headers.indexOf(col('Смерти T4'));
+  const deathT5Idx=headers.indexOf(col('Смерти T5'));
+  const killT4Idx=headers.indexOf(col('Убийства T4'));
+  const killT5Idx=headers.indexOf(col('Убийства T5'));
+  if(deathT4Idx<0||deathT5Idx<0||killT4Idx<0||killT5Idx<0)return;
+  rawData.forEach(row=>{
+    const d4=parseFloat(row[deathT4Idx])||0;
+    const d5=parseFloat(row[deathT5Idx])||0;
+    const k4=parseFloat(row[killT4Idx])||0;
+    const k5=parseFloat(row[killT5Idx])||0;
+    row[dkpColIdx]=Math.round(d4*c.deathT4+d5*c.deathT5+k4*c.killT4+k5*c.killT5);
+  });
+  renderTables();
+  loadMsg.className='msg-info';loadMsg.textContent=t('dkp_recalc');
+  setTimeout(()=>{loadMsg.className='hidden'},2000);
 });
 
 // ===== DOWNLOAD RIGHT AS EXCEL =====
