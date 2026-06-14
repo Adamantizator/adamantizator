@@ -738,6 +738,10 @@ window.lang=lang;
 function t(k){return LANG[lang][k]||k}
 function tt(o){return o&&o[lang]?o[lang]:o}
 function tn(n){return lang==='ru'?(NAMES_RU[n]||n):n}
+function sn(s){
+  const ru={'Eternal Empire':'Вечная Империя','Hellish Wasteland':'Адская Пустошь',"Dragon's Breath":'Дыхание Дракона',"Witch's Wardrobe":'Гардероб Ведьмы','Glorious Goddess':'Милостивая Богиня',"Wolf's Clothing":'Одеяние Волка'};
+  return lang==='ru'?(ru[s]||s):s;
+}
 function ts(s){const k=s.trim();return lang==='ru'?(STAT_KEYS_RU[k]||k):k}
 function applyLang(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
@@ -763,9 +767,10 @@ function renderSetCountersHtml(names){
   entries.forEach(([set,cnt],idx)=>{
     const total=SET_TOTAL[set]||6;
     if(idx>0)h+=`<div style="margin-top:7px"></div>`;
-    h+=`<div style="color:#fff;font-size:0.65rem;margin-top:5px">${set}: ${cnt}/${total}</div>`;
+    h+=`<div style="color:#fff;font-size:0.65rem;margin-top:5px">${sn(set)}: ${cnt}/${total}</div>`;
     const bonuses=SET_BONUSES[set];
     if(bonuses)Object.entries(bonuses).forEach(([tier,desc])=>{
+      if(cnt>=parseInt(tier))return;
       desc.split(', ').forEach(part=>{
         const m=part.match(/^(.+?)\s+[+-]/);
         const cls=m?statColorClass(m[1]):'stat-march';
@@ -805,9 +810,8 @@ function renderStatsHtml(data){
   procs.forEach(p=>{h+=`<div class="stat-row"><span>${p}</span><span class="val">⚡</span></div>`});
   const setHtml=names?renderSetCountersHtml(names):'';
   if(setHtml){
-    if(hint)h+=`<div style="border-top:1px solid rgba(255,230,0,0.2);margin:6px 0 4px"></div><div style="font-size:0.55rem;color:var(--text-dim);line-height:1.5;max-width:260px;margin-top:4px">${tt(hint)}</div>`;
-    else h+=`<div style="border-top:1px solid rgba(255,255,255,0.1);margin:6px 0 4px"></div>`;
     h+=setHtml;
+    if(hint)h+=`<div style="border-top:1px solid rgba(255,230,0,0.2);margin:6px 0 4px"></div><div style="font-size:0.55rem;color:var(--text-dim);line-height:1.5;max-width:260px;margin-top:4px">${tt(hint)}</div>`;
   }else if(hint){
     h+=`<div style="border-top:1px solid rgba(255,230,0,0.2);margin:6px 0 4px"></div><div style="font-size:0.55rem;color:var(--text-dim);line-height:1.5;max-width:260px;margin-top:4px">${tt(hint)}</div>`;
   }
