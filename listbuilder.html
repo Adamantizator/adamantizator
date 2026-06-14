@@ -674,6 +674,13 @@ $('downloadRightBtn').addEventListener('click',()=>{
     loadMsg.className='msg-error';loadMsg.textContent='Ошибка: '+err.message;
   }
 });
+
+// ===== UNLOAD WARNING =====
+window.addEventListener('beforeunload',e=>{
+  if(!fileLoaded)return;
+  e.preventDefault();
+  e.returnValue='';
+});
 </script>
 </body>
 </html>
