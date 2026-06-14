@@ -520,10 +520,9 @@ function applyLang() {
   document.documentElement.lang = lang;
   const sn = document.getElementById('searchNick');
   if (sn) sn.placeholder = t('search_placeholder');
-  if (typeof columnSelect !== 'undefined' && typeof applyFilters === 'function') applyFilters();
+  if (rawData && rawData.length > 0 && typeof applyFilters === 'function') applyFilters();
 }
 
-applyLang();
 // ===== STATE =====
 let df = null;
 let headers = [];
@@ -550,6 +549,8 @@ const sumDisplay = $('sumDisplay');
 const countDisplay = $('countDisplay');
 const thColumn = $('thColumn');
 const tableBody = $('tableBody');
+
+applyLang();
 
 // ===== HELPERS =====
 function fmtNum(n) { return Math.floor(n).toLocaleString('ru-RU'); }
