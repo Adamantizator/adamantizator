@@ -113,7 +113,10 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
 .b-slot-cell .sc-remove{position:absolute;top:1px;right:3px;background:none;border:none;color:var(--neon-red);cursor:pointer;font-size:0.7rem;opacity:0;transition:opacity 0.2s;font-family:var(--font-mono);line-height:1}
 .b-slot-cell:hover .sc-remove{opacity:0.5}.b-slot-cell .sc-remove:hover{opacity:1}
 .b-slot-cell.crit{border-color:var(--neon-red);box-shadow:0 0 12px rgba(255,16,48,0.3)}
-.crit-diamond{position:absolute;bottom:3px;right:3px;width:8px;height:8px;background:var(--neon-red);transform:rotate(45deg);box-shadow:0 0 6px rgba(255,16,48,0.6);border-radius:1px}
+.crit-diamond{position:absolute;bottom:3px;right:3px;width:8px;height:8px;transform:rotate(45deg);border-radius:1px;cursor:pointer;z-index:5;transition:all 0.2s}
+.crit-diamond.crit-off{background:rgba(128,128,128,0.5);box-shadow:0 0 4px rgba(128,128,128,0.3)}
+.crit-diamond.crit-on{background:var(--neon-red);box-shadow:0 0 6px rgba(255,16,48,0.6)}
+.crit-diamond.crit-off:hover{background:rgba(180,180,180,0.7)}
 .b-item-list{background:var(--panel-bg);border:1px solid rgba(255,230,0,0.08);border-radius:4px;padding:10px}
 .b-item-list .il-header{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
 .il-search{flex:1;min-width:120px;padding:5px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.15);color:var(--text-primary);font-family:var(--font-mono);font-size:0.6rem;border-radius:3px;outline:none}
@@ -1069,14 +1072,13 @@ function renderBuilder(){
   function slotHtml(sk){
     const n=builder.slots[sk];
     const sel=builder.selectedSlot===sk?' selected':'';
-    const crit=builder.crits[sk]?' crit':'';
     const lbl=lang==='ru'?(SLOT_KEYS_RU[sk]||sk):tt(SLOT_KEYS[sk]);
     const baseSrc=BASE_ICONS[sk]||'';
     const iconSrc=n?(ICON_MAP[n]||baseSrc):baseSrc;
     const rarity=n?RARITY_MAP[n]||'':'';
-    let h=`<div class="b-slot-cell${sel}${crit}${rarity?' r-'+rarity:''}" data-sk="${sk}">`;
+    let h=`<div class="b-slot-cell${sel}${builder.crits[sk]?' crit':''}${rarity?' r-'+rarity:''}" data-sk="${sk}">`;
     if(n)h+=`<button class="sc-remove" data-sk="${sk}">×</button>`;
-    if(n&&builder.crits[sk])h+=`<span class="crit-diamond"></span>`;
+    if(n)h+=`<span class="crit-diamond${builder.crits[sk]?' crit-on':' crit-off'}"></span>`;
     h+=`<div class="sc-icon"><img src="${iconSrc}" alt="${n||lbl}" loading="lazy"></div>`;
     h+=`<div class="sc-label">${lbl}</div>`;
     if(n)h+=`<div class="sc-name" data-en="${n}">${tn(n)}</div>`;
@@ -1096,13 +1098,13 @@ function renderBuilder(){
   grid.querySelectorAll('.b-slot-cell').forEach(c=>{
     c.addEventListener('click',e=>{
       if(e.target.closest('.sc-remove'))return;
+      if(e.target.closest('.crit-diamond'))return;
       const sk=c.dataset.sk;
       const current=builder.slots[sk];
       builder.selectedSlot=sk;
       if(current){
         builder.viewingItem=current;
         builder.viewingSlot=sk;
-        builder.crits[sk]=!builder.crits[sk];
       } else {
         builder.viewingItem=null;
         builder.viewingSlot=null;
@@ -1118,6 +1120,14 @@ function renderBuilder(){
       delete builder.crits[sk];
       if(builder.viewingSlot===sk)builder.viewingSlot=null;
       if(builder.viewingItem&&!builder.slots[sk])builder.viewingItem=null;
+      renderBuilder();
+    });
+  });
+  grid.querySelectorAll('.crit-diamond').forEach(d=>{
+    d.addEventListener('click',e=>{
+      e.stopPropagation();
+      const sk=d.closest('.b-slot-cell').dataset.sk;
+      builder.crits[sk]=!builder.crits[sk];
       renderBuilder();
     });
   });
