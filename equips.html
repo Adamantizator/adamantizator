@@ -769,12 +769,15 @@ function renderSetCountersHtml(names){
     if(idx>0)h+=`<div style="margin-top:7px"></div>`;
     h+=`<div style="color:#fff;font-size:0.65rem;margin-top:5px">${sn(set)}: ${cnt}/${total}</div>`;
     const bonuses=SET_BONUSES[set];
-    if(bonuses)Object.entries(bonuses).forEach(([tier,desc])=>{
-      if(cnt>=parseInt(tier))return;
-      desc.split(', ').forEach(part=>{
-        const m=part.match(/^(.+?)\s+[+-]/);
+    if(bonuses)[6,4,2].filter(t=>cnt>=t).forEach(t=>{
+      const raw=bonuses[t]; if(!raw)return;
+      raw.split(', ').forEach(part=>{
+        const m=part.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)%?$/);
+        const k=m?m[1]:part;
+        const v=m?m[2]:'';
+        const sv=lang==='ru'?(STAT_KEYS_RU[k.trim()]||k):k;
         const cls=m?statColorClass(m[1]):'stat-march';
-        h+=`<div style="font-size:0.6rem;line-height:1.4"><span class="${cls}">${part}</span></div>`;
+        h+=`<div style="font-size:0.6rem;line-height:1.4"><span class="${cls}">${sv}${v?' '+v+'%':''}</span></div>`;
       });
     });
   });
@@ -797,7 +800,6 @@ function getSetStats(troop, setId){
       else{const m2=stat.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)$/);if(m2){const k=m2[1];const v=parseFloat(m2[2]);agg[k]=(agg[k]||0)+v}}
     });
   });
-  applySetBonuses(agg,procs,names);
   return {agg,procs,hint:set.hint,names};
 }
 function renderStatsHtml(data){
@@ -1027,26 +1029,6 @@ function statSortKey(k){
   if(kl.includes('barbarian')||kl.includes('xp')||kl.includes('exp gain'))return 5;
   return 4;
 }
-function applySetBonuses(agg,procs,names){
-  const counts={};
-  names.forEach(n=>{
-    const set=ITEM_SET_MAP[n];
-    if(set)counts[set]=(counts[set]||0)+1;
-  });
-  Object.entries(counts).forEach(([set,cnt])=>{
-    const bonuses=SET_BONUSES[set]; if(!bonuses)return;
-    const thresholds=[6,4,2].filter(t=>cnt>=t);
-    thresholds.forEach(t=>{
-      const raw=bonuses[t]; if(!raw)return;
-      raw.split(', ').forEach(stat=>{
-        const m=stat.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)%$/);
-        if(m){const k=m[1];const v=parseFloat(m[2]);agg[k]=(agg[k]||0)+v}
-        else if(stat.includes('(proc)'))procs.push(stat);
-        else{const m2=stat.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)$/);if(m2){const k=m2[1];const v=parseFloat(m2[2]);agg[k]=(agg[k]||0)+v}}
-      });
-    });
-  });
-}
 function calcBuilderStats(){
   const agg={},procs=[],names=[];
   SLOT_ORDER.forEach(sk=>{
@@ -1061,7 +1043,6 @@ function calcBuilderStats(){
       else{const m2=s.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)$/);if(m2){const k=m2[1];const v=parseFloat(m2[2]);agg[k]=(agg[k]||0)+Math.round(v*mult*2)/2}}
     });
   });
-  applySetBonuses(agg,procs,names);
   const sorted=Object.entries(agg).sort((a,b)=>{
     const ka=statSortKey(a[0]),kb=statSortKey(b[0]);
     return ka!==kb?ka-kb:Math.abs(b[1])-Math.abs(a[1]);
