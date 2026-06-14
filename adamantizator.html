@@ -530,6 +530,55 @@ td.pct { color: var(--neon-yellow); }
   100% { transform: rotate(360deg); }
 }
 
+/* MODE SWITCH */
+.mode-switch {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin: 16px 0;
+}
+.mode-btn {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  padding: 8px 20px;
+  background: var(--input-bg);
+  border: 1px solid var(--border-glow);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.mode-btn:first-child { border-radius: 3px 0 0 3px; }
+.mode-btn:last-child { border-radius: 0 3px 3px 0; }
+.mode-btn.active {
+  background: linear-gradient(135deg, var(--neon-yellow), var(--neon-amber));
+  color: #000;
+  border-color: var(--neon-yellow);
+  box-shadow: 0 0 20px rgba(255, 230, 0, 0.3);
+}
+.mode-btn:hover:not(.active) { border-color: var(--neon-yellow); color: var(--neon-yellow); }
+
+/* MANUAL INPUT */
+.manual-input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.manual-result {
+  text-align: center;
+  padding: 24px;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  letter-spacing: 3px;
+  color: var(--neon-yellow);
+  background: rgba(255, 230, 0, 0.05);
+  border: 1px solid var(--border-glow);
+  border-radius: 3px;
+  box-shadow: 0 0 30px rgba(255, 230, 0, 0.1);
+}
+
 /* TOOLTIP / STATUS MESSAGES */
 .msg-info {
   padding: 10px 16px;
@@ -649,6 +698,12 @@ td.pct { color: var(--neon-yellow); }
      <img src="logo.png" alt="ADAMANTIZATOR Logo" loading="lazy" onerror="this.style.display='none'">
    </div>
 
+    <!-- MODE SWITCH -->
+    <div class="mode-switch">
+      <button class="mode-btn active" data-mode="table" data-i18n="table_mode">[ ТАБЛИЦА ]</button>
+      <button class="mode-btn" data-mode="manual" data-i18n="manual_mode">[ РУЧНОЙ ]</button>
+    </div>
+
     <!-- LOADER -->
     <div class="panel" id="loader-panel">
       <div class="panel-title" data-i18n="file">Файл</div>
@@ -715,8 +770,32 @@ td.pct { color: var(--neon-yellow); }
     </div>
   </div>
 
+  <!-- MANUAL INPUT PANEL -->
+  <div class="panel hidden" id="manualPanel">
+    <div class="panel-title" data-i18n="manual_title">Ручной ввод</div>
+    <div class="manual-input-grid">
+      <div class="coef-group">
+        <label style="color:var(--neon-yellow);" data-i18n="death4">Смерти T4</label>
+        <input type="number" id="manualDeathT4" value="0" min="0" step="1">
+      </div>
+      <div class="coef-group">
+        <label style="color:var(--neon-yellow);" data-i18n="death5">Смерти T5</label>
+        <input type="number" id="manualDeathT5" value="0" min="0" step="1">
+      </div>
+      <div class="coef-group">
+        <label style="color:var(--neon-gold);" data-i18n="kill4">Убийства T4</label>
+        <input type="number" id="manualKillT4" value="0" min="0" step="1">
+      </div>
+      <div class="coef-group">
+        <label style="color:var(--neon-gold);" data-i18n="kill5">Убийства T5</label>
+        <input type="number" id="manualKillT5" value="0" min="0" step="1">
+      </div>
+    </div>
+    <div id="manualResult" class="manual-result">ДКП: 0</div>
+  </div>
+
   <!-- ФИЛЬТРЫ -->
-  <div class="panel">
+  <div class="panel" id="filtersPanel">
     <div class="panel-title" data-i18n="filters_title">Фильтры и опции</div>
     <div class="row row-gap" style="margin-bottom:12px;">
       <div class="col" style="min-width:100px;">
@@ -764,7 +843,7 @@ td.pct { color: var(--neon-yellow); }
   </div>
 
   <!-- ТАБЛИЦА -->
-  <div class="panel" style="padding:0;overflow:hidden;">
+  <div class="panel" id="tablePanel" style="padding:0;overflow:hidden;">
     <div class="status-bar" style="border-radius:0;border:none;border-bottom:1px solid var(--neon-yellow);margin-top:0;">
       <span class="sum" id="sumDisplay">Сумма ДКП: 0</span>
       <span class="count" id="countDisplay">Всего игроков: 0</span>
@@ -819,6 +898,8 @@ const LANG = {
     sum_dkp: 'Сумма ДКП:', total_players: 'Всего игроков:',
     players_filtered: 'Игроков:', of: '/',
     calendar_btn: '📅 Календарь',
+    table_mode: '[ ТАБЛИЦА ]', manual_mode: '[ РУЧНОЙ ]',
+    manual_title: 'Ручной ввод', manual_result: 'ДКП:',
   },
   en: {
     back: '← Home', subtitle: 'DKP Analyzer / ДКП Анализатор', h1:'ADAMANTIZATOR',
@@ -843,6 +924,8 @@ const LANG = {
     sum_dkp: 'DKP Sum:', total_players: 'Total players:',
     players_filtered: 'Players:', of: '/',
     calendar_btn: '📅 Calendar',
+    table_mode: '[ TABLE ]', manual_mode: '[ MANUAL ]',
+    manual_title: 'Manual Input', manual_result: 'DKP:',
   },
 };
 
@@ -1115,6 +1198,10 @@ function calculateFormulaColumn(data) {
 
 // ===== MAIN CALCULATE =====
 calcBtn.addEventListener('click', async () => {
+  if (currentMode === 'manual') {
+    calculateManual();
+    return;
+  }
   if (!df || df.length === 0) {
     showMsg('error', 'Сначала выберите Excel файл.');
     return;
@@ -1286,6 +1373,51 @@ downloadBtn.addEventListener('click', () => {
   } catch (err) {
     showMsg('error', `Не удалось скачать Excel файл: ${err.message}`);
   }
+});
+
+// ===== MODE SWITCHING =====
+let currentMode = 'table';
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+  if (mode === 'table') {
+    $('loader-panel').classList.remove('hidden');
+    $('preloadPanel').classList.remove('hidden');
+    $('manualPanel').classList.add('hidden');
+    $('filtersPanel').classList.remove('hidden');
+    $('tablePanel').classList.remove('hidden');
+  } else {
+    $('loader-panel').classList.add('hidden');
+    $('preloadPanel').classList.add('hidden');
+    $('manualPanel').classList.remove('hidden');
+    $('filtersPanel').classList.add('hidden');
+    $('tablePanel').classList.add('hidden');
+    calculateManual();
+  }
+}
+
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchMode(btn.dataset.mode));
+});
+
+// ===== MANUAL CALCULATION =====
+function calculateManual() {
+  const d4 = parseFloat($('manualDeathT4').value) || 0;
+  const d5 = parseFloat($('manualDeathT5').value) || 0;
+  const k4 = parseFloat($('manualKillT4').value) || 0;
+  const k5 = parseFloat($('manualKillT5').value) || 0;
+  const c = getFormulaCoefficients();
+  const dkp = d4 * c.deathT4 + d5 * c.deathT5 + k4 * c.killT4 + k5 * c.killT5;
+  $('manualResult').textContent = `${t('manual_result')} ${fmtNum(dkp)}`;
+}
+
+['manualDeathT4','manualDeathT5','manualKillT4','manualKillT5'].forEach(id => {
+  $(id).addEventListener('input', () => {
+    if (currentMode === 'manual') calculateManual();
+  });
 });
 
 // ===== SEARCH BY NICK =====
