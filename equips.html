@@ -217,13 +217,13 @@ const EQUIP = {
   archer: {
     label:{ru:'Лучники',en:'Archer'},
     sets:[
-{id:'early',label:{ru:'Стартовый сет',en:'Earlygame'},subtitle:{ru:'',en:''},slots:[S('helmet','Helm of Phoenix'),S('chest',"Commander's Heavy Armor"),S('weapon','Staff of the Lost'),S('gloves',"Saint's Song"),S('pants',"Greaves of the Exile"),S('acc1',''),S('acc2',''),S('boots','Edged Boots')]},
-        {id:'mid',label:{ru:'Эпический сет',en:'Midgame'},subtitle:{ru:'',en:''},slots:[S('helmet','Revival Helm'),S('chest','Revival Plate'),S('weapon','Golden Age'),S('gloves','Revival Gauntlets'),S('pants','Revival Greaves'),S('acc1',''),S('acc2',''),S('boots','Flame Treads')]},
+{id:'early',label:{ru:'Стартовый сет',en:'Starter Set'},subtitle:{ru:'',en:''},slots:[S('helmet','Helm of Phoenix'),S('chest',"Commander's Heavy Armor"),S('weapon','Staff of the Lost'),S('gloves',"Saint's Song"),S('pants',"Greaves of the Exile"),S('acc1',''),S('acc2',''),S('boots','Edged Boots')]},
+        {id:'mid',label:{ru:'Эпический сет',en:'Epic Set'},subtitle:{ru:'',en:''},slots:[S('helmet','Revival Helm'),S('chest','Revival Plate'),S('weapon','Golden Age'),S('gloves','Revival Gauntlets'),S('pants','Revival Greaves'),S('acc1',''),S('acc2',''),S('boots','Flame Treads')]},
          {id:'intermediate',label:{ru:'Промежуточный сет',en:'Intermediate Set'},subtitle:{ru:'',en:''},hint:{ru:'Можно сразу ковать шлем и оружие дыхания дракона, в перспективе выходить на 222A/222Б и Фулл Драконик сета',en:'You can forge the Dragon\'s Breath helm and weapon right away, aiming for 222A/222B and a full Draconic set in the long run.'},slots:[S('helmet','Revival Helm'),S('chest',"Dragon's Breath Plate"),S('weapon','Golden Age'),S('gloves',"Dragon's Breath Vambraces"),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]},
-        {id:'end4',label:{ru:'Эндгейм 222А',en:'Endgame Set 4'},subtitle:{ru:'(Рейд/Гарнизон)',en:'(Rally/Garrison)'},slots:[S('helmet','Ancestral Mask of Night'),S('chest',"Dragon's Breath Plate"),S('weapon',"The Hydra's Blast"),S('gloves',"Dragon's Breath Vambraces"),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]},
-        {id:'end3',label:{ru:'Эндгейм 222Б',en:'Endgame Set 3'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Ancestral Mask of Night'),S('chest','The Milky Way'),S('weapon',"The Hydra's Blast"),S('gloves',"Ian's Choice"),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]},
-        {id:'end1',label:{ru:'Полный сет дракона',en:'Endgame Set 1'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet',"Dragon's Breath Helm"),S('chest',"Dragon's Breath Plate"),S('weapon',"Dragon's Breath Bow"),S('gloves',"Dragon's Breath Vambraces"),S('pants',"Dragon's Breath Tassets"),S('acc1',''),S('acc2',''),S('boots',"Dragon's Breath Boots")]},
-        {id:'end2',label:{ru:'Эндгейм 2-4',en:'Endgame Set 2'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Ancestral Mask of Night'),S('chest',"Dragon's Breath Plate"),S('weapon',"The Hydra's Blast"),S('gloves',"Dragon's Breath Vambraces"),S('pants',"Dragon's Breath Tassets"),S('acc1',''),S('acc2',''),S('boots',"Dragon's Breath Boots")]}
+        {id:'end4',label:{ru:'Эндгейм 222А',en:'Endgame 222A'},subtitle:{ru:'(Рейд/Гарнизон)',en:'(Rally/Garrison)'},slots:[S('helmet','Ancestral Mask of Night'),S('chest',"Dragon's Breath Plate"),S('weapon',"The Hydra's Blast"),S('gloves',"Dragon's Breath Vambraces"),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]},
+        {id:'end3',label:{ru:'Эндгейм 222Б',en:'Endgame 222B'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Ancestral Mask of Night'),S('chest','The Milky Way'),S('weapon',"The Hydra's Blast"),S('gloves',"Ian's Choice"),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]},
+        {id:'end1',label:{ru:'Полный сет дракона',en:'Full Dragon Set'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet',"Dragon's Breath Helm"),S('chest',"Dragon's Breath Plate"),S('weapon',"Dragon's Breath Bow"),S('gloves',"Dragon's Breath Vambraces"),S('pants',"Dragon's Breath Tassets"),S('acc1',''),S('acc2',''),S('boots',"Dragon's Breath Boots")]},
+        {id:'end2',label:{ru:'Эндгейм 2-4',en:'Endgame 2-4'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Ancestral Mask of Night'),S('chest',"Dragon's Breath Plate"),S('weapon',"The Hydra's Blast"),S('gloves',"Dragon's Breath Vambraces"),S('pants',"Dragon's Breath Tassets"),S('acc1',''),S('acc2',''),S('boots',"Dragon's Breath Boots")]}
     ]
   },
   siege: {
@@ -318,6 +318,8 @@ const ITEM_SET_MAP = {
   'Diadem of the Glorious Goddess':'Glorious Goddess','Plate of the Glorious Goddess':'Glorious Goddess','Scepter of the Glorious Goddess':'Glorious Goddess','Gauntlets of the Glorious Goddess':'Glorious Goddess','Chausses of the Glorious Goddess':'Glorious Goddess','Greaves of the Glorious Goddess':'Glorious Goddess',
   "Fierce Wolf's Helmet":"Wolf's Clothing","Vigilant Wolf's Leather Armor":"Wolf's Clothing","Wailing Wolf's Gauntlets":"Wolf's Clothing","Lone Wolf's Leather Tassets":"Wolf's Clothing","Roaring Wolf's Claws":"Wolf's Clothing"
 };
+const SET_TOTAL={};
+Object.entries(ITEM_SET_MAP).forEach(([item,set])=>{SET_TOTAL[set]=(SET_TOTAL[set]||0)+1});
 const SET_BONUSES = {
   'Eternal Empire':{2:'All Troops Defense +3%',4:'All Troops March Speed +10%',6:'Infantry Attack +5%'},
   'Hellish Wasteland':{2:'All Troops Health +3%',4:'Counterattack Damage +3%',6:'Cavalry Defense +5%'},
@@ -752,6 +754,27 @@ let activeTroop='infantry';
 const tabsEl=document.getElementById('troopTabs');
 const contentEl=document.getElementById('troopContent');
 
+function renderSetCountersHtml(names){
+  const counts={};
+  names.forEach(n=>{const s=ITEM_SET_MAP[n];if(s)counts[s]=(counts[s]||0)+1});
+  const entries=Object.entries(counts).filter(([,c])=>c>0);
+  if(!entries.length)return'';
+  let h='';
+  entries.forEach(([set,cnt],idx)=>{
+    const total=SET_TOTAL[set]||6;
+    if(idx>0)h+=`<div style="margin-top:7px"></div>`;
+    h+=`<div style="color:#fff;font-size:0.65rem;margin-top:5px">${set}: ${cnt}/${total}</div>`;
+    const bonuses=SET_BONUSES[set];
+    if(bonuses)Object.entries(bonuses).forEach(([tier,desc])=>{
+      desc.split(', ').forEach(part=>{
+        const m=part.match(/^(.+?)\s+[+-]/);
+        const cls=m?statColorClass(m[1]):'stat-march';
+        h+=`<div style="font-size:0.6rem;line-height:1.4"><span class="${cls}">${part}</span></div>`;
+      });
+    });
+  });
+  return h;
+}
 function getSetStats(troop, setId){
   const td=EQUIP[troop];
   const set=td&&td.sets.find(s=>s.id===setId);
@@ -770,17 +793,24 @@ function getSetStats(troop, setId){
     });
   });
   applySetBonuses(agg,procs,names);
-  return {agg,procs,hint:set.hint};
+  return {agg,procs,hint:set.hint,names};
 }
 function renderStatsHtml(data){
-  const{agg,procs,hint}=data;
+  const{agg,procs,hint,names}=data;
   const sorted=Object.entries(agg).sort((a,b)=>{
     const ka=statSortKey(a[0]),kb=statSortKey(b[0]);
     return ka!==kb?ka-kb:Math.abs(b[1])-Math.abs(a[1]);
   });
   let h=sorted.map(([k,v])=>`<div class="stat-row"><span class="${statColorClass(k)}">${ts(k)}</span><span class="val ${statColorClass(k)}">${v>0?'+':''}${v}%</span></div>`).join('');
   procs.forEach(p=>{h+=`<div class="stat-row"><span>${p}</span><span class="val">⚡</span></div>`});
-  if(hint){h+=`<div style="border-top:1px solid rgba(255,230,0,0.2);margin:6px 0 4px"></div><div style="font-size:0.55rem;color:var(--text-dim);line-height:1.5;max-width:260px;margin-top:4px">${tt(hint)}</div>`}
+  const setHtml=names?renderSetCountersHtml(names):'';
+  if(setHtml){
+    if(hint)h+=`<div style="border-top:1px solid rgba(255,230,0,0.2);margin:6px 0 4px"></div><div style="font-size:0.55rem;color:var(--text-dim);line-height:1.5;max-width:260px;margin-top:4px">${tt(hint)}</div>`;
+    else h+=`<div style="border-top:1px solid rgba(255,255,255,0.1);margin:6px 0 4px"></div>`;
+    h+=setHtml;
+  }else if(hint){
+    h+=`<div style="border-top:1px solid rgba(255,230,0,0.2);margin:6px 0 4px"></div><div style="font-size:0.55rem;color:var(--text-dim);line-height:1.5;max-width:260px;margin-top:4px">${tt(hint)}</div>`;
+  }
   return h;
 }
 function renderTabs(){
@@ -1034,6 +1064,7 @@ function calcBuilderStats(){
   });
   let h=sorted.map(([k,v])=>`<div class="stat-row"><span class="${statColorClass(k)}">${ts(k)}</span><span class="val ${statColorClass(k)}">${v>0?'+':''}${v}%</span></div>`).join('');
   procs.forEach(p=>{h+=`<div class="stat-row proc"><span>${p}</span><span class="val">⚡</span></div>`});
+  h+=renderSetCountersHtml(names);
   return h;
 }
 function itemDetailHtml(name, crit){
