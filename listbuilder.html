@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Составление списка</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --neon-yellow:#ffe600;--neon-gold:#ffdd00;--neon-amber:#ffb300;--neon-red:#ff1030;
+  --neon-white:#fff;--dark-bg:#0a0a0f;--panel-bg:#12121a;--card-bg:#1a1a2e;
+  --input-bg:#0d0d1a;--border-glow:rgba(255,230,0,0.3);
+  --text-primary:#fff8dc;--text-dim:#e0d8b0;--text-muted:#c0b080;
+  --font-display:'Orbitron',monospace;--font-body:'Rajdhani',sans-serif;--font-mono:'Fira Code',monospace;
+}
+body{background:var(--dark-bg);color:var(--text-primary);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background:linear-gradient(rgba(255,230,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,230,0,0.05) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px);
+  pointer-events:none;z-index:1}
+.app{position:relative;z-index:2;max-width:1600px;margin:0 auto;padding:16px}
+.header{text-align:center;padding:20px 0 12px}
+.header h1{font-family:var(--font-display);font-size:2rem;font-weight:900;text-transform:uppercase;letter-spacing:4px;
+  background:linear-gradient(135deg,var(--neon-yellow),var(--neon-amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 20px rgba(255,230,0,0.3))}
+.header .subtitle{font-family:var(--font-display);font-size:0.65rem;letter-spacing:6px;color:var(--text-dim);margin-top:6px;text-transform:uppercase}
+.glitch-line{height:2px;background:linear-gradient(90deg,transparent,var(--neon-yellow),var(--neon-gold),transparent);margin:8px 0 0;box-shadow:0 0 20px rgba(255,230,0,0.3)}
+.panel{background:var(--panel-bg);border:1px solid var(--border-glow);border-radius:4px;padding:14px;margin-bottom:12px;box-shadow:0 0 20px rgba(255,230,0,0.06),inset 0 0 30px rgba(255,230,0,0.03)}
+.panel-title{font-family:var(--font-display);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--neon-yellow);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.panel-title::before{content:'>';color:var(--neon-gold);font-weight:700}
+.btn{font-family:var(--font-body);font-weight:700;font-size:0.85rem;padding:8px 18px;border:none;border-radius:3px;cursor:pointer;text-transform:uppercase;letter-spacing:1.2px;transition:all 0.2s}
+.btn-primary{background:linear-gradient(135deg,var(--neon-yellow),var(--neon-amber));color:#000;box-shadow:0 0 20px rgba(255,230,0,0.3)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(255,230,0,0.5);transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid var(--neon-yellow);color:var(--neon-yellow)}
+.btn-outline:hover{background:rgba(255,230,0,0.1);box-shadow:0 0 20px rgba(255,230,0,0.2)}
+.btn-small{font-size:0.7rem;padding:5px 12px;letter-spacing:1px}
+.btn-danger{background:linear-gradient(135deg,var(--neon-red),#cc0033);color:#fff;box-shadow:0 0 15px rgba(255,16,48,0.3)}
+.btn-danger:hover{box-shadow:0 0 30px rgba(255,16,48,0.5);transform:translateY(-1px)}
+select,input{font-family:var(--font-body);font-size:0.85rem;padding:6px 10px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.25);color:var(--text-primary);border-radius:3px;outline:none;transition:border-color 0.2s}
+select:focus,input:focus{border-color:var(--neon-yellow);box-shadow:0 0 15px rgba(255,230,0,0.15)}
+select{cursor:pointer}
+label{font-family:var(--font-display);font-size:0.6rem;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:3px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.col{display:flex;flex-direction:column;gap:4px}
+.col-grow{flex:1;min-width:120px}
+.hidden{display:none!important}
+.msg-info{padding:8px 14px;background:rgba(255,230,0,0.08);border-left:3px solid var(--neon-yellow);color:var(--neon-yellow);border-radius:2px;margin:6px 0;font-size:0.85rem}
+.msg-error{padding:8px 14px;background:rgba(255,16,48,0.08);border-left:3px solid var(--neon-red);color:var(--neon-red);border-radius:2px;margin:6px 0;font-size:0.85rem}
+
+/* LANG SWITCH */
+.lang-switch{position:fixed;top:4px;right:8px;display:flex;gap:2px;z-index:10}
+.lang-btn{font-family:var(--font-mono);font-size:0.55rem;padding:3px 7px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.2);color:var(--text-muted);cursor:pointer;transition:all 0.2s;text-transform:uppercase;letter-spacing:1px}
+.lang-btn:first-child{border-radius:3px 0 0 3px}
+.lang-btn:last-child{border-radius:0 3px 3px 0}
+.lang-btn.active{background:var(--neon-yellow);color:#000;border-color:var(--neon-yellow)}
+.lang-btn:hover:not(.active){border-color:var(--neon-yellow)}
+
+/* TWO TABLE LAYOUT */
+.tables-container{display:flex;gap:14px;align-items:stretch}
+.table-panel{flex:1;min-width:0;display:flex;flex-direction:column}
+.table-panel .panel{flex:1}
+
+/* TABLE WRAP */
+.table-wrap{overflow-x:auto;border:1px solid rgba(0,240,255,0.12);border-radius:3px;background:var(--dark-bg);max-height:60vh;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-family:var(--font-body);font-size:0.8rem}
+thead th{background:linear-gradient(180deg,rgba(255,230,0,0.18),rgba(255,230,0,0.04));color:var(--text-primary);
+  font-family:var(--font-display);font-size:0.55rem;letter-spacing:1.2px;text-transform:uppercase;
+  padding:8px 10px;text-align:left;border-bottom:2px solid var(--neon-yellow);white-space:nowrap;
+  position:sticky;top:0;z-index:2;cursor:pointer;user-select:none}
+thead th .sort-arrow{font-size:0.5rem;margin-left:4px;color:var(--neon-yellow)}
+thead th:hover{background:linear-gradient(180deg,rgba(255,230,0,0.25),rgba(255,230,0,0.06))}
+tbody tr{border-bottom:1px solid rgba(255,230,0,0.05);transition:background 0.12s;cursor:default}
+tbody tr:hover{background:rgba(255,230,0,0.06)}
+tbody tr:nth-child(even){background:rgba(255,230,0,0.02)}
+tbody tr:nth-child(even):hover{background:rgba(255,230,0,0.06)}
+tbody tr.selected{background:rgba(255,230,0,0.1)}
+tbody tr.dragging{opacity:0.4}
+tbody tr.drag-over{border-top:2px solid var(--neon-yellow)}
+tbody td{padding:6px 10px;white-space:nowrap;font-family:var(--font-mono);font-size:0.7rem}
+td.num{text-align:right}
+td.center{text-align:center}
+td.name-col{color:var(--neon-yellow);font-weight:600}
+
+/* RIGHT TABLE ROW REMOVE BUTTON */
+.rm-btn{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;
+  border:1px solid rgba(255,16,48,0.4);color:var(--neon-red);background:transparent;cursor:pointer;
+  font-size:0.55rem;transition:all 0.2s;margin-right:4px;flex-shrink:0}
+.rm-btn:hover{background:rgba(255,16,48,0.2);border-color:var(--neon-red)}
+
+/* COLUMN TOGGLES */
+.col-toggles{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.col-toggle{font-family:var(--font-mono);font-size:0.55rem;padding:2px 6px;border:1px solid rgba(255,230,0,0.15);
+  border-radius:2px;background:transparent;color:var(--text-muted);cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.col-toggle:hover{border-color:var(--neon-yellow);color:var(--neon-yellow)}
+.col-toggle.hidden-col{opacity:0.35;text-decoration:line-through}
+
+/* STATUS BAR */
+.status-bar{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;
+  background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.1);border-radius:3px;
+  margin-top:8px;font-family:var(--font-mono);font-size:0.75rem}
+.status-bar .sum{color:var(--neon-yellow);font-weight:600}
+.status-bar .count{color:var(--text-dim)}
+
+/* DRAG INDICATOR */
+.drag-hint{font-size:0.6rem;color:var(--text-muted);font-family:var(--font-display);letter-spacing:1px;margin-bottom:6px;text-align:center}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--dark-bg)}
+::-webkit-scrollbar-thumb{background:var(--neon-yellow);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#ffdd00}
+
+@media(max-width:900px){
+  .tables-container{flex-direction:column}
+  .header h1{font-size:1.4rem;letter-spacing:2px}
+  table{font-size:0.65rem}
+  thead th{font-size:0.5rem;padding:4px 6px}
+  tbody td{padding:4px 6px;font-size:0.6rem}
+  .app{padding:10px}
+}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <button class="lang-btn" data-lang="ru">RU</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
+<div class="app">
+  <header class="header">
+    <div style="text-align:left;margin-bottom:4px">
+      <a href="index.html" style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px" data-i18n="back">← Главная</a>
+    </div>
+    <h1 data-i18n="h1">СОСТАВЛЕНИЕ СПИСКА</h1>
+    <div class="subtitle" data-i18n="subtitle">List Builder</div>
+    <div class="glitch-line"></div>
+  </header>
+
+  <!-- LOADER -->
+  <div class="panel">
+    <div class="panel-title" data-i18n="file">Файл</div>
+    <div class="row">
+      <button class="btn btn-primary" id="loadBtn" data-i18n="open_excel">[ ОТКРЫТЬ EXCEL ]</button>
+      <span id="fileLabel" style="color:var(--text-dim);font-size:0.85rem" data-i18n="no_file">Файл не выбран</span>
+      <span id="fileInfo" style="color:var(--text-dim);font-size:0.8rem;font-family:var(--font-mono)"></span>
+    </div>
+    <div id="loadMsg" class="hidden"></div>
+  </div>
+
+  <!-- PRELOADED -->
+  <div class="panel" id="preloadPanel">
+    <div class="panel-title" data-i18n="preloaded">Предзагруженные данные</div>
+    <div id="preloadList" class="row" style="gap:6px;min-height:24px"></div>
+    <div id="preloadMsg" class="hidden"></div>
+  </div>
+
+  <!-- FILTERS + TWO TABLES -->
+  <div class="tables-container">
+    <!-- LEFT TABLE -->
+    <div class="table-panel">
+      <div class="panel">
+        <div class="panel-title" data-i18n="left_title">Все данные</div>
+        <div class="row" style="margin-bottom:8px;gap:8px">
+          <div class="col" style="min-width:100px">
+            <label data-i18n="search">Поиск</label>
+            <input type="text" id="searchLeft" placeholder="Ник..." style="width:100%">
+          </div>
+          <div class="col" style="min-width:70px">
+            <label data-i18n="from_place">С места</label>
+            <input type="number" id="fromLeft" value="" min="1" style="width:70px">
+          </div>
+          <div class="col" style="min-width:70px">
+            <label data-i18n="to_place">По место</label>
+            <input type="number" id="toLeft" value="" min="1" style="width:70px">
+          </div>
+          <div id="leftColToggles" class="col-toggles" style="flex:1;align-self:flex-end"></div>
+        </div>
+        <div class="drag-hint" data-i18n="drag_hint">🖱 Перетащите строку в правую таблицу или кликните</div>
+        <div class="table-wrap" id="leftTableWrap">
+          <table><thead id="leftHead"></thead><tbody id="leftBody"></tbody></table>
+        </div>
+        <div class="status-bar">
+          <span class="count" id="leftCount">Записей: 0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT TABLE -->
+    <div class="table-panel">
+      <div class="panel">
+        <div class="panel-title" data-i18n="right_title">Отобранные</div>
+        <div class="row" style="margin-bottom:8px;gap:8px">
+          <button class="btn btn-danger btn-small" id="clearRightBtn" data-i18n="clear">[ ОЧИСТИТЬ ]</button>
+          <button class="btn btn-primary btn-small" id="downloadRightBtn" data-i18n="download">[ СКАЧАТЬ EXCEL ]</button>
+          <div id="rightColToggles" class="col-toggles" style="flex:1"></div>
+        </div>
+        <div class="drag-hint" data-i18n="drag_hint_right">🖱 Перетащите для изменения порядка</div>
+        <div class="table-wrap" id="rightTableWrap">
+          <table><thead id="rightHead"></thead><tbody id="rightBody"></tbody></table>
+        </div>
+        <div class="status-bar">
+          <span class="sum" id="rightCount">Выбрано: 0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== I18N =====
+const LANG={ru:{
+  back:'← Главная',h1:'СОСТАВЛЕНИЕ СПИСКА',subtitle:'List Builder',
+  file:'Файл',open_excel:'[ ОТКРЫТЬ EXCEL ]',no_file:'Файл не выбран',
+  preloaded:'Предзагруженные данные',
+  left_title:'Все данные',right_title:'Отобранные',
+  search:'Поиск',from_place:'С места',to_place:'По место',
+  clear:'[ ОЧИСТИТЬ ]',download:'[ СКАЧАТЬ EXCEL ]',
+  drag_hint:'🖱 Перетащите строку в правую таблицу или кликните',
+  drag_hint_right:'🖱 Перетащите для изменения порядка',
+  records:'Записей:',selected:'Выбрано:',
+  hide:'скрыть',show:'показать',
+},en:{
+  back:'← Home',h1:'LIST BUILDER',subtitle:'Составление списка',
+  file:'File',open_excel:'[ OPEN EXCEL ]',no_file:'No file selected',
+  preloaded:'Preloaded Data',
+  left_title:'All Data',right_title:'Selected',
+  search:'Search',from_place:'From place',to_place:'To place',
+  clear:'[ CLEAR ]',download:'[ DOWNLOAD EXCEL ]',
+  drag_hint:'🖱 Drag a row to the right table or click',
+  drag_hint_right:'🖱 Drag to reorder',
+  records:'Records:',selected:'Selected:',
+  hide:'hide',show:'show',
+}};
+const detected=navigator.language.startsWith('ru')?'ru':'en';
+let lang=localStorage.getItem('lang')||detected;
+function t(k){return LANG[lang][k]||k}
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.dataset.i18n;
+    if(LANG[lang][k])el.textContent=LANG[lang][k];
+  });
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  document.documentElement.lang=lang;
+  ['searchLeft'].forEach(id=>{const e=document.getElementById(id);if(e)e.placeholder=t('search')});
+}
+document.querySelectorAll('.lang-btn').forEach(b=>{
+  b.addEventListener('click',()=>{lang=b.dataset.lang;localStorage.setItem('lang',lang);applyLang();renderTables()});
+});
+applyLang();
+
+// ===== STATE =====
+let headers=[];
+let rawData=[];
+let fileLoaded=false;
+let leftHidden=new Set;
+let rightHidden=new Set;
+let leftSort={col:-1,dir:'none'};
+let rightSort={col:-1,dir:'none'};
+let rightRows=[]; // array of row indices (pointing into rawData)
+
+const $=id=>document.getElementById(id);
+const loadBtn=$('loadBtn');
+const fileLabel=$('fileLabel');
+const fileInfo=$('fileInfo');
+const loadMsg=$('loadMsg');
+const searchLeft=$('searchLeft');
+const fromLeft=$('fromLeft');
+const toLeft=$('toLeft');
+const leftBody=$('leftBody');
+const leftHead=$('leftHead');
+const rightBody=$('rightBody');
+const rightHead=$('rightHead');
+const preloadList=$('preloadList');
+const preloadMsg=$('preloadMsg');
+
+// ===== PRELOADED =====
+const PRELOADED_FILES=['06-07_3901.xlsx'];
+function preloadLabel(fn){return fn.replace(/\.[^.]+$/,'').replace(/_/g,' ')}
+function showPreloadMsg(tp,text){preloadMsg.className='msg-'+tp;preloadMsg.textContent=text;setTimeout(()=>{preloadMsg.className='hidden'},4000)}
+async function loadPreloadedFile(filename){
+  try{
+    const resp=await fetch('data/'+encodeURIComponent(filename));
+    if(!resp.ok)throw new Error('HTTP '+resp.status);
+    const buf=await resp.arrayBuffer();
+    if(loadExcelFromBuffer(buf,filename))showPreloadMsg('info','"'+preloadLabel(filename)+'" загружен');
+    else showPreloadMsg('error','Файл пуст или поврежден');
+  }catch(err){
+    showPreloadMsg('error','Ошибка: '+err.message+(window.location.protocol==='file:'?' (откройте через http://localhost:8080)':''));
+  }
+}
+function renderPreloadedFiles(){
+  preloadList.innerHTML='';
+  PRELOADED_FILES.forEach(f=>{
+    const b=document.createElement('button');
+    b.className='btn btn-outline btn-small';
+    b.textContent=preloadLabel(f);
+    b.addEventListener('click',()=>loadPreloadedFile(f));
+    preloadList.appendChild(b);
+  });
+}
+renderPreloadedFiles();
+
+// ===== LOAD EXCEL =====
+function loadExcelFromBuffer(buf,fn){
+  try{
+    const wb=XLSX.read(buf,{type:'array'});
+    const sh=wb.Sheets[wb.SheetNames[0]];
+    const j=XLSX.utils.sheet_to_json(sh,{header:1,defval:''});
+    if(!j||j.length<2)return false;
+    headers=j[0].map(h=>String(h).trim()||'Column '+(j[0].indexOf(h)+1));
+    rawData=j.slice(1).filter(r=>r.some(c=>c!==undefined&&c!==null&&c!==''));
+    fileLoaded=true;
+    leftHidden=new Set; rightHidden=new Set;
+    leftSort={col:-1,dir:'none'}; rightSort={col:-1,dir:'none'};
+    rightRows=[];
+    fileLabel.textContent=fn; fileLabel.style.color='var(--neon-yellow)';
+    fileInfo.textContent='| Строк: '+rawData.length+' | Колонок: '+headers.length;
+    renderTables();
+    return true;
+  }catch(e){return false}
+}
+
+loadBtn.addEventListener('click',()=>{
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='.xlsx,.xls';
+  inp.onchange=async e=>{
+    const f=e.target.files[0];if(!f)return;
+    loadMsg.className='hidden';
+    try{
+      const buf=await f.arrayBuffer();
+      if(loadExcelFromBuffer(buf,f.name))loadMsg.className='msg-info',loadMsg.textContent='Файл "'+f.name+'" загружен. Строк: '+rawData.length+', колонок: '+headers.length;
+      else loadMsg.className='msg-error',loadMsg.textContent='Не удалось прочитать файл';
+    }catch(err){loadMsg.className='msg-error',loadMsg.textContent='Ошибка: '+err.message}
+  };
+  inp.click();
+});
+
+// ===== FORMAT NUM =====
+function fmt(n){return typeof n==='number'?Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,' '):String(n)}
+
+// ===== SORT HELPERS =====
+function cellVal(v){const n=parseFloat(v);return isNaN(n)?String(v).toLowerCase():n}
+function cmp(a,b,dir){
+  const va=cellVal(a),vb=cellVal(b);
+  if(typeof va==='number'&&typeof vb==='number')return dir==='asc'?va-vb:vb-va;
+  const sa=String(va),sb=String(vb);
+  return dir==='asc'?sa.localeCompare(sb):sb.localeCompare(sa);
+}
+
+// ===== RENDER TABLES =====
+function renderTables(){
+  if(!fileLoaded||!headers.length){leftBody.innerHTML='';rightBody.innerHTML='';return}
+  renderLeft();
+  renderRight();
+  renderColToggles('left');
+  renderColToggles('right');
+}
+
+function renderLeft(){
+  // Build data array
+  let data=rawData.map((row,i)=>({idx:i,row}));
+  // Search filter
+  const sq=searchLeft.value.trim().toLowerCase();
+  if(sq)data=data.filter(d=>{
+    const nameCell=d.row[0]; // first col is often name
+    return String(nameCell).toLowerCase().includes(sq);
+  });
+  // Sort
+  if(leftSort.dir!=='none'&&leftSort.col>=0){
+    data.sort((a,b)=>cmp(a.row[leftSort.col],b.row[leftSort.col],leftSort.dir));
+  }
+  // Range
+  let total=data.length;
+  let from=parseInt(fromLeft.value)||1;
+  let to=parseInt(toLeft.value)||total;
+  if(from<1)from=1;
+  if(to>total)to=total;
+  if(from>to)[from,to]=[to,from];
+  data=data.slice(from-1,to);
+
+  // Render head
+  let hh='<tr>';
+  headers.forEach((h,i)=>{
+    let arrow='';
+    if(leftSort.col===i)arrow=leftSort.dir==='asc'?' ▲':' ▼';
+    const style=leftHidden.has(i)?'style="display:none"':'';
+    hh+=`<th ${style} data-li="${i}">${h}<span class="sort-arrow">${arrow}</span></th>`;
+  });
+  leftHead.innerHTML=hh;
+
+  // Render body
+  let bh='';
+  data.forEach(d=>{
+    const inRight=rightRows.includes(d.idx);
+    let r='<tr draggable="true" data-idx="'+d.idx+'" class="'+ (inRight?'selected':'') +'">';
+    headers.forEach((h,i)=>{
+      if(leftHidden.has(i))return;
+      const v=d.row[i]!==undefined?d.row[i]:'';
+      const cls=typeof v==='number'||(!isNaN(parseFloat(v))&&String(v).trim()!=='')?'num':'';
+      r+=`<td class="${cls}">${fmt(v)}</td>`;
+    });
+    r+='</tr>';
+    bh+=r;
+  });
+  leftBody.innerHTML=bh;
+
+  // Drag events for left rows
+  leftBody.querySelectorAll('tr[draggable]').forEach(tr=>{
+    tr.addEventListener('dragstart',e=>{
+      e.dataTransfer.setData('text/plain',tr.dataset.idx);
+      e.dataTransfer.effectAllowed='move';
+      tr.classList.add('dragging');
+    });
+    tr.addEventListener('dragend',()=>tr.classList.remove('dragging'));
+    tr.addEventListener('click',()=>{
+      const idx=parseInt(tr.dataset.idx);
+      if(!rightRows.includes(idx)){
+        rightRows.push(idx);
+        renderTables();
+      }
+    });
+  });
+
+  $('leftCount').textContent=t('records')+' '+data.length;
+}
+
+function renderRight(){
+  // Build data
+  let data=rightRows.map(idx=>({idx,row:rawData[idx]}));
+  // Sort
+  if(rightSort.dir!=='none'&&rightSort.col>=0){
+    data.sort((a,b)=>cmp(a.row[rightSort.col],b.row[rightSort.col],rightSort.dir));
+  }
+
+  // Render head
+  let hh='<tr><th style="width:28px;text-align:center">#</th>';
+  headers.forEach((h,i)=>{
+    let arrow='';
+    if(rightSort.col===i)arrow=rightSort.dir==='asc'?' ▲':' ▼';
+    const style=rightHidden.has(i)?'style="display:none"':'';
+    hh+=`<th ${style} data-ri="${i}">${h}<span class="sort-arrow">${arrow}</span></th>`;
+  });
+  hh+='</tr>';
+  rightHead.innerHTML=hh;
+
+  // Render body
+  let bh='';
+  data.forEach((d,pos)=>{
+    let r='<tr draggable="true" data-ridx="'+d.idx+'">';
+    r+=`<td class="center"><button class="rm-btn" data-idx="${d.idx}" title="Remove">✕</button></td>`;
+    headers.forEach((h,i)=>{
+      if(rightHidden.has(i))return;
+      const v=d.row[i]!==undefined?d.row[i]:'';
+      const cls=typeof v==='number'||(!isNaN(parseFloat(v))&&String(v).trim()!=='')?'num':'';
+      r+=`<td class="${cls}">${fmt(v)}</td>`;
+    });
+    r+='</tr>';
+    bh+=r;
+  });
+  rightBody.innerHTML=bh;
+
+  // Remove buttons
+  rightBody.querySelectorAll('.rm-btn').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const idx=parseInt(btn.dataset.idx);
+      const pos=rightRows.indexOf(idx);
+      if(pos>=0){rightRows.splice(pos,1);renderTables()}
+    });
+  });
+
+  // Drag for reorder within right
+  rightBody.querySelectorAll('tr[draggable]').forEach(tr=>{
+    tr.addEventListener('dragstart',e=>{
+      e.dataTransfer.setData('text/plain','r:'+tr.dataset.ridx);
+      e.dataTransfer.effectAllowed='move';
+      tr.classList.add('dragging');
+    });
+    tr.addEventListener('dragend',()=>tr.classList.remove('dragging'));
+  });
+
+  // Drop on right table body for adding/reordering
+  const rtb=rightBody;
+  rtb.addEventListener('dragover',e=>{
+    e.preventDefault();
+    e.dataTransfer.dropEffect='move';
+    const target=e.target.closest('tr');
+    if(target)target.classList.add('drag-over');
+  });
+  rtb.addEventListener('dragleave',e=>{
+    const target=e.target.closest('tr');
+    if(target)target.classList.remove('drag-over');
+  });
+  rtb.addEventListener('drop',e=>{
+    e.preventDefault();
+    rtb.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'));
+    const data=e.dataTransfer.getData('text/plain');
+    if(data.startsWith('r:')){
+      // Reorder within right
+      const idx=parseInt(data.slice(2));
+      const fromPos=rightRows.indexOf(idx);
+      if(fromPos<0)return;
+      const target=e.target.closest('tr');
+      if(!target)return;
+      const toIdx=parseInt(target.dataset.ridx);
+      const toPos=rightRows.indexOf(toIdx);
+      if(toPos<0||fromPos===toPos)return;
+      rightRows.splice(fromPos,1);
+      rightRows.splice(toPos,0,idx);
+      renderTables();
+    }else{
+      // Add from left
+      const idx=parseInt(data);
+      if(!rightRows.includes(idx)){rightRows.push(idx);renderTables()}
+    }
+  });
+
+  $('rightCount').textContent=t('selected')+' '+rightRows.length;
+}
+
+// ===== COLUMN TOGGLES =====
+function renderColToggles(side){
+  const container=$(side==='left'?'leftColToggles':'rightColToggles');
+  const hidden=side==='left'?leftHidden:rightHidden;
+  container.innerHTML='';
+  headers.forEach((h,i)=>{
+    const b=document.createElement('button');
+    b.className='col-toggle'+(hidden.has(i)?' hidden-col':'');
+    b.textContent=h;
+    b.addEventListener('click',()=>{
+      if(hidden.has(i))hidden.delete(i);
+      else hidden.add(i);
+      renderColToggles(side);
+      side==='left'?renderLeft():renderRight();
+    });
+    container.appendChild(b);
+  });
+}
+
+// ===== SORT ON HEADER CLICK =====
+leftHead.addEventListener('click',e=>{
+  const th=e.target.closest('th');
+  if(!th)return;
+  const idx=parseInt(th.dataset.li);
+  if(isNaN(idx))return;
+  if(leftSort.col===idx){
+    leftSort.dir=leftSort.dir==='none'?'asc':leftSort.dir==='asc'?'desc':'none';
+  }else{
+    leftSort.col=idx;leftSort.dir='asc';
+  }
+  renderLeft();
+});
+
+rightHead.addEventListener('click',e=>{
+  const th=e.target.closest('th');
+  if(!th)return;
+  const idx=parseInt(th.dataset.ri);
+  if(isNaN(idx))return;
+  if(rightSort.col===idx){
+    rightSort.dir=rightSort.dir==='none'?'asc':rightSort.dir==='asc'?'desc':'none';
+  }else{
+    rightSort.col=idx;rightSort.dir='asc';
+  }
+  renderRight();
+});
+
+// ===== FILTER INPUTS =====
+searchLeft.addEventListener('input',renderLeft);
+fromLeft.addEventListener('input',renderLeft);
+toLeft.addEventListener('input',renderLeft);
+
+// ===== CLEAR RIGHT =====
+$('clearRightBtn').addEventListener('click',()=>{
+  rightRows=[];rightSort={col:-1,dir:'none'};renderTables();
+});
+
+// ===== DOWNLOAD RIGHT AS EXCEL =====
+$('downloadRightBtn').addEventListener('click',()=>{
+  if(!rightRows.length){
+    loadMsg.className='msg-info';loadMsg.textContent='Правая таблица пуста';
+    setTimeout(()=>{loadMsg.className='hidden'},3000);
+    return;
+  }
+  try{
+    const visibleCols=headers.filter((h,i)=>!rightHidden.has(i));
+    const visibleIdx=headers.map((h,i)=>i).filter(i=>!rightHidden.has(i));
+    let data=rightRows.map(idx=>{
+      const row={};
+      visibleIdx.forEach(ci=>{row[headers[ci]]=rawData[idx][ci]!==undefined?rawData[idx][ci]:''});
+      return row;
+    });
+    const ws=XLSX.utils.json_to_sheet(data);
+    ws['!cols']=visibleCols.map(()=>({wch:16}));
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Лист1');
+    const now=new Date();
+    const ts=now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'_'+
+      String(now.getHours()).padStart(2,'0')+String(now.getMinutes()).padStart(2,'0');
+    XLSX.writeFile(wb,'List_'+ts+'.xlsx');
+    loadMsg.className='msg-info';loadMsg.textContent='Excel скачан';
+    setTimeout(()=>{loadMsg.className='hidden'},2000);
+  }catch(err){
+    loadMsg.className='msg-error';loadMsg.textContent='Ошибка: '+err.message;
+  }
+});
+</script>
+</body>
+</html>
