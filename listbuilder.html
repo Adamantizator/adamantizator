@@ -384,6 +384,10 @@ function loadExcelFromBuffer(buf,fn){
     fileLoaded=true;
     leftHidden=new Set; rightHidden=new Set;
     headers.forEach((_,i)=>rightHidden.add(i));
+    // keep name column visible
+    const nameAliases=['Имя пользователя','Ник','Игрок','Имя','Username','Nick','Player','Name'];
+    let nameIdx=headers.findIndex(h=>nameAliases.some(a=>h.toLowerCase()===a.toLowerCase()));
+    if(nameIdx>=0)rightHidden.delete(nameIdx);
     leftSort={col:-1,dir:'none'}; rightSort={col:-1,dir:'none'};
     rightRows=[];
     buildColMap();
