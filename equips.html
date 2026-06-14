@@ -491,8 +491,9 @@ const SLOT_KEYS = {
   weapon:{ru:'Оружие',en:'Weapon'},
   gloves:{ru:'Перчатки',en:'Gloves'},
   pants:{ru:'Штаны',en:'Pants'},
-  acc1:{ru:'Аксессуар 1',en:'Accessory 1'},
-  acc2:{ru:'Аксессуар 2',en:'Accessory 2'},
+  acc1:{ru:'Акс 1',en:'Acc 1'},
+  acc2:{ru:'Акс 2',en:'Acc 2'},
+  acc:{ru:'Аксы',en:'Acc'},
   boots:{ru:'Сапоги',en:'Boots'}
 };
 
@@ -930,16 +931,16 @@ const SLOT_MAP = {
   "Lone Wolf's Leather Tassets":'pants',"Roaring Wolf's Claws":'boots',
   "Witch's Deadwood Crown":'helmet',"Witch's Hexed Cloak":'chest',"Witch's Feathered Staff":'weapon',
   "Witch's Crimson Bracers":'gloves',"Witch's Ornamented Pants":'pants',"Witch's Mire-Waders":'boots',
-  "The Bard's Pendant":'acc1','Call of the Loyal':'acc1','Concealed Dagger':'acc1',
-  'Crimson Ring':'acc1',"Delane's Amulet":'acc1','Pendant of Eternal Night':'acc1',
-  'Greatest Glory':'acc1','Horn of Fury':'acc1','Immolating Plume':'acc1',
-  "Lohar's Bone Necklace":'acc1',"Scola's Lucky Coin":'acc1',"Mora's Web":'acc1',
-  "Peter's Sickle":'acc1','Ring of Doom':'acc1','Wind Scars':'acc1',"Seth's Call":'acc1',
-  'Silent Trial':'acc1','Ancient Strategems':'acc1','Savage Totem':'acc1','Vengeance':'acc1',
-  "Karuak's War Drums":'acc1','Saddle of a Thousand Blessings':'acc1',"Hero's Hilt":'acc1'
+   "The Bard's Pendant":'acc','Call of the Loyal':'acc','Concealed Dagger':'acc',
+   'Crimson Ring':'acc',"Delane's Amulet":'acc','Pendant of Eternal Night':'acc',
+   'Greatest Glory':'acc','Horn of Fury':'acc','Immolating Plume':'acc',
+   "Lohar's Bone Necklace":'acc',"Scola's Lucky Coin":'acc',"Mora's Web":'acc',
+   "Peter's Sickle":'acc','Ring of Doom':'acc','Wind Scars':'acc',"Seth's Call":'acc',
+   'Silent Trial':'acc','Ancient Strategems':'acc','Savage Totem':'acc','Vengeance':'acc',
+   "Karuak's War Drums":'acc','Saddle of a Thousand Blessings':'acc',"Hero's Hilt":'acc'
 };
 const SLOT_ORDER=['helmet','chest','weapon','gloves','pants','acc1','acc2','boots'];
-const SLOT_KEYS_RU={'helmet':'Шлем','chest':'Нагрудник','weapon':'Оружие','gloves':'Перчатки','pants':'Поножи','boots':'Ботинки','acc1':'Акс. 1','acc2':'Акс. 2'};
+const SLOT_KEYS_RU={'helmet':'Шлем','chest':'Нагрудник','weapon':'Оружие','gloves':'Перчатки','pants':'Поножи','boots':'Ботинки','acc1':'Акс 1','acc2':'Акс 2','acc':'Аксы'};
 const builder={active:false,slots:{},selectedSlot:null,viewingItem:null,filters:{troop:new Set,slot:new Set,rarity:new Set,search:''}};
 
 function getItemTroop(name){
@@ -1184,9 +1185,35 @@ function renderItemList(){
     c.addEventListener('click',()=>{
       const name=c.dataset.itemName;
       const itemSlot=c.dataset.itemSlot;
-      const sk=builder.selectedSlot&&itemSlot===builder.selectedSlot?builder.selectedSlot:itemSlot;
-      if(builder.slots[sk]===name){delete builder.slots[sk];builder.viewingItem=null}
-      else{builder.slots[sk]=name;builder.viewingItem=null;builder.selectedSlot=null}
+      let sk;
+      if(itemSlot==='acc'){
+        const inAcc1=builder.slots['acc1']===name;
+        const inAcc2=builder.slots['acc2']===name;
+        if(builder.selectedSlot && (builder.selectedSlot==='acc1' || builder.selectedSlot==='acc2')){
+          sk=builder.selectedSlot;
+          const otherSk=sk==='acc1'?'acc2':'acc1';
+          if(builder.slots[sk]===name){
+            delete builder.slots[sk];
+          } else if(builder.slots[otherSk]===name){
+            delete builder.slots[otherSk];
+            builder.slots[sk]=name;
+          } else {
+            builder.slots[sk]=name;
+          }
+        } else if(inAcc1 || inAcc2){
+          if(inAcc1)delete builder.slots['acc1'];
+          if(inAcc2)delete builder.slots['acc2'];
+        } else {
+          sk=!builder.slots['acc1']?'acc1':(!builder.slots['acc2']?'acc2':'acc1');
+          builder.slots[sk]=name;
+        }
+      } else {
+        sk=builder.selectedSlot&&itemSlot===builder.selectedSlot?builder.selectedSlot:itemSlot;
+        if(builder.slots[sk]===name){delete builder.slots[sk]}
+        else{builder.slots[sk]=name}
+      }
+      builder.viewingItem=null;
+      builder.selectedSlot=null;
       renderBuilder();
     });
   });
