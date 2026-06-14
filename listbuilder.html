@@ -205,6 +205,7 @@ td.name-col{color:var(--neon-yellow);font-weight:600}
         <div class="panel-title" data-i18n="right_title">Отобранные</div>
         <div class="row" style="margin-bottom:8px;gap:8px">
           <button class="btn btn-danger btn-small" id="clearRightBtn" data-i18n="clear">[ ОЧИСТИТЬ ]</button>
+          <button class="btn btn-outline btn-small" id="importRightBtn" data-i18n="import_right">[ ВОССТАНОВИТЬ ]</button>
           <button class="btn btn-primary btn-small" id="downloadRightBtn" data-i18n="download">[ СКАЧАТЬ EXCEL ]</button>
           <div id="rightColToggles" class="col-toggles" style="flex:1"></div>
         </div>
@@ -228,7 +229,7 @@ const LANG={ru:{
   preloaded:'Предзагруженные данные',
   left_title:'Все данные',right_title:'Отобранные',
   search:'Поиск',from_place:'С места',to_place:'По место',
-  clear:'[ ОЧИСТИТЬ ]',download:'[ СКАЧАТЬ EXCEL ]',
+    clear:'[ ОЧИСТИТЬ ]',import_right:'[ ВОССТАНОВИТЬ ]',download:'[ СКАЧАТЬ EXCEL ]',
     drag_hint:'Кликните строку чтобы добавить ➜',
     drag_hint_right:'↑ ↓ для изменения порядка',
     records:'Записей:',selected:'Выбрано:',
@@ -244,7 +245,7 @@ const LANG={ru:{
   preloaded:'Preloaded Data',
   left_title:'All Data',right_title:'Selected',
   search:'Search',from_place:'From place',to_place:'To place',
-  clear:'[ CLEAR ]',download:'[ DOWNLOAD EXCEL ]',
+    clear:'[ CLEAR ]',import_right:'[ RESTORE ]',download:'[ DOWNLOAD EXCEL ]',
     drag_hint:'Click a row to add ➜',
     drag_hint_right:'↑ ↓ to reorder',
     records:'Records:',selected:'Selected:',
@@ -303,6 +304,7 @@ const COL_ALIASES={
   'Убийства T4':'T4 Kills','Убийства T5':'T5 Kills',
   'Мощь':'Power','Макс. мощь':'Highest Power',
 };
+const NAME_ALIASES=['Имя пользователя','Ник','Игрок','Имя','Username','Nick','Player','Name'];
 let colMap={};
 let dkpColIdx=-1;
 function buildColMap(){
@@ -389,8 +391,7 @@ function loadExcelFromBuffer(buf,fn){
     headers.forEach((_,i)=>rightHidden.add(i));
     // left table: keep only Ник, ДКП, Мощь visible
     headers.forEach((_,i)=>leftHidden.add(i));
-    const nameAliases=['Имя пользователя','Ник','Игрок','Имя','Username','Nick','Player','Name'];
-    const nameIdx=headers.findIndex(h=>nameAliases.some(a=>h.toLowerCase()===a.toLowerCase()));
+    const nameIdx=headers.findIndex(h=>NAME_ALIASES.some(a=>h.toLowerCase()===a.toLowerCase()));
     if(nameIdx>=0)leftHidden.delete(nameIdx);
     buildColMap();
     const hasDkp=computeDKPColumn();
@@ -677,6 +678,48 @@ $('downloadRightBtn').addEventListener('click',()=>{
   }catch(err){
     loadMsg.className='msg-error';loadMsg.textContent='Ошибка: '+err.message;
   }
+});
+
+// ===== IMPORT TO RIGHT =====
+$('importRightBtn').addEventListener('click',()=>{
+  if(!fileLoaded){loadMsg.className='msg-info';loadMsg.textContent='Сначала загрузите исходные данные';setTimeout(()=>{loadMsg.className='hidden'},3000);return}
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='.xlsx,.xls';
+  inp.onchange=async e=>{
+    const f=e.target.files[0];if(!f)return;
+    try{
+      const buf=await f.arrayBuffer();
+      const wb=XLSX.read(buf,{type:'array'});
+      const sh=wb.Sheets[wb.SheetNames[0]];
+      const j=XLSX.utils.sheet_to_json(sh,{header:1,defval:''});
+      if(!j||j.length<2){loadMsg.className='msg-error';loadMsg.textContent='Файл пуст';setTimeout(()=>{loadMsg.className='hidden'},3000);return}
+      const impHeaders=j[0].map(h=>String(h).trim());
+      const impRows=j.slice(1).filter(r=>r.some(c=>c!==undefined&&c!==null&&c!==''));
+      // Find name column in imported file
+      const impNameIdx=impHeaders.findIndex(h=>NAME_ALIASES.some(a=>h.toLowerCase()===a.toLowerCase()));
+      if(impNameIdx<0){loadMsg.className='msg-error';loadMsg.textContent='Не найден столбец с никами';setTimeout(()=>{loadMsg.className='hidden'},3000);return}
+      // Find name column in current data
+      const curNameIdx=headers.findIndex(h=>NAME_ALIASES.some(a=>h.toLowerCase()===a.toLowerCase()));
+      if(curNameIdx<0){loadMsg.className='msg-error';loadMsg.textContent='Не найден столбец с никами в текущих данных';setTimeout(()=>{loadMsg.className='hidden'},3000);return}
+      // Build lookup: normalized name → row index
+      const nameMap=new Map;
+      rawData.forEach((row,i)=>{
+        const n=String(row[curNameIdx]||'').trim().toLowerCase();
+        if(n)nameMap.set(n,i);
+      });
+      // Match and add to right
+      let added=0;
+      impRows.forEach(impRow=>{
+        const impName=String(impRow[impNameIdx]||'').trim().toLowerCase();
+        if(!impName)return;
+        const idx=nameMap.get(impName);
+        if(idx!==undefined&&!rightRows.includes(idx)){rightRows.push(idx);added++}
+      });
+      if(added){renderTables();loadMsg.className='msg-info';loadMsg.textContent='Восстановлено: '+added;setTimeout(()=>{loadMsg.className='hidden'},3000)}
+      else{loadMsg.className='msg-info';loadMsg.textContent='Совпадений не найдено';setTimeout(()=>{loadMsg.className='hidden'},3000)}
+    }catch(err){loadMsg.className='msg-error';loadMsg.textContent='Ошибка: '+err.message;setTimeout(()=>{loadMsg.className='hidden'},4000)}
+  };
+  inp.click();
 });
 
 // ===== UNLOAD WARNING =====
