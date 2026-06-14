@@ -117,8 +117,6 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
 .crit-diamond.crit-off{background:rgba(128,128,128,0.5);box-shadow:0 0 4px rgba(128,128,128,0.3)}
 .crit-diamond.crit-on{background:var(--neon-red);box-shadow:0 0 6px rgba(255,16,48,0.6)}
 .crit-diamond.crit-off:hover{background:rgba(180,180,180,0.7)}
-.crit-toggle{font-size:0.55rem;cursor:pointer;background:none;border:none;color:var(--text-muted);transition:all 0.2s;padding:2px 4px}
-.crit-toggle.active{color:var(--neon-red);text-shadow:0 0 8px rgba(255,16,48,0.5)}
 .b-item-list{background:var(--panel-bg);border:1px solid rgba(255,230,0,0.08);border-radius:4px;padding:10px}
 .b-item-list .il-header{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
 .il-search{flex:1;min-width:120px;padding:5px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.15);color:var(--text-primary);font-family:var(--font-mono);font-size:0.6rem;border-radius:3px;outline:none}
@@ -785,7 +783,7 @@ function renderSetCountersHtml(names){
   });
   return h;
 }
-function getSetStats(troop, setId, crit){
+function getSetStats(troop, setId){
   const td=EQUIP[troop];
   const set=td&&td.sets.find(s=>s.id===setId);
   if(!set)return[];
@@ -795,7 +793,7 @@ function getSetStats(troop, setId, crit){
     names.push(sl.n);
     const raw=STATS_MAP[sl.n];
     if(!raw)return;
-    const mult=crit?1.3:1;
+    const mult=setCrits[troop+'-'+setId+'-'+sl.s]?1.3:1;
     raw.split(', ').forEach(stat=>{
       const m=stat.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)%$/);
       if(m){const k=m[1];const v=parseFloat(m[2]);agg[k]=(agg[k]||0)+Math.round(v*mult*2)/2}
@@ -842,7 +840,7 @@ function renderTabs(){
   renderContent();
 }
 
-function renderSetGridHtml(set){
+function renderSetGridHtml(set, troop, setId){
   const slots={};
   set.slots.forEach(sl=>{slots[sl.s]=sl});
   function cellHtml(sk){
@@ -852,10 +850,15 @@ function renderSetGridHtml(set){
     const baseSrc=BASE_ICONS[sk]||'';
     const iconSrc=n?(ICON_MAP[n]||baseSrc):baseSrc;
     const rarity=n?RARITY_MAP[n]||'':'';
-    let h=`<div class="b-slot-cell${rarity?' r-'+rarity:''}" style="cursor:default">`;
+    const critKey=troop+'-'+setId+'-'+sk;
+    const critOn=setCrits[critKey];
+    let h=`<div class="b-slot-cell${rarity?' r-'+rarity:''}${critOn?' crit':''}" style="cursor:default" data-sk="${sk}">`;
     h+=`<div class="sc-icon"><img src="${iconSrc}" alt="${n||lbl}" loading="lazy"></div>`;
     h+=`<div class="sc-label">${lbl}</div>`;
-    if(n)h+=`<div class="sc-name" data-en="${n}">${tn(n)}</div>`;
+    if(n){
+      h+=`<div class="sc-name" data-en="${n}">${tn(n)}</div>`;
+      h+=`<span class="crit-diamond${critOn?' crit-on':' crit-off'}"></span>`;
+    }
     h+=`</div>`;
     return h;
   }
@@ -881,49 +884,67 @@ function renderContent(){
   d.sets.forEach((set,i)=>{
     const lbl=tt(set.label);
     const subl=tt(set.subtitle);
-    h+=`<div class="section"><div class="section-title">${lbl}<button class="stats-btn" data-troop="${activeTroop}" data-set="${set.id}">⚙</button><button class="crit-toggle${setCrits[activeTroop+'-'+set.id]?' active':''}" data-troop="${activeTroop}" data-set="${set.id}">◆</button></div>`;
+    h+=`<div class="section"><div class="section-title">${lbl}<button class="stats-btn" data-troop="${activeTroop}" data-set="${set.id}">⚙</button></div>`;
     if(subl)h+=`<div class="section-subtitle">${subl}</div>`;
-    h+=`<div class="set-grid-wrap">${renderSetGridHtml(set)}</div></div>`;
+    h+=`<div class="set-grid-wrap">${renderSetGridHtml(set,activeTroop,set.id)}</div></div>`;
   });
   h+='</div>';
   contentEl.innerHTML=`<div class="tab-content active">${h}</div>`;
+  contentEl.querySelectorAll('.set-grid-wrap .crit-diamond').forEach(d=>{
+    d.addEventListener('click',e=>{
+      e.stopPropagation();
+      const cell=d.closest('.b-slot-cell');
+      if(!cell)return;
+      const sk=cell.dataset.sk;
+      const wrap=cell.closest('.set-grid-wrap');
+      const section=wrap?wrap.closest('.section'):null;
+      if(!section)return;
+      const btn=section.querySelector('.stats-btn');
+      if(!btn)return;
+      const key=btn.dataset.troop+'-'+btn.dataset.set+'-'+sk;
+      setCrits[key]=!setCrits[key];
+      renderContent();
+    });
+  });
 }
 
 document.querySelectorAll('.lang-btn').forEach(b=>{
   b.addEventListener('click',()=>{lang=b.dataset.lang;window.lang=lang;localStorage.setItem('lang',lang);applyLang();renderTabs();if(builder.active)renderBuilder()});
 });
 contentEl.addEventListener('mouseover',e=>{
-  const btn=e.target.closest('.stats-btn:not(.crit-toggle)');
+  const btn=e.target.closest('.stats-btn');
   if(btn){
-    const key=btn.dataset.troop+'-'+btn.dataset.set;
-    const stats=getSetStats(btn.dataset.troop,btn.dataset.set,setCrits[key]);
+    const stats=getSetStats(btn.dataset.troop,btn.dataset.set);
     showTooltip(btn,renderStatsHtml(stats));
     return;
   }
   const cell=e.target.closest('.b-slot-cell');
   if(cell){
     const nameEl=cell.querySelector('.sc-name');
-    if(nameEl)showTooltip(cell,itemDetailHtml(nameEl.dataset.en||nameEl.textContent));
+    if(nameEl){
+      const sk=cell.dataset.sk;
+      const wrap=cell.closest('.set-grid-wrap');
+      let crit=false;
+      if(wrap){
+        const section=wrap.closest('.section');
+        if(section){
+          const btn=section.querySelector('.stats-btn');
+          if(btn)crit=!!setCrits[btn.dataset.troop+'-'+btn.dataset.set+'-'+sk];
+        }
+      }
+      showTooltip(cell,itemDetailHtml(nameEl.dataset.en||nameEl.textContent,crit));
+    }
     return;
   }
   hideTooltip();
 });
 contentEl.addEventListener('mouseout',e=>{
-  if(e.target.closest('.stats-btn:not(.crit-toggle)')||e.target.closest('.b-slot-cell'))hideTooltip()
+  if(e.target.closest('.stats-btn')||e.target.closest('.b-slot-cell'))hideTooltip()
 });
 contentEl.addEventListener('click',e=>{
-  const toggle=e.target.closest('.crit-toggle');
-  if(toggle){
-    const key=toggle.dataset.troop+'-'+toggle.dataset.set;
-    setCrits[key]=!setCrits[key];
-    renderContent();
-    return;
-  }
-  const btn=e.target.closest('.stats-btn');
-  if(!btn)return;
-  const key=btn.dataset.troop+'-'+btn.dataset.set;
-  const stats=getSetStats(btn.dataset.troop,btn.dataset.set,setCrits[key]);
-  showModal(key,renderStatsHtml(stats));
+  const btn=e.target.closest('.stats-btn'); if(!btn)return;
+  const stats=getSetStats(btn.dataset.troop,btn.dataset.set);
+  showModal(btn.dataset.troop+'-'+btn.dataset.set,renderStatsHtml(stats));
 });
 function showTooltip(btn,html){
   const tip=document.getElementById('statsTooltip');
