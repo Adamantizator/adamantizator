@@ -78,18 +78,20 @@ tbody tr:hover{background:rgba(255,230,0,0.06)}
 tbody tr:nth-child(even){background:rgba(255,230,0,0.02)}
 tbody tr:nth-child(even):hover{background:rgba(255,230,0,0.06)}
 tbody tr.selected{background:rgba(255,230,0,0.1)}
-tbody tr.dragging{opacity:0.4}
-tbody tr.drag-over{border-top:2px solid var(--neon-yellow)}
+tbody tr.dim{opacity:0.35}
 tbody td{padding:6px 10px;white-space:nowrap;font-family:var(--font-mono);font-size:0.7rem}
 td.num{text-align:right}
 td.center{text-align:center}
 td.name-col{color:var(--neon-yellow);font-weight:600}
 
 /* RIGHT TABLE ROW REMOVE BUTTON */
-.rm-btn{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;
-  border:1px solid rgba(255,16,48,0.4);color:var(--neon-red);background:transparent;cursor:pointer;
-  font-size:0.55rem;transition:all 0.2s;margin-right:4px;flex-shrink:0}
+.rm-btn,.move-btn{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;
+  background:transparent;cursor:pointer;font-size:0.5rem;transition:all 0.2s;flex-shrink:0;line-height:1;padding:0}
+.rm-btn{border:1px solid rgba(255,16,48,0.4);color:var(--neon-red);margin-right:2px}
 .rm-btn:hover{background:rgba(255,16,48,0.2);border-color:var(--neon-red)}
+.move-btn{border:1px solid rgba(255,230,0,0.3);color:var(--neon-yellow)}
+.move-btn:hover{background:rgba(255,230,0,0.15);border-color:var(--neon-yellow)}
+.move-btn:disabled{opacity:0.25;cursor:default}
 
 /* COLUMN TOGGLES */
 .col-toggles{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
@@ -187,7 +189,7 @@ td.name-col{color:var(--neon-yellow);font-weight:600}
           </div>
           <div id="leftColToggles" class="col-toggles" style="flex:1;align-self:flex-end"></div>
         </div>
-        <div class="drag-hint" data-i18n="drag_hint">🖱 Перетащите строку в правую таблицу или кликните</div>
+        <div class="drag-hint" data-i18n="drag_hint">Кликните строку чтобы добавить ➜</div>
         <div class="table-wrap" id="leftTableWrap">
           <table><thead id="leftHead"></thead><tbody id="leftBody"></tbody></table>
         </div>
@@ -206,7 +208,7 @@ td.name-col{color:var(--neon-yellow);font-weight:600}
           <button class="btn btn-primary btn-small" id="downloadRightBtn" data-i18n="download">[ СКАЧАТЬ EXCEL ]</button>
           <div id="rightColToggles" class="col-toggles" style="flex:1"></div>
         </div>
-        <div class="drag-hint" data-i18n="drag_hint_right">🖱 Перетащите для изменения порядка</div>
+        <div class="drag-hint" data-i18n="drag_hint_right">↑ ↓ для изменения порядка</div>
         <div class="table-wrap" id="rightTableWrap">
           <table><thead id="rightHead"></thead><tbody id="rightBody"></tbody></table>
         </div>
@@ -227,8 +229,8 @@ const LANG={ru:{
   left_title:'Все данные',right_title:'Отобранные',
   search:'Поиск',from_place:'С места',to_place:'По место',
   clear:'[ ОЧИСТИТЬ ]',download:'[ СКАЧАТЬ EXCEL ]',
-  drag_hint:'🖱 Перетащите строку в правую таблицу или кликните',
-  drag_hint_right:'🖱 Перетащите для изменения порядка',
+    drag_hint:'Кликните строку чтобы добавить ➜',
+    drag_hint_right:'↑ ↓ для изменения порядка',
     records:'Записей:',selected:'Выбрано:',
     hide:'скрыть',show:'показать',
     coeff_title:'Коэфф. ДКП',
@@ -243,8 +245,8 @@ const LANG={ru:{
   left_title:'All Data',right_title:'Selected',
   search:'Search',from_place:'From place',to_place:'To place',
   clear:'[ CLEAR ]',download:'[ DOWNLOAD EXCEL ]',
-  drag_hint:'🖱 Drag a row to the right table or click',
-  drag_hint_right:'🖱 Drag to reorder',
+    drag_hint:'Click a row to add ➜',
+    drag_hint_right:'↑ ↓ to reorder',
     records:'Records:',selected:'Selected:',
     hide:'hide',show:'show',
     coeff_title:'DKP Coeff.',
@@ -472,7 +474,7 @@ function renderLeft(){
   let bh='';
   data.forEach(d=>{
     const inRight=rightRows.includes(d.idx);
-    let r='<tr draggable="true" data-idx="'+d.idx+'" class="'+ (inRight?'selected':'') +'">';
+    let r='<tr data-idx="'+d.idx+'" class="'+ (inRight?'selected dim':'') +'">';
     headers.forEach((h,i)=>{
       if(leftHidden.has(i))return;
       const v=d.row[i]!==undefined?d.row[i]:'';
@@ -484,14 +486,8 @@ function renderLeft(){
   });
   leftBody.innerHTML=bh;
 
-  // Drag events for left rows
-  leftBody.querySelectorAll('tr[draggable]').forEach(tr=>{
-    tr.addEventListener('dragstart',e=>{
-      e.dataTransfer.setData('text/plain',tr.dataset.idx);
-      e.dataTransfer.effectAllowed='move';
-      tr.classList.add('dragging');
-    });
-    tr.addEventListener('dragend',()=>tr.classList.remove('dragging'));
+  // Click to add to right
+  leftBody.querySelectorAll('tr').forEach(tr=>{
     tr.addEventListener('click',()=>{
       const idx=parseInt(tr.dataset.idx);
       if(!rightRows.includes(idx)){
@@ -513,7 +509,7 @@ function renderRight(){
   }
 
   // Render head
-  let hh='<tr><th style="width:20px;text-align:center">#</th><th style="width:24px;text-align:center"></th>';
+  let hh='<tr><th style="width:20px;text-align:center">#</th><th style="width:48px;text-align:center"></th>';
   headers.forEach((h,i)=>{
     let arrow='';
     if(rightSort.col===i)arrow=rightSort.dir==='asc'?' ▲':' ▼';
@@ -526,9 +522,14 @@ function renderRight(){
   // Render body
   let bh='';
   data.forEach((d,pos)=>{
-    let r='<tr draggable="true" data-ridx="'+d.idx+'">';
+    let r='<tr data-ridx="'+d.idx+'">';
     r+=`<td class="center" style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.6rem">${pos+1}</td>`;
-    r+=`<td class="center"><button class="rm-btn" data-idx="${d.idx}" title="Remove">✕</button></td>`;
+    const first=pos===0,last=pos===data.length-1;
+    r+=`<td class="center" style="white-space:nowrap">
+      <button class="move-btn" data-idx="${d.idx}" data-dir="up" ${first?'disabled':''}>↑</button>
+      <button class="move-btn" data-idx="${d.idx}" data-dir="down" ${last?'disabled':''}>↓</button>
+      <button class="rm-btn" data-idx="${d.idx}" title="Remove">✕</button>
+    </td>`;
     headers.forEach((h,i)=>{
       if(rightHidden.has(i))return;
       const v=d.row[i]!==undefined?d.row[i]:'';
@@ -540,7 +541,21 @@ function renderRight(){
   });
   rightBody.innerHTML=bh;
 
-  // Remove buttons
+  // Move and remove buttons
+  rightBody.querySelectorAll('.move-btn').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(btn.disabled)return;
+      const idx=parseInt(btn.dataset.idx);
+      const dir=btn.dataset.dir;
+      const pos=rightRows.indexOf(idx);
+      if(pos<0)return;
+      const swap=dir==='up'?pos-1:pos+1;
+      if(swap<0||swap>=rightRows.length)return;
+      [rightRows[pos],rightRows[swap]]=[rightRows[swap],rightRows[pos]];
+      renderTables();
+    });
+  });
   rightBody.querySelectorAll('.rm-btn').forEach(btn=>{
     btn.addEventListener('click',e=>{
       e.stopPropagation();
@@ -548,52 +563,6 @@ function renderRight(){
       const pos=rightRows.indexOf(idx);
       if(pos>=0){rightRows.splice(pos,1);renderTables()}
     });
-  });
-
-  // Drag for reorder within right
-  rightBody.querySelectorAll('tr[draggable]').forEach(tr=>{
-    tr.addEventListener('dragstart',e=>{
-      e.dataTransfer.setData('text/plain','r:'+tr.dataset.ridx);
-      e.dataTransfer.effectAllowed='move';
-      tr.classList.add('dragging');
-    });
-    tr.addEventListener('dragend',()=>tr.classList.remove('dragging'));
-  });
-
-  // Drop on right table body for adding/reordering
-  const rtb=rightBody;
-  rtb.addEventListener('dragover',e=>{
-    e.preventDefault();
-    e.dataTransfer.dropEffect='move';
-    const target=e.target.closest('tr');
-    if(target)target.classList.add('drag-over');
-  });
-  rtb.addEventListener('dragleave',e=>{
-    const target=e.target.closest('tr');
-    if(target)target.classList.remove('drag-over');
-  });
-  rtb.addEventListener('drop',e=>{
-    e.preventDefault();
-    rtb.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'));
-    const data=e.dataTransfer.getData('text/plain');
-    if(data.startsWith('r:')){
-      // Reorder within right
-      const idx=parseInt(data.slice(2));
-      const fromPos=rightRows.indexOf(idx);
-      if(fromPos<0)return;
-      const target=e.target.closest('tr');
-      if(!target)return;
-      const toIdx=parseInt(target.dataset.ridx);
-      const toPos=rightRows.indexOf(toIdx);
-      if(toPos<0||fromPos===toPos)return;
-      rightRows.splice(fromPos,1);
-      rightRows.splice(toPos,0,idx);
-      renderTables();
-    }else{
-      // Add from left
-      const idx=parseInt(data);
-      if(!rightRows.includes(idx)){rightRows.push(idx);renderTables()}
-    }
   });
 
   $('rightCount').textContent=t('selected')+' '+rightRows.length;
