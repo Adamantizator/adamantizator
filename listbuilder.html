@@ -383,10 +383,12 @@ function loadExcelFromBuffer(buf,fn){
     rawData=j.slice(1).filter(r=>r.some(c=>c!==undefined&&c!==null&&c!==''));
     fileLoaded=true;
     leftHidden=new Set; rightHidden=new Set;
+    headers.forEach((_,i)=>rightHidden.add(i));
     leftSort={col:-1,dir:'none'}; rightSort={col:-1,dir:'none'};
     rightRows=[];
     buildColMap();
     const hasDkp=computeDKPColumn();
+    if(hasDkp)rightHidden.add(headers.length-1);
     fileLabel.textContent=fn; fileLabel.style.color='var(--neon-yellow)';
     fileInfo.textContent='| Строк: '+rawData.length+' | Колонок: '+headers.length+(hasDkp?' + ДКП':'');
     renderTables();
@@ -507,7 +509,7 @@ function renderRight(){
   }
 
   // Render head
-  let hh='<tr><th style="width:28px;text-align:center">#</th>';
+  let hh='<tr><th style="width:20px;text-align:center">#</th><th style="width:24px;text-align:center"></th>';
   headers.forEach((h,i)=>{
     let arrow='';
     if(rightSort.col===i)arrow=rightSort.dir==='asc'?' ▲':' ▼';
@@ -521,6 +523,7 @@ function renderRight(){
   let bh='';
   data.forEach((d,pos)=>{
     let r='<tr draggable="true" data-ridx="'+d.idx+'">';
+    r+=`<td class="center" style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.6rem">${pos+1}</td>`;
     r+=`<td class="center"><button class="rm-btn" data-idx="${d.idx}" title="Remove">✕</button></td>`;
     headers.forEach((h,i)=>{
       if(rightHidden.has(i))return;
