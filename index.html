@@ -218,6 +218,10 @@ body::after {
 .card-equip { border-color: rgba(0, 255, 204, 0.3); }
 .card-equip:hover { border-color: #00ffcc !important; }
 
+.card-list .card-title { color: #6c5ce7; }
+.card-list { border-color: rgba(108, 92, 231, 0.3); }
+.card-list:hover { border-color: #6c5ce7 !important; }
+
 .footer {
   margin-top: 40px;
   font-family: var(--font-mono);
@@ -474,6 +478,14 @@ body::after {
         <div class="tag" data-i18n="card10_tag">Builder · Sets · Search</div>
       </a>
     </div>
+    <div class="card-wrap">
+      <a class="card card-list" href="listbuilder.html">
+        <div class="card-icon">📋</div>
+        <div class="card-title" data-i18n="card11_title">List Builder</div>
+        <div class="card-desc" data-i18n="card11_desc">Составление списка: Excel, drag-and-drop, сортировка, экспорт</div>
+        <div class="tag" data-i18n="card11_tag">Загрузка .xlsx · Drag & Drop · Экспорт</div>
+      </a>
+    </div>
   </div>
 
   <div class="footer">
@@ -517,6 +529,9 @@ const LANG = {
     card10_title: 'Экипировка',
     card10_desc: 'Выбор экипировки для командиров: билды, сеты, статы',
     card10_tag: 'Конструктор · Сеты · Поиск',
+    card11_title: 'Составление списка',
+    card11_desc: 'Работа с Excel: загрузка, сортировка, drag-and-drop, экспорт',
+    card11_tag: 'Загрузка .xlsx · Drag & Drop · Экспорт',
     calendar_btn: '📅 Календарь',
   },
   en: {
@@ -551,6 +566,9 @@ const LANG = {
     card10_title: 'Equipment',
     card10_desc: 'Equipment builder & set viewer for commanders',
     card10_tag: 'Builder · Sets · Search',
+    card11_title: 'List Builder',
+    card11_desc: 'Excel lists: load, sort, drag-and-drop, export',
+    card11_tag: 'Load .xlsx · Drag & Drop · Export',
     calendar_btn: '📅 Calendar',
   },
 };
