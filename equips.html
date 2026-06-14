@@ -117,6 +117,8 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
 .crit-diamond.crit-off{background:rgba(128,128,128,0.5);box-shadow:0 0 4px rgba(128,128,128,0.3)}
 .crit-diamond.crit-on{background:var(--neon-red);box-shadow:0 0 6px rgba(255,16,48,0.6)}
 .crit-diamond.crit-off:hover{background:rgba(180,180,180,0.7)}
+.crit-toggle{font-size:0.55rem;cursor:pointer;background:none;border:none;color:var(--text-muted);transition:all 0.2s;padding:2px 4px}
+.crit-toggle.active{color:var(--neon-red);text-shadow:0 0 8px rgba(255,16,48,0.5)}
 .b-item-list{background:var(--panel-bg);border:1px solid rgba(255,230,0,0.08);border-radius:4px;padding:10px}
 .b-item-list .il-header{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
 .il-search{flex:1;min-width:120px;padding:5px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.15);color:var(--text-primary);font-family:var(--font-mono);font-size:0.6rem;border-radius:3px;outline:none}
@@ -198,7 +200,7 @@ const EQUIP = {
        {id:'intermediate',label:{ru:'Промежуточный сет',en:'Intermediate Set'},subtitle:{ru:'',en:''},hint:{ru:'Можно сковать 2 любых предмета из сета империи, рекомендуется ковать шлем и что то еще, перчатки или ботинки. Менять остальное можно в любой момент, поножи в последнюю очередь - каруака не плохие.',en:'You can craft any 2 Empire set items, recommended to craft the helm and something else — gloves or boots. You can swap the rest at any time. Do pants last — Karuak is not bad.'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Hope Cloak'),S('weapon','Gatekeepers Shield'),S('gloves',"Seth's Brutality"),S('pants',"Karuak's Humility"),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
        {id:'end1',label:{ru:'Эндгейм Сет 1',en:'Endgame Set 1'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Hope Cloak'),S('weapon','Shield of the Eternal Empire'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Eternal Night'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
       {id:'end2',label:{ru:'Эндгейм Сет 2',en:'Endgame Set 2'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Helm of the Conqueror'),S('chest','Plate of the Eternal Empire'),S('weapon','Hammer of the Sun and Moon'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Greaves of the Eternal Empire'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
-      {id:'end3',label:{ru:'Эндгейм Сет 3',en:'Endgame Set 3'},subtitle:{ru:'(Поле)',en:'(Open Field)'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Hope Cloak'),S('weapon','Shield of the Eternal Empire'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]},
+       {id:'end3',label:{ru:'Эндгейм Сет 3',en:'Endgame Set 3'},subtitle:{ru:'(Поле)',en:'(Open Field)'},hint:{ru:'Шлем или щит можно заменить на СЗшные. Что то одно, не оба.',en:'The helm or shield can be replaced with Silent ones. Just one of them, not both.'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Hope Cloak'),S('weapon','Shield of the Eternal Empire'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]},
       {id:'end4',label:{ru:'Эндгейм Сет 4',en:'Endgame Set 4'},subtitle:{ru:'(Рейд/Гарнизон)',en:'(Rally/Garrison)'},slots:[S('helmet','Helm of the Conqueror'),S('chest','Hope Cloak'),S('weapon','Hammer of the Sun and Moon'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Eternal Night'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
       {id:'end5',label:{ru:'Эндгейм Сет 5',en:'Endgame Set 5'},subtitle:{ru:'(Рейд/Гарнизон)',en:'(Rally/Garrison)'},slots:[S('helmet','Gold Helm of the Eternal Empire'),S('chest','Plate of the Eternal Empire'),S('weapon','Shield of the Eternal Empire'),S('gloves','Vambraces of the Eternal Empire'),S('pants','Greaves of the Eternal Empire'),S('acc1',''),S('acc2',''),S('boots','Sturdy Boots of the Eternal Empire')]},
       {id:'end6',label:{ru:'Эндгейм Сет 6',en:'Endgame Set 6'},subtitle:{ru:'(Рейд/Гарнизон)',en:'(Rally/Garrison)'},slots:[S('helmet','Helm of the Conqueror'),S('chest','Hope Cloak'),S('weapon','Hammer of the Sun and Moon'),S('gloves','Sacred Grips'),S('pants','Chausses of the Glorious Goddess'),S('acc1',''),S('acc2',''),S('boots','Greaves of the Glorious Goddess')]}
@@ -783,7 +785,7 @@ function renderSetCountersHtml(names){
   });
   return h;
 }
-function getSetStats(troop, setId){
+function getSetStats(troop, setId, crit){
   const td=EQUIP[troop];
   const set=td&&td.sets.find(s=>s.id===setId);
   if(!set)return[];
@@ -793,11 +795,12 @@ function getSetStats(troop, setId){
     names.push(sl.n);
     const raw=STATS_MAP[sl.n];
     if(!raw)return;
+    const mult=crit?1.3:1;
     raw.split(', ').forEach(stat=>{
       const m=stat.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)%$/);
-      if(m){const k=m[1];const v=parseFloat(m[2]);agg[k]=(agg[k]||0)+v}
+      if(m){const k=m[1];const v=parseFloat(m[2]);agg[k]=(agg[k]||0)+Math.round(v*mult*2)/2}
       else if(stat.includes('(proc)'))procs.push(stat);
-      else{const m2=stat.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)$/);if(m2){const k=m2[1];const v=parseFloat(m2[2]);agg[k]=(agg[k]||0)+v}}
+      else{const m2=stat.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)$/);if(m2){const k=m2[1];const v=parseFloat(m2[2]);agg[k]=(agg[k]||0)+Math.round(v*mult*2)/2}}
     });
   });
   return {agg,procs,hint:set.hint,names};
@@ -878,7 +881,7 @@ function renderContent(){
   d.sets.forEach((set,i)=>{
     const lbl=tt(set.label);
     const subl=tt(set.subtitle);
-    h+=`<div class="section"><div class="section-title">${lbl}<button class="stats-btn" data-troop="${activeTroop}" data-set="${set.id}">⚙</button></div>`;
+    h+=`<div class="section"><div class="section-title">${lbl}<button class="stats-btn" data-troop="${activeTroop}" data-set="${set.id}">⚙</button><button class="crit-toggle${setCrits[activeTroop+'-'+set.id]?' active':''}" data-troop="${activeTroop}" data-set="${set.id}">◆</button></div>`;
     if(subl)h+=`<div class="section-subtitle">${subl}</div>`;
     h+=`<div class="set-grid-wrap">${renderSetGridHtml(set)}</div></div>`;
   });
@@ -890,9 +893,10 @@ document.querySelectorAll('.lang-btn').forEach(b=>{
   b.addEventListener('click',()=>{lang=b.dataset.lang;window.lang=lang;localStorage.setItem('lang',lang);applyLang();renderTabs();if(builder.active)renderBuilder()});
 });
 contentEl.addEventListener('mouseover',e=>{
-  const btn=e.target.closest('.stats-btn');
+  const btn=e.target.closest('.stats-btn:not(.crit-toggle)');
   if(btn){
-    const stats=getSetStats(btn.dataset.troop,btn.dataset.set);
+    const key=btn.dataset.troop+'-'+btn.dataset.set;
+    const stats=getSetStats(btn.dataset.troop,btn.dataset.set,setCrits[key]);
     showTooltip(btn,renderStatsHtml(stats));
     return;
   }
@@ -905,12 +909,21 @@ contentEl.addEventListener('mouseover',e=>{
   hideTooltip();
 });
 contentEl.addEventListener('mouseout',e=>{
-  if(e.target.closest('.stats-btn')||e.target.closest('.b-slot-cell'))hideTooltip()
+  if(e.target.closest('.stats-btn:not(.crit-toggle)')||e.target.closest('.b-slot-cell'))hideTooltip()
 });
 contentEl.addEventListener('click',e=>{
-  const btn=e.target.closest('.stats-btn'); if(!btn)return;
-  const stats=getSetStats(btn.dataset.troop,btn.dataset.set);
-  showModal(btn.dataset.troop+'-'+btn.dataset.set,renderStatsHtml(stats));
+  const toggle=e.target.closest('.crit-toggle');
+  if(toggle){
+    const key=toggle.dataset.troop+'-'+toggle.dataset.set;
+    setCrits[key]=!setCrits[key];
+    renderContent();
+    return;
+  }
+  const btn=e.target.closest('.stats-btn');
+  if(!btn)return;
+  const key=btn.dataset.troop+'-'+btn.dataset.set;
+  const stats=getSetStats(btn.dataset.troop,btn.dataset.set,setCrits[key]);
+  showModal(key,renderStatsHtml(stats));
 });
 function showTooltip(btn,html){
   const tip=document.getElementById('statsTooltip');
@@ -983,6 +996,7 @@ const SLOT_MAP = {
 const SLOT_ORDER=['helmet','chest','weapon','gloves','pants','acc1','acc2','boots'];
 const SLOT_KEYS_RU={'helmet':'Шлем','chest':'Нагрудник','weapon':'Оружие','gloves':'Перчатки','pants':'Поножи','boots':'Ботинки','acc1':'Акс 1','acc2':'Акс 2','acc':'Аксы'};
 const builder={active:false,slots:{},crits:{},selectedSlot:null,viewingItem:null,viewingSlot:null,filters:{troop:new Set,slot:new Set,rarity:new Set,search:''}};
+let setCrits={};
 
 function getItemTroop(name){
   const raw=STATS_MAP[name]; if(!raw)return'';
