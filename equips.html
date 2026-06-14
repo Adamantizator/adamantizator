@@ -112,6 +112,8 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
 .set-grid-wrap .b-slot-cell{height:80px}
 .b-slot-cell .sc-remove{position:absolute;top:1px;right:3px;background:none;border:none;color:var(--neon-red);cursor:pointer;font-size:0.7rem;opacity:0;transition:opacity 0.2s;font-family:var(--font-mono);line-height:1}
 .b-slot-cell:hover .sc-remove{opacity:0.5}.b-slot-cell .sc-remove:hover{opacity:1}
+.b-slot-cell.crit{border-color:var(--neon-red);box-shadow:0 0 12px rgba(255,16,48,0.3)}
+.crit-diamond{position:absolute;bottom:3px;right:3px;width:8px;height:8px;background:var(--neon-red);transform:rotate(45deg);box-shadow:0 0 6px rgba(255,16,48,0.6);border-radius:1px}
 .b-item-list{background:var(--panel-bg);border:1px solid rgba(255,230,0,0.08);border-radius:4px;padding:10px}
 .b-item-list .il-header{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
 .il-search{flex:1;min-width:120px;padding:5px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.15);color:var(--text-primary);font-family:var(--font-mono);font-size:0.6rem;border-radius:3px;outline:none}
@@ -941,7 +943,7 @@ const SLOT_MAP = {
 };
 const SLOT_ORDER=['helmet','chest','weapon','gloves','pants','acc1','acc2','boots'];
 const SLOT_KEYS_RU={'helmet':'Шлем','chest':'Нагрудник','weapon':'Оружие','gloves':'Перчатки','pants':'Поножи','boots':'Ботинки','acc1':'Акс 1','acc2':'Акс 2','acc':'Аксы'};
-const builder={active:false,slots:{},selectedSlot:null,viewingItem:null,filters:{troop:new Set,slot:new Set,rarity:new Set,search:''}};
+const builder={active:false,slots:{},crits:{},selectedSlot:null,viewingItem:null,viewingSlot:null,filters:{troop:new Set,slot:new Set,rarity:new Set,search:''}};
 
 function getItemTroop(name){
   const raw=STATS_MAP[name]; if(!raw)return'';
@@ -1014,11 +1016,12 @@ function calcBuilderStats(){
     const n=builder.slots[sk]; if(!n)return;
     names.push(n);
     const raw=STATS_MAP[n]; if(!raw)return;
+    const mult=builder.crits[sk]?1.3:1;
     raw.split(', ').forEach(s=>{
       const m=s.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)%$/);
-      if(m){const k=m[1];const v=parseFloat(m[2]);agg[k]=(agg[k]||0)+v}
+      if(m){const k=m[1];const v=parseFloat(m[2]);agg[k]=(agg[k]||0)+v*mult}
       else if(s.includes('(proc)'))procs.push(s);
-      else{const m2=s.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)$/);if(m2){const k=m2[1];const v=parseFloat(m2[2]);agg[k]=(agg[k]||0)+v}}
+      else{const m2=s.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)$/);if(m2){const k=m2[1];const v=parseFloat(m2[2]);agg[k]=(agg[k]||0)+v*mult}}
     });
   });
   applySetBonuses(agg,procs,names);
@@ -1030,7 +1033,7 @@ function calcBuilderStats(){
   procs.forEach(p=>{h+=`<div class="stat-row proc"><span>${p}</span><span class="val">⚡</span></div>`});
   return h;
 }
-function itemDetailHtml(name){
+function itemDetailHtml(name, crit){
   const raw=STATS_MAP[name]; if(!raw)return'';
   const stats=raw.split(', ').map(s=>{
     const m=s.match(/^(.+?)\s+([+-]\d+(?:\.\d+)?)%?$/);
@@ -1040,15 +1043,21 @@ function itemDetailHtml(name){
   const rarity=RARITY_MAP[name]||'';
   let h=`<div class="id-title">${lang==='ru'?'Характеристики предмета':'Item Stats'}</div>`;
   h+=`<div class="id-name">${tn(name)}</div>`;
+  if(crit)h+=`<div class="crit-diamond" style="display:inline-block;margin:4px 0;padding:2px 6px;border:1px solid var(--neon-red);border-radius:3px;font-size:0.5rem;color:var(--neon-red)">◆ CRIT +30%</div>`;
   if(rarity)h+=`<div style="color:var(--text-muted);margin-bottom:4px;font-size:0.5rem">${rarity}</div>`;
   stats.forEach(st=>{
-    if(st.value)h+=`<div class="id-stat"><span class="${st.cls}">${st.name}</span><span class="val ${st.cls}">${st.value.startsWith('-')?'':'+'}${st.value}%</span></div>`;
+    if(st.value){
+      const val=parseFloat(st.value);
+      const cv=crit?val*1.3:val;
+      const sign=cv>=0?'+':'';
+      h+=`<div class="id-stat"><span class="${st.cls}">${st.name}</span><span class="val ${st.cls}">${sign}${cv.toFixed(1)}%</span></div>`;
+    }
     else h+=`<div class="id-stat"><span>${st.name}</span></div>`;
   });
   return h;
 }
 
-function clearSlots(){builder.slots={};builder.selectedSlot=null;builder.viewingItem=null;renderBuilder()}
+function clearSlots(){builder.slots={};builder.crits={};builder.selectedSlot=null;builder.viewingItem=null;builder.viewingSlot=null;renderBuilder()}
 
 function renderBuilder(){
   const bar=document.getElementById('presetBar');
@@ -1060,12 +1069,14 @@ function renderBuilder(){
   function slotHtml(sk){
     const n=builder.slots[sk];
     const sel=builder.selectedSlot===sk?' selected':'';
+    const crit=builder.crits[sk]?' crit':'';
     const lbl=lang==='ru'?(SLOT_KEYS_RU[sk]||sk):tt(SLOT_KEYS[sk]);
     const baseSrc=BASE_ICONS[sk]||'';
     const iconSrc=n?(ICON_MAP[n]||baseSrc):baseSrc;
     const rarity=n?RARITY_MAP[n]||'':'';
-    let h=`<div class="b-slot-cell${sel}${rarity?' r-'+rarity:''}" data-sk="${sk}">`;
+    let h=`<div class="b-slot-cell${sel}${crit}${rarity?' r-'+rarity:''}" data-sk="${sk}">`;
     if(n)h+=`<button class="sc-remove" data-sk="${sk}">×</button>`;
+    if(n&&builder.crits[sk])h+=`<span class="crit-diamond"></span>`;
     h+=`<div class="sc-icon"><img src="${iconSrc}" alt="${n||lbl}" loading="lazy"></div>`;
     h+=`<div class="sc-label">${lbl}</div>`;
     if(n)h+=`<div class="sc-name" data-en="${n}">${tn(n)}</div>`;
@@ -1088,8 +1099,14 @@ function renderBuilder(){
       const sk=c.dataset.sk;
       const current=builder.slots[sk];
       builder.selectedSlot=sk;
-      if(current)builder.viewingItem=current;
-      else builder.viewingItem=null;
+      if(current){
+        builder.viewingItem=current;
+        builder.viewingSlot=sk;
+        builder.crits[sk]=!builder.crits[sk];
+      } else {
+        builder.viewingItem=null;
+        builder.viewingSlot=null;
+      }
       renderBuilder();
     });
   });
@@ -1098,6 +1115,8 @@ function renderBuilder(){
       e.stopPropagation();
       const sk=b.dataset.sk;
       delete builder.slots[sk];
+      delete builder.crits[sk];
+      if(builder.viewingSlot===sk)builder.viewingSlot=null;
       if(builder.viewingItem&&!builder.slots[sk])builder.viewingItem=null;
       renderBuilder();
     });
