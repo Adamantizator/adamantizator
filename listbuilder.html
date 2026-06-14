@@ -385,16 +385,23 @@ function loadExcelFromBuffer(buf,fn){
     rawData=j.slice(1).filter(r=>r.some(c=>c!==undefined&&c!==null&&c!==''));
     fileLoaded=true;
     leftHidden=new Set; rightHidden=new Set;
+    // right table: hide all
     headers.forEach((_,i)=>rightHidden.add(i));
-    // keep name column visible
+    // left table: keep only Ник, ДКП, Мощь visible
+    headers.forEach((_,i)=>leftHidden.add(i));
     const nameAliases=['Имя пользователя','Ник','Игрок','Имя','Username','Nick','Player','Name'];
-    let nameIdx=headers.findIndex(h=>nameAliases.some(a=>h.toLowerCase()===a.toLowerCase()));
+    const nameIdx=headers.findIndex(h=>nameAliases.some(a=>h.toLowerCase()===a.toLowerCase()));
+    if(nameIdx>=0)leftHidden.delete(nameIdx);
+    buildColMap();
+    const hasDkp=computeDKPColumn();
+    if(hasDkp){leftHidden.delete(headers.length-1);rightHidden.add(headers.length-1)}
+    const powerCol=col('Мощь');
+    const powerIdx=headers.indexOf(powerCol);
+    if(powerIdx>=0)leftHidden.delete(powerIdx);
+    // keep name visible in right too
     if(nameIdx>=0)rightHidden.delete(nameIdx);
     leftSort={col:-1,dir:'none'}; rightSort={col:-1,dir:'none'};
     rightRows=[];
-    buildColMap();
-    const hasDkp=computeDKPColumn();
-    if(hasDkp)rightHidden.add(headers.length-1);
     fileLabel.textContent=fn; fileLabel.style.color='var(--neon-yellow)';
     fileInfo.textContent='| Строк: '+rawData.length+' | Колонок: '+headers.length+(hasDkp?' + ДКП':'');
     renderTables();
@@ -441,12 +448,9 @@ function renderTables(){
 function renderLeft(){
   // Build data array
   let data=rawData.map((row,i)=>({idx:i,row}));
-  // Search filter
+  // Search filter — all columns
   const sq=searchLeft.value.trim().toLowerCase();
-  if(sq)data=data.filter(d=>{
-    const nameCell=d.row[0]; // first col is often name
-    return String(nameCell).toLowerCase().includes(sq);
-  });
+  if(sq)data=data.filter(d=>d.row.some(cell=>String(cell).toLowerCase().includes(sq)));
   // Sort
   if(leftSort.dir!=='none'&&leftSort.col>=0){
     data.sort((a,b)=>cmp(a.row[leftSort.col],b.row[leftSort.col],leftSort.dir));
