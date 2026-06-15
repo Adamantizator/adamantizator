@@ -1262,9 +1262,13 @@ function clearSlots(){builder.slots={};builder.crits={};builder.selectedSlot=nul
 
 function renderBuilder(){
   const bar=document.getElementById('presetBar');
-  bar.innerHTML=`<button class="preset-btn clear" id="clearSlots">${lang==='ru'?'Очистить':'Clear'}</button>`;
-  const clearBtn=document.getElementById('clearSlots');
-  if(clearBtn)clearBtn.onclick=clearSlots;
+  if(builder.costMode){
+    bar.innerHTML='';
+  } else {
+    bar.innerHTML=`<button class="preset-btn clear" id="clearSlots">${lang==='ru'?'Очистить':'Clear'}</button>`;
+    const clearBtn=document.getElementById('clearSlots');
+    if(clearBtn)clearBtn.onclick=clearSlots;
+  }
 
   const grid=document.getElementById('slotGrid');
   function slotHtml(sk){
@@ -1358,7 +1362,8 @@ function renderItemList(){
   const rarityTypes=['Legendary','Epic','Elite','Advanced','Normal'];
 
   const f=builder.filters;
-  const filtered=allNames.filter(n=>{
+  let filtered=allNames.filter(n=>{
+    if(builder.costMode && !ITEM_COST_MAP[n])return false;
     if(f.search && !n.toLowerCase().includes(f.search.toLowerCase()) && !tn(n).toLowerCase().includes(f.search.toLowerCase()))return false;
     if(f.troop.size && !f.troop.has(getItemTroop(n)))return false;
     if(f.slot.size && !f.slot.has(SLOT_MAP[n]))return false;
