@@ -64,8 +64,9 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 .mat-panel{overflow-x:auto}.mat-table{border-collapse:collapse;width:100%;font-family:var(--font-mono);font-size:0.75rem}
 .mat-table th{font-family:var(--font-display);font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);padding:8px 6px 12px;text-align:center;font-weight:400}
 .mat-table td{padding:6px 5px;text-align:center;border-top:1px solid rgba(255,230,0,0.06)}
-.mat-table td:first-child{text-align:left;padding:6px 12px 6px 6px;white-space:nowrap;display:flex;align-items:center;gap:8px;font-family:var(--font-body);font-size:0.75rem;color:var(--text-dim)}
-.mat-table td:first-child img{width:1.2rem;height:1.2rem;display:block;flex-shrink:0}
+.mat-table td:first-child{text-align:left;padding:6px 12px 6px 6px;white-space:nowrap;font-family:var(--font-body);font-size:0.75rem;color:var(--text-dim)}
+.mat-table td:first-child .mat-label{display:inline-flex;align-items:center;gap:8px}
+.mat-table td:first-child .mat-label img{width:1.2rem;height:1.2rem;display:block;flex-shrink:0}
 .mat-table input{font-family:var(--font-mono);font-size:0.9rem;padding:6px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.12);color:var(--text-primary);border-radius:3px;outline:none;transition:border-color 0.2s;width:100%;max-width:100px;text-align:center}
 .mat-table input:focus{border-color:var(--neon-yellow);box-shadow:0 0 10px rgba(255,230,0,0.1)}
 .mat-table th:nth-child(2),.mat-table td:nth-child(2){background:rgba(255,255,255,0.04)}
@@ -230,31 +231,31 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
       </tr>
     </thead>
     <tbody>
-      <tr><td><img src="icons/leather.png" alt="">Leather</td>
+      <tr><td><span class="mat-label"><img src="icons/leather.png" alt="">Leather</span></td>
         <td><input type="number" id="mat_Leather_COMMON" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Leather_ADVANCED" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Leather_ELITE" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Leather_EPIC" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Leather_LEGENDARY" min="0" step="0.01" value=""></td></tr>
-      <tr><td><img src="icons/iron.png" alt="">Iron Ore</td>
+      <tr><td><span class="mat-label"><img src="icons/iron.png" alt="">Iron Ore</span></td>
         <td><input type="number" id="mat_Iron Ore_COMMON" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Iron Ore_ADVANCED" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Iron Ore_ELITE" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Iron Ore_EPIC" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Iron Ore_LEGENDARY" min="0" step="0.01" value=""></td></tr>
-      <tr><td><img src="icons/wood.png" alt="">Wood</td>
+      <tr><td><span class="mat-label"><img src="icons/wood.png" alt="">Wood</span></td>
         <td><input type="number" id="mat_Wood_COMMON" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Wood_ADVANCED" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Wood_ELITE" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Wood_EPIC" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Wood_LEGENDARY" min="0" step="0.01" value=""></td></tr>
-      <tr><td><img src="icons/bone.png" alt="">Bone</td>
+      <tr><td><span class="mat-label"><img src="icons/bone.png" alt="">Bone</span></td>
         <td><input type="number" id="mat_Bone_COMMON" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Bone_ADVANCED" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Bone_ELITE" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Bone_EPIC" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Bone_LEGENDARY" min="0" step="0.01" value=""></td></tr>
-      <tr><td><img src="icons/univ.png" alt="">Universal</td>
+      <tr><td><span class="mat-label"><img src="icons/univ.png" alt="">Universal</span></td>
         <td><input type="number" id="mat_Universal_COMMON" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Universal_ADVANCED" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Universal_ELITE" min="0" step="0.01" value=""></td>
