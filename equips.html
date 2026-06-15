@@ -1305,11 +1305,10 @@ function calcBuilderCost(){
     if(!n)return;
     const cost=ITEM_COST_MAP[n];
     if(!cost)return;
-    const mult=builder.crits[sk]?2:1;
     Object.entries(cost.materials).forEach(([mat,tiers])=>{
       Object.entries(tiers).forEach(([quality,qty])=>{
         if(!matAgg[mat])matAgg[mat]={};
-        matAgg[mat][quality]=(matAgg[mat][quality]||0)+qty*mult;
+        matAgg[mat][quality]=(matAgg[mat][quality]||0)+qty;
       });
     });
   });
@@ -1340,7 +1339,6 @@ function matRowHtml(mat,tiers,showNormal){
 function itemCostHtml(name){
   const cost=ITEM_COST_MAP[name];
   if(!cost)return`<div style="font-family:var(--font-mono);font-size:0.55rem;color:var(--text-muted);padding:4px">${builder.costMode?t('cost_no_data'):''}</div>`;
-  const mult=builder.crits[builder.viewingSlot]?2:1;
   let h=`<div class="id-title">${lang==='ru'?'Стоимость':'Cost'}</div>`;
   h+=`<div class="id-name">${tn(name)}</div>`;
   if(cost.quality)h+=`<div style="color:var(--text-muted);margin-bottom:6px;font-size:0.5rem">${cost.quality}</div>`;
@@ -1348,9 +1346,7 @@ function itemCostHtml(name){
     const ai=MATERIAL_ORDER.indexOf(a[0]),bi=MATERIAL_ORDER.indexOf(b[0]);
     return (ai===-1?99:ai)-(bi===-1?99:bi);
   }).forEach(([mat,tiers])=>{
-    const multTiers={};
-    Object.entries(tiers).forEach(([q,t])=>{multTiers[q]=t*mult});
-    h+=matRowHtml(mat,multTiers,false);
+    h+=matRowHtml(mat,tiers,false);
   });
   return h;
 }
@@ -1387,9 +1383,9 @@ function renderBuilder(){
     const baseSrc=BASE_ICONS[sk]||'';
     const iconSrc=n?(ICON_MAP[n]||baseSrc):baseSrc;
     const rarity=n?RARITY_MAP[n]||'':'';
-    let h=`<div class="b-slot-cell${sel}${builder.crits[sk]?' crit':''}${rarity?' r-'+rarity:''}" data-sk="${sk}">`;
+    let h=`<div class="b-slot-cell${sel}${builder.crits[sk]&&!builder.costMode?' crit':''}${rarity?' r-'+rarity:''}" data-sk="${sk}">`;
     if(n)h+=`<button class="sc-remove" data-sk="${sk}">×</button>`;
-    if(n)h+=`<span class="crit-diamond${builder.crits[sk]?' crit-on':' crit-off'}"></span>`;
+    if(n&&!builder.costMode)h+=`<span class="crit-diamond${builder.crits[sk]?' crit-on':' crit-off'}"></span>`;
     h+=`<div class="sc-icon"><img src="${iconSrc}" alt="${n||lbl}" loading="lazy"></div>`;
     h+=`<div class="sc-label">${lbl}</div>`;
     if(n)h+=`<div class="sc-name" data-en="${n}">${tn(n)}</div>`;
@@ -1436,6 +1432,7 @@ function renderBuilder(){
   });
   grid.querySelectorAll('.crit-diamond').forEach(d=>{
     d.addEventListener('click',e=>{
+      if(builder.costMode)return;
       e.stopPropagation();
       const sk=d.closest('.b-slot-cell').dataset.sk;
       builder.crits[sk]=!builder.crits[sk];
@@ -1457,7 +1454,7 @@ function renderBuilder(){
   detailEl.dataset.placeholder=lang==='ru'?'Нажмите на предмет в слоте':'Click an item in a slot';
   if(builder.viewingItem){
     if(builder.costMode)detailEl.innerHTML=itemCostHtml(builder.viewingItem);
-    else detailEl.innerHTML=itemDetailHtml(builder.viewingItem);
+    else detailEl.innerHTML=itemDetailHtml(builder.viewingItem,builder.crits[builder.viewingSlot]);
   } else detailEl.innerHTML='';
 
   renderItemList();
