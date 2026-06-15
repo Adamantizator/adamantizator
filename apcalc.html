@@ -61,7 +61,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 .flicker{animation:flicker 4s infinite}
 @keyframes flicker-glow-text{0%,82%{-webkit-text-stroke:0 transparent}86%{-webkit-text-stroke:1.5px #ff1030}90%{-webkit-text-stroke:0 transparent}94%{-webkit-text-stroke:1.5px #ff1030}98%{-webkit-text-stroke:0 transparent}100%{-webkit-text-stroke:0 transparent}}
 .flicker-glow-text{animation:flicker-glow-text 4s infinite}
-.mat-panel{overflow-x:auto}.mat-table{border-collapse:collapse;width:100%;font-family:var(--font-mono);font-size:0.75rem}
+.mat-panel{overflow-x:auto}@media(min-width:769px){.mat-panel{overflow-x:visible}}.mat-table{border-collapse:collapse;width:100%;font-family:var(--font-mono);font-size:0.75rem}
 .mat-table th{font-family:var(--font-display);font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);padding:8px 6px 12px;text-align:center;font-weight:400}
 .mat-table td{padding:6px 5px;text-align:center;border-top:1px solid rgba(255,230,0,0.06)}
 .mat-table td:first-child{text-align:left;padding:6px 12px 6px 6px;white-space:nowrap;font-family:var(--font-body);font-size:0.75rem;color:var(--text-dim)}
