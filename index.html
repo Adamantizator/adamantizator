@@ -222,6 +222,10 @@ body::after {
 .card-list { border-color: rgba(108, 92, 231, 0.3); }
 .card-list:hover { border-color: #6c5ce7 !important; }
 
+.card-ap .card-title { color: #ff4500; }
+.card-ap { border-color: rgba(255, 69, 0, 0.3); }
+.card-ap:hover { border-color: #ff4500 !important; }
+
 .footer {
   margin-top: 40px;
   font-family: var(--font-mono);
@@ -486,6 +490,14 @@ body::after {
         <div class="tag" data-i18n="card11_tag">Загрузка .xlsx · Drag & Drop · Экспорт</div>
       </a>
     </div>
+    <div class="card-wrap">
+      <a class="card card-ap" href="apcalc.html">
+        <div class="card-icon"><img src="APX.png" alt="AP" style="width:1.6rem;height:1.6rem;vertical-align:middle"></div>
+        <div class="card-title" data-i18n="card12_title">AP Bottle Calc</div>
+        <div class="card-desc" data-i18n="card12_desc">Расчёт очков действий по бутылькам разного номинала</div>
+        <div class="tag" data-i18n="card12_tag">50 · 100 · 500 · 1000</div>
+      </a>
+    </div>
   </div>
 
   <div class="footer">
@@ -532,6 +544,9 @@ const LANG = {
     card11_title: 'Составление списка',
     card11_desc: 'Работа с Excel: загрузка, сортировка, drag-and-drop, экспорт',
     card11_tag: 'Загрузка .xlsx · Drag & Drop · Экспорт',
+    card12_title: 'AP Bottle Calc',
+    card12_desc: 'Расчёт очков действий по бутылькам разного номинала',
+    card12_tag: '50 · 100 · 500 · 1000',
     calendar_btn: '📅 Календарь',
   },
   en: {
@@ -569,6 +584,9 @@ const LANG = {
     card11_title: 'List Builder',
     card11_desc: 'Excel lists: load, sort, drag-and-drop, export',
     card11_tag: 'Load .xlsx · Drag & Drop · Export',
+    card12_title: 'AP Bottle Calc',
+    card12_desc: 'Action points calculator from AP bottles',
+    card12_tag: '50 · 100 · 500 · 1000',
     calendar_btn: '📅 Calendar',
   },
 };
