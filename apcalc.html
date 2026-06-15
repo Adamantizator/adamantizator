@@ -254,6 +254,12 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
         <td><input type="number" id="mat_Bone_ELITE" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Bone_EPIC" min="0" step="0.01" value=""></td>
         <td><input type="number" id="mat_Bone_LEGENDARY" min="0" step="0.01" value=""></td></tr>
+      <tr><td><img src="icons/univ.png" alt="">Universal</td>
+        <td><input type="number" id="mat_Universal_COMMON" min="0" step="0.01" value=""></td>
+        <td><input type="number" id="mat_Universal_ADVANCED" min="0" step="0.01" value=""></td>
+        <td><input type="number" id="mat_Universal_ELITE" min="0" step="0.01" value=""></td>
+        <td><input type="number" id="mat_Universal_EPIC" min="0" step="0.01" value=""></td>
+        <td><input type="number" id="mat_Universal_LEGENDARY" min="0" step="0.01" value=""></td></tr>
     </tbody>
   </table>
 
@@ -348,11 +354,11 @@ $('gemCalcBtn').addEventListener('click',()=>{
   gemResultBox.style.display='';
 });
 
-const MATS=['Leather','Iron Ore','Wood','Bone'];
+const MATS=['Leather','Iron Ore','Wood','Bone','Universal'];
 const QUALS=['COMMON','ADVANCED','ELITE','EPIC','LEGENDARY'];
 const QUALITY_MULT={COMMON:1,ADVANCED:4,ELITE:16,EPIC:64,LEGENDARY:256};
-const MAT_ICON={Leather:'leather.png','Iron Ore':'iron.png',Wood:'wood.png','Bone':'bone.png'};
-const MAT_LABEL={ru:{Leather:'Кожа','Iron Ore':'Железо',Wood:'Дерево',Bone:'Кости'},en:{Leather:'Leather','Iron Ore':'Iron Ore',Wood:'Wood',Bone:'Bone'}};
+const MAT_ICON={Leather:'leather.png','Iron Ore':'iron.png',Wood:'wood.png',Bone:'bone.png',Universal:'univ.png'};
+const MAT_LABEL={ru:{Leather:'Кожа','Iron Ore':'Железо',Wood:'Дерево',Bone:'Кости',Universal:'Универсальный'},en:{Leather:'Leather','Iron Ore':'Iron Ore',Wood:'Wood',Bone:'Bone',Universal:'Universal'}};
 
 function fmtMat(n){return (Math.round(n*100)/100).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2})}
 
