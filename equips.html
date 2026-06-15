@@ -1113,11 +1113,12 @@ function getItemTroop(name){
 
 function switchMode(mode){
   document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+  const isSets=mode==='sets';
   const isB=mode==='builder';
   const isC=mode==='cost';
   const showB=isB||isC;
-  document.getElementById('troopContent').style.display=isB?'none':'';
-  document.getElementById('troopTabs').style.display=isB?'none':'';
+  document.getElementById('troopContent').style.display=isSets?'':'none';
+  document.getElementById('troopTabs').style.display=isSets?'':'none';
   document.getElementById('builderWrap').classList.toggle('active',showB);
   builder.active=showB;
   builder.costMode=isC;
