@@ -180,51 +180,77 @@ body::after {
   position: relative;
 }
 
-.card-adamantizator .card-title { color: var(--neon-yellow); }
-.card-adamantizator { border-color: rgba(255, 230, 0, 0.3); }
+/* === GRADIENT BORDERS per group === */
+/* RED: HealCalc, AP, Covenant */
+.card-healcalc,.card-ap,.card-covenant{
+  border:1px solid transparent;
+  background:linear-gradient(var(--panel-bg),var(--panel-bg)) padding-box,
+    linear-gradient(135deg,rgba(255,16,48,0.5),rgba(255,16,48,0.1)) border-box
+}
+.card-healcalc:hover,.card-ap:hover,.card-covenant:hover{
+  border:1px solid transparent;
+  background:linear-gradient(var(--panel-bg),var(--panel-bg)) padding-box,
+    linear-gradient(135deg,rgba(255,16,48,0.7),rgba(255,16,48,0.2)) border-box;
+  box-shadow:0 0 40px rgba(255,16,48,0.15),inset 0 0 40px rgba(255,16,48,0.05)
+}
+.card-healcalc .card-title,.card-ap .card-title,.card-covenant .card-title{color:var(--neon-red)}
 
-.card-healcalc .card-title { color: var(--neon-red); }
-.card-healcalc { border-color: rgba(255, 16, 48, 0.3); }
-.card-healcalc:hover { border-color: var(--neon-red) !important; }
+/* CYAN: Training, Equipment */
+.card-training,.card-equip{
+  border:1px solid transparent;
+  background:linear-gradient(var(--panel-bg),var(--panel-bg)) padding-box,
+    linear-gradient(135deg,rgba(0,240,255,0.5),rgba(0,240,255,0.1)) border-box
+}
+.card-training:hover,.card-equip:hover{
+  border:1px solid transparent;
+  background:linear-gradient(var(--panel-bg),var(--panel-bg)) padding-box,
+    linear-gradient(135deg,rgba(0,240,255,0.7),rgba(0,240,255,0.2)) border-box;
+  box-shadow:0 0 40px rgba(0,240,255,0.15),inset 0 0 40px rgba(0,240,255,0.05)
+}
+.card-training .card-title,.card-equip .card-title{color:var(--neon-cyan)}
 
-.card-stats .card-title { color: var(--neon-yellow); }
-.card-stats { border-color: rgba(255, 230, 0, 0.3); }
+/* ORANGE: VIP, GoldHeads, Passports */
+.card-vip,.card-goldheads,.card-passports{
+  border:1px solid transparent;
+  background:linear-gradient(var(--panel-bg),var(--panel-bg)) padding-box,
+    linear-gradient(135deg,rgba(255,140,0,0.5),rgba(255,140,0,0.1)) border-box
+}
+.card-vip:hover,.card-goldheads:hover,.card-passports:hover{
+  border:1px solid transparent;
+  background:linear-gradient(var(--panel-bg),var(--panel-bg)) padding-box,
+    linear-gradient(135deg,rgba(255,140,0,0.7),rgba(255,140,0,0.2)) border-box;
+  box-shadow:0 0 40px rgba(255,140,0,0.15),inset 0 0 40px rgba(255,140,0,0.05)
+}
+.card-vip .card-title,.card-goldheads .card-title,.card-passports .card-title{color:#ff8c00}
 
-.card-training .card-title { color: var(--neon-cyan); }
-.card-training { border-color: rgba(0, 240, 255, 0.3); }
-.card-training:hover { border-color: var(--neon-cyan) !important; }
+/* WHITE+YELLOW: Stats, Adamantizator, List Builder */
+.card-stats,.card-adamantizator,.card-list{
+  border:1px solid transparent;
+  background:linear-gradient(var(--panel-bg),var(--panel-bg)) padding-box,
+    linear-gradient(135deg,rgba(255,255,255,0.3),rgba(255,230,0,0.06)) border-box
+}
+.card-stats:hover,.card-adamantizator:hover,.card-list:hover{
+  border:1px solid transparent;
+  background:linear-gradient(var(--panel-bg),var(--panel-bg)) padding-box,
+    linear-gradient(135deg,rgba(255,255,255,0.45),rgba(255,230,0,0.1)) border-box;
+  box-shadow:0 0 40px rgba(255,230,0,0.15),inset 0 0 40px rgba(255,230,0,0.05)
+}
+.card-stats .card-title,.card-adamantizator .card-title{color:var(--neon-yellow)}
+.card-list .card-title{color:#6c5ce7}
 
-.card-calendar .card-title { color: #cc66ff; }
-.card-calendar { border-color: rgba(204, 102, 255, 0.3); }
-.card-calendar:hover { border-color: #cc66ff !important; }
-
-.card-vip .card-title { color: var(--neon-gold); }
-.card-vip { border-color: rgba(255, 221, 0, 0.3); }
-.card-vip:hover { border-color: var(--neon-gold) !important; }
-
-.card-goldheads .card-title { color: #ff8c00; }
-.card-goldheads { border-color: rgba(255, 140, 0, 0.3); }
-.card-goldheads:hover { border-color: #ff8c00 !important; }
-
-.card-passports .card-title { color: #00f0aa; }
-.card-passports { border-color: rgba(0, 240, 170, 0.3); }
-.card-passports:hover { border-color: #00f0aa !important; }
-
-.card-covenant .card-title { color: var(--neon-amber); }
-.card-covenant { border-color: rgba(255, 179, 0, 0.3); }
-.card-covenant:hover { border-color: var(--neon-amber) !important; }
-
-.card-equip .card-title { color: #00ffcc; }
-.card-equip { border-color: rgba(0, 255, 204, 0.3); }
-.card-equip:hover { border-color: #00ffcc !important; }
-
-.card-list .card-title { color: #6c5ce7; }
-.card-list { border-color: rgba(108, 92, 231, 0.3); }
-.card-list:hover { border-color: #6c5ce7 !important; }
-
-.card-ap .card-title { color: #ff4500; }
-.card-ap { border-color: rgba(255, 69, 0, 0.3); }
-.card-ap:hover { border-color: #ff4500 !important; }
+/* PURPLE: Calendar (keep original) */
+.card-calendar{
+  border:1px solid transparent;
+  background:linear-gradient(var(--panel-bg),var(--panel-bg)) padding-box,
+    linear-gradient(135deg,rgba(204,102,255,0.5),rgba(204,102,255,0.1)) border-box
+}
+.card-calendar:hover{
+  border:1px solid transparent;
+  background:linear-gradient(var(--panel-bg),var(--panel-bg)) padding-box,
+    linear-gradient(135deg,rgba(204,102,255,0.7),rgba(204,102,255,0.2)) border-box;
+  box-shadow:0 0 40px rgba(204,102,255,0.15),inset 0 0 40px rgba(204,102,255,0.05)
+}
+.card-calendar .card-title{color:#cc66ff}
 
 .footer {
   margin-top: 40px;
