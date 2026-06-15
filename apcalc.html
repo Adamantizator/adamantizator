@@ -61,12 +61,12 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 .flicker{animation:flicker 4s infinite}
 @keyframes flicker-glow-text{0%,82%{-webkit-text-stroke:0 transparent}86%{-webkit-text-stroke:1.5px #ff1030}90%{-webkit-text-stroke:0 transparent}94%{-webkit-text-stroke:1.5px #ff1030}98%{-webkit-text-stroke:0 transparent}100%{-webkit-text-stroke:0 transparent}}
 .flicker-glow-text{animation:flicker-glow-text 4s infinite}
-.mat-panel{overflow-x:auto;text-align:center}.mat-table{border-collapse:collapse;width:auto;min-width:0;font-family:var(--font-mono);font-size:0.75rem;margin:0 auto}
-.mat-table th{font-family:var(--font-display);font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);padding:6px 4px 10px;text-align:center;font-weight:400}
-.mat-table td{padding:4px 3px;text-align:center;border-top:1px solid rgba(255,230,0,0.06)}
-.mat-table td:first-child{text-align:left;padding:4px 8px 4px 4px;white-space:nowrap;display:flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:0.75rem;color:var(--text-dim)}
+.mat-panel{overflow-x:auto}.mat-table{border-collapse:collapse;width:100%;font-family:var(--font-mono);font-size:0.75rem}
+.mat-table th{font-family:var(--font-display);font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);padding:8px 6px 12px;text-align:center;font-weight:400}
+.mat-table td{padding:6px 5px;text-align:center;border-top:1px solid rgba(255,230,0,0.06)}
+.mat-table td:first-child{text-align:left;padding:6px 12px 6px 6px;white-space:nowrap;display:flex;align-items:center;gap:8px;font-family:var(--font-body);font-size:0.75rem;color:var(--text-dim)}
 .mat-table td:first-child img{width:1.2rem;height:1.2rem;display:block;flex-shrink:0}
-.mat-table input{font-family:var(--font-mono);font-size:0.9rem;padding:4px 6px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.12);color:var(--text-primary);border-radius:3px;outline:none;transition:border-color 0.2s;width:100%;max-width:100px;text-align:center}
+.mat-table input{font-family:var(--font-mono);font-size:0.9rem;padding:6px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.12);color:var(--text-primary);border-radius:3px;outline:none;transition:border-color 0.2s;width:100%;max-width:100px;text-align:center}
 .mat-table input:focus{border-color:var(--neon-yellow);box-shadow:0 0 10px rgba(255,230,0,0.1)}
 .mat-table th:nth-child(2),.mat-table td:nth-child(2){background:rgba(255,255,255,0.04)}
 .mat-table th:nth-child(3),.mat-table td:nth-child(3){background:rgba(0,200,0,0.06)}
@@ -99,13 +99,13 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
     <div style="text-align:left;margin-bottom:4px">
       <a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px" data-i18n="back">← Главная</a>
     </div>
-    <h1 class="flicker-glow-text" data-i18n="h1">КАЛЬКУЛЯТОР БУТЫЛЬКОВ</h1>
-    <div class="subtitle" data-i18n="subtitle">Action Points Calculator</div>
+    <h1 class="flicker-glow-text" data-i18n="h1">ОЧКИ ДЕЙСТВИЙ, ГЕМЫ, МАТЕРИАЛЫ</h1>
+    <div class="subtitle" data-i18n="subtitle">AP, Gems, Materials Calculator</div>
     <div class="glitch-line"></div>
   </header>
 
   <div class="panel">
-    <div class="panel-title" data-i18n="title">Введите количество</div>
+    <div class="panel-title" data-i18n="title">Очки действия</div>
 
     <div class="input-grid">
       <div class="input-group">
@@ -282,8 +282,8 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 
 <script>
 const LANG={ru:{
-  back:'← Главная',h1:'КАЛЬКУЛЯТОР БУТЫЛЬКОВ',subtitle:'Action Points Calculator',
-  title:'Введите количество',
+  back:'← Главная',h1:'КАЛЬКУЛЯТОР БУТЫЛЬКОВ',  subtitle:'Очки действий, гемы, материалы',
+  title:'Очки действия',
   b50:'Бутыльки на 50',b100:'Бутыльки на 100',b500:'Бутыльки на 500',b1000:'Бутыльки на 1000',
   calc_btn:'[ РАССЧИТАТЬ ]',total:'Итого очков действий',
   gem_title:'Гемы',
@@ -295,8 +295,8 @@ const LANG={ru:{
   calc_mat:'[ РАССЧИТАТЬ ]',
   mat_by_type:'По типам (в Legendary)',mat_total_label:'Всего материалов',
 },en:{
-  back:'← Home',h1:'AP BOTTLE CALCULATOR',subtitle:'Калькулятор бутыльков',
-  title:'Enter quantities',
+  back:'← Home',h1:'AP, GEMS, MATERIALS',subtitle:'Очки действий, гемы, материалы',
+  title:'Action Points',
   b50:'Bottles x50',b100:'Bottles x100',b500:'Bottles x500',b1000:'Bottles x1000',
   calc_btn:'[ CALCULATE ]',total:'Total Action Points',
   gem_title:'Gems',
