@@ -1048,12 +1048,12 @@ function renderSetGridHtml(set, troop, setId){
   }
   let gh='<div class="b-slot-grid" style="margin:0 auto">';
   gh+=`<div style="grid-column:2;grid-row:1">${cellHtml('helmet')}</div>`;
-  gh+=`<div style="grid-column:1;grid-row:2;align-self:center">${cellHtml('weapon')}</div>`;
+  gh+=`<div style="grid-column:1;grid-row:2/span 2;align-self:center;margin-top:-8px">${cellHtml('weapon')}</div>`;
   gh+=`<div style="grid-column:1;grid-row:3/span 2;align-self:center">${cellHtml('acc1')}</div>`;
   gh+=`<div style="grid-column:2;grid-row:2">${cellHtml('chest')}</div>`;
   gh+=`<div style="grid-column:2;grid-row:3">${cellHtml('pants')}</div>`;
   gh+=`<div style="grid-column:2;grid-row:4">${cellHtml('boots')}</div>`;
-  gh+=`<div style="grid-column:3;grid-row:2;align-self:center">${cellHtml('gloves')}</div>`;
+  gh+=`<div style="grid-column:3;grid-row:2/span 2;align-self:center;margin-top:-8px">${cellHtml('gloves')}</div>`;
   gh+=`<div style="grid-column:3;grid-row:3/span 2;align-self:center">${cellHtml('acc2')}</div>`;
   gh+='</div>';
   return gh;
@@ -1396,12 +1396,12 @@ function renderBuilder(){
   }
   let gh='';
   gh+=`<div style="grid-column:2;grid-row:1">${slotHtml('helmet')}</div>`;
-  gh+=`<div style="grid-column:1;grid-row:2;align-self:center">${slotHtml('weapon')}</div>`;
+  gh+=`<div style="grid-column:1;grid-row:2/span 2;align-self:center;margin-top:-8px">${slotHtml('weapon')}</div>`;
   gh+=`<div style="grid-column:1;grid-row:3/span 2;align-self:center">${slotHtml('acc1')}</div>`;
   gh+=`<div style="grid-column:2;grid-row:2">${slotHtml('chest')}</div>`;
   gh+=`<div style="grid-column:2;grid-row:3">${slotHtml('pants')}</div>`;
   gh+=`<div style="grid-column:2;grid-row:4">${slotHtml('boots')}</div>`;
-  gh+=`<div style="grid-column:3;grid-row:2;align-self:center">${slotHtml('gloves')}</div>`;
+  gh+=`<div style="grid-column:3;grid-row:2/span 2;align-self:center;margin-top:-8px">${slotHtml('gloves')}</div>`;
   gh+=`<div style="grid-column:3;grid-row:3/span 2;align-self:center">${slotHtml('acc2')}</div>`;
   grid.innerHTML=gh;
   grid.querySelectorAll('.b-slot-cell').forEach(c=>{
