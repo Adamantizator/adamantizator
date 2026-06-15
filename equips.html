@@ -136,6 +136,11 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
 @media(max-width:800px){.b-mid{grid-template-columns:1fr;justify-items:center}.b-mid>*{justify-self:center!important}}
 @media(max-width:600px){.b-slot-grid{grid-template-columns:74px 74px 74px;max-width:226px}.il-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}.il-item{min-height:40px}.il-item img{width:30px;height:30px}}
 .hint-ru{text-align:center;font-family:var(--font-mono);font-size:0.45rem;color:var(--text-muted);padding:16px 10px 4px;opacity:0.6;letter-spacing:0.5px}
+.mat-icon{width:20px;height:20px;vertical-align:middle;margin-right:4px}
+.mat-row{display:flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:0.6rem;padding:2px 0}
+.mat-row .qty{color:var(--neon-yellow);font-weight:700;min-width:28px;text-align:right}
+.mat-row .tier{color:var(--text-muted);font-size:0.5rem;min-width:40px}
+.mat-total{color:var(--neon-amber)}
 </style>
 </head>
 <body>
@@ -158,6 +163,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
   <div class="mode-tabs" id="modeTabs">
     <button class="mode-btn active" data-mode="sets" data-i18n="mode_sets">Сеты</button>
     <button class="mode-btn" data-mode="builder" data-i18n="mode_builder">Конструктор</button>
+    <button class="mode-btn" data-mode="cost" data-i18n="mode_cost">Стоимость</button>
   </div>
   <div id="troopContent"></div>
 <div id="builderWrap">
@@ -328,6 +334,64 @@ const SET_BONUSES = {
   'Glorious Goddess':{2:'All Troops Defense +3%',4:'Skill Damage Reduction +3%',6:'All Troops Health +5%'},
   "Wolf's Clothing":{2:'Siege Unit Defense +5%',4:'Ranged Skill Damage +5%, Ranged Attack Damage +5%'}
 };
+
+const QUALITY_MULT = { NORMAL:1, ADVANCED:4, ELITE:16, EPIC:64, LEGENDARY:256 };
+const ITEM_COST_MAP = {
+  'Sharp Longsword':{slot:'weapon',quality:'NORMAL',materials:{"Iron Ore":{NORMAL:60},"Leather":{NORMAL:20},"Animal Bone":{NORMAL:20}}},
+  'Vanguard Halberd':{slot:'weapon',quality:'ADVANCED',materials:{"Feather":{ADVANCED:40},"Crystal":{ADVANCED:40},"Animal Bone":{ADVANCED:20}}},
+  'Staff of the Lost':{slot:'weapon',quality:'ELITE',materials:{"Ebony":{ELITE:60},"Feather":{ELITE:30},"Iron Ore":{ELITE:20}}},
+  'Golden Age':{slot:'weapon',quality:'EPIC',materials:{"Crystal":{EPIC:40},"Feather":{EPIC:40},"Iron Ore":{EPIC:20}}},
+  'Heart of the Saint':{slot:'weapon',quality:'EPIC',materials:{"Iron Ore":{EPIC:30},"Leather":{EPIC:20},"Animal Bone":{EPIC:50}}},
+  'Scepter of the Forest Guardian':{slot:'weapon',quality:'EPIC',materials:{"Crystal":{EPIC:30},"Ebony":{EPIC:40},"Animal Bone":{EPIC:30}}},
+  'Trial of the Lost Kingdom':{slot:'weapon',quality:'LEGENDARY',materials:{"Crystal":{LEGENDARY:60},"Silk":{LEGENDARY:60}}},
+  'Iron Helm':{slot:'helm',quality:'NORMAL',materials:{"Feather":{NORMAL:40},"Silk":{NORMAL:20},"Leather":{NORMAL:20}}},
+  'Helm of Phoenix':{slot:'helm',quality:'ADVANCED',materials:{"Feather":{ADVANCED:40},"Animal Bone":{ADVANCED:10},"Iron Ore":{ADVANCED:20}}},
+  'Abyssal Visage':{slot:'helm',quality:'EPIC',materials:{"Crystal":{EPIC:30},"Animal Bone":{EPIC:30},"Iron Ore":{EPIC:30}}},
+  'Mask of the Forest Guardian':{slot:'helm',quality:'EPIC',materials:{"Feather":{EPIC:30},"Silk":{EPIC:60},"Leather":{EPIC:30}}},
+  'Chain Mail':{slot:'chest',quality:'NORMAL',materials:{"Feather":{NORMAL:20},"Crystal":{NORMAL:40},"Iron Ore":{NORMAL:20}}},
+  'Milanese Plate':{slot:'chest',quality:'ADVANCED',materials:{"Leather":{ADVANCED:30},"Animal Bone":{ADVANCED:20},"Iron Ore":{ADVANCED:20}}},
+  'Infantry Breastplate':{slot:'chest',quality:'ADVANCED',materials:{"Ebony":{ADVANCED:20},"Silk":{ADVANCED:30},"Leather":{ADVANCED:20}}},
+  "Commander's Heavy Armor":{slot:'chest',quality:'ELITE',materials:{"Silk":{ELITE:10},"Animal Bone":{ELITE:10},"Iron Ore":{ELITE:50}}},
+  "Quinn's Soul":{slot:'chest',quality:'EPIC',materials:{"Crystal":{EPIC:20},"Leather":{EPIC:40},"Iron Ore":{EPIC:30}}},
+  'Robe of the Forest Guardian':{slot:'chest',quality:'EPIC',materials:{"Silk":{EPIC:30},"Leather":{EPIC:30},"Animal Bone":{EPIC:30}}},
+  'The Milky Way':{slot:'chest',quality:'LEGENDARY',materials:{"Feather":{LEGENDARY:20},"Ebony":{LEGENDARY:20},"Iron Ore":{LEGENDARY:20}}},
+  "Shadow Legion's Retribution":{slot:'chest',quality:'LEGENDARY',materials:{"Feather":{LEGENDARY:20},"Silk":{LEGENDARY:20},"Leather":{LEGENDARY:20}}},
+  'Cloth Gloves':{slot:'gloves',quality:'NORMAL',materials:{"Ebony":{NORMAL:20},"Crystal":{NORMAL:20},"Animal Bone":{NORMAL:20}}},
+  "Saint's Song":{slot:'gloves',quality:'ELITE',materials:{"Ebony":{ELITE:10},"Crystal":{ELITE:30},"Iron Ore":{ELITE:10}}},
+  'Windswept Bracers':{slot:'gloves',quality:'ELITE',materials:{"Crystal":{ELITE:20},"Silk":{ELITE:20},"Animal Bone":{ELITE:10}}},
+  "Seth's Brutality":{slot:'gloves',quality:'EPIC',materials:{"Crystal":{EPIC:20},"Animal Bone":{EPIC:20},"Iron Ore":{EPIC:20}}},
+  "Iset's Sufferance":{slot:'gloves',quality:'EPIC',materials:{"Feather":{EPIC:40},"Silk":{EPIC:10},"Leather":{EPIC:10}}},
+  'Claws of the Forest Guardian':{slot:'gloves',quality:'EPIC',materials:{"Feather":{EPIC:10},"Animal Bone":{EPIC:20},"Iron Ore":{EPIC:30}}},
+  'Sacred Grips':{slot:'gloves',quality:'LEGENDARY',materials:{"Crystal":{LEGENDARY:20},"Silk":{LEGENDARY:20}}},
+  "Ian's Choice":{slot:'gloves',quality:'LEGENDARY',materials:{"Crystal":{LEGENDARY:20},"Silk":{LEGENDARY:20}}},
+  'Coarse Breeches':{slot:'pants',quality:'NORMAL',materials:{"Ebony":{NORMAL:20},"Silk":{NORMAL:20},"Leather":{NORMAL:20}}},
+  'Ranger Trousers':{slot:'pants',quality:'ADVANCED',materials:{"Crystal":{ADVANCED:10},"Silk":{ADVANCED:30},"Leather":{ADVANCED:30}}},
+  'Vanguard Greaves':{slot:'pants',quality:'ADVANCED',materials:{"Feather":{ADVANCED:20},"Crystal":{ADVANCED:30},"Iron Ore":{ADVANCED:20}}},
+  'Greaves of the Exile':{slot:'pants',quality:'ELITE',materials:{"Feather":{ELITE:30},"Silk":{ELITE:20},"Animal Bone":{ELITE:20}}},
+  "Karuak's Humility":{slot:'pants',quality:'EPIC',materials:{"Ebony":{EPIC:30},"Crystal":{EPIC:30},"Animal Bone":{EPIC:30}}},
+  'Gladiator':{slot:'pants',quality:'EPIC',materials:{"Ebony":{EPIC:30},"Crystal":{EPIC:30},"Animal Bone":{EPIC:30}}},
+  'Eternal Night':{slot:'pants',quality:'LEGENDARY',materials:{"Feather":{LEGENDARY:20},"Ebony":{LEGENDARY:20},"Leather":{LEGENDARY:20}}},
+  'Ash of the Dawn':{slot:'pants',quality:'LEGENDARY',materials:{"Crystal":{LEGENDARY:20},"Silk":{LEGENDARY:20},"Animal Bone":{LEGENDARY:20}}},
+  'Sturdy Boots':{slot:'boots',quality:'NORMAL',materials:{"Ebony":{NORMAL:20},"Silk":{NORMAL:20},"Animal Bone":{NORMAL:20}}},
+  'Edged Boots':{slot:'boots',quality:'ADVANCED',materials:{"Feather":{ADVANCED:20},"Ebony":{ADVANCED:10},"Leather":{ADVANCED:20}}},
+  'Windswept Boots':{slot:'boots',quality:'ELITE',materials:{"Feather":{ELITE:10},"Silk":{ELITE:20},"Animal Bone":{ELITE:20}}},
+  'Cloud Racers':{slot:'boots',quality:'EPIC',materials:{"Feather":{EPIC:40},"Crystal":{EPIC:10},"Silk":{EPIC:10}}},
+  "Shio's Return":{slot:'boots',quality:'LEGENDARY',materials:{"Ebony":{LEGENDARY:20},"Leather":{LEGENDARY:20}}},
+  "Peter's Sickle":{slot:'acc',quality:'EPIC',materials:{"Ebony":{EPIC:80},"Iron Ore":{EPIC:80}}},
+  "Lohar's Bone Necklace":{slot:'acc',quality:'ELITE',materials:{"Leather":{ELITE:70},"Animal Bone":{ELITE:70}}},
+  'Savage Totem':{slot:'acc',quality:'ELITE',materials:{"Feather":{ELITE:70},"Ebony":{ELITE:70}}}
+};
+const MATERIAL_ICONS = {
+  'Animal Bone':'bone.png',
+  'Iron Ore':'iron.png',
+  'Leather':'leather.png',
+  'Ebony':'wood.png'
+};
+const MATERIAL_LABELS = {
+  'Animal Bone':'Bone','Iron Ore':'Iron','Leather':'Leather','Ebony':'Wood',
+  'Crystal':'Crystal','Silk':'Silk','Feather':'Feather'
+};
+const MATERIAL_ORDER = ['Animal Bone','Iron Ore','Leather','Ebony','Crystal','Silk','Feather'];
 
 const ICON_MAP = {
   'Sharp Longsword':'снаряга/sharplongsword.png',
@@ -715,6 +779,12 @@ const LANG = {
     subtitle:'Equipment Builds',
     mode_sets:'Сеты',
     mode_builder:'Конструктор',
+    mode_cost:'Стоимость',
+    cost_title:'Стоимость комплекта',
+    cost_empty:'Наденьте предметы для расчета стоимости',
+    cost_no_data:'Нет данных о стоимости',
+    cost_normal:'Всего Normal',
+    cost_mats:'Материалы',
     disclaimer:'Некоторые названия предметов на русском могут не совпадать с оригинальными',
     placeholder:'Данные скоро появятся',
     placeholder_tag:'Следите за обновлениями',
@@ -726,6 +796,12 @@ const LANG = {
     subtitle:'Best Equipment Builds',
     mode_sets:'Sets',
     mode_builder:'Builder',
+    mode_cost:'Cost',
+    cost_title:'Set Cost',
+    cost_empty:'Equip items to calculate cost',
+    cost_no_data:'No cost data',
+    cost_normal:'Normal Total',
+    cost_mats:'Materials',
     disclaimer:'',
     placeholder:'Data coming soon',
     placeholder_tag:'Stay tuned',
@@ -1016,7 +1092,7 @@ const SLOT_MAP = {
 };
 const SLOT_ORDER=['helmet','chest','weapon','gloves','pants','acc1','acc2','boots'];
 const SLOT_KEYS_RU={'helmet':'Шлем','chest':'Нагрудник','weapon':'Оружие','gloves':'Перчатки','pants':'Поножи','boots':'Ботинки','acc1':'Акс 1','acc2':'Акс 2','acc':'Аксы'};
-const builder={active:false,slots:{},crits:{},selectedSlot:null,viewingItem:null,viewingSlot:null,filters:{troop:new Set,slot:new Set,rarity:new Set,search:''}};
+const builder={active:false,costMode:false,slots:{},crits:{},selectedSlot:null,viewingItem:null,viewingSlot:null,filters:{troop:new Set,slot:new Set,rarity:new Set,search:''}};
 let setCrits={};
 
 function getItemTroop(name){
@@ -1038,11 +1114,14 @@ function getItemTroop(name){
 function switchMode(mode){
   document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
   const isB=mode==='builder';
+  const isC=mode==='cost';
+  const showB=isB||isC;
   document.getElementById('troopContent').style.display=isB?'none':'';
   document.getElementById('troopTabs').style.display=isB?'none':'';
-  document.getElementById('builderWrap').classList.toggle('active',isB);
-  builder.active=isB;
-  if(isB)renderBuilder();
+  document.getElementById('builderWrap').classList.toggle('active',showB);
+  builder.active=showB;
+  builder.costMode=isC;
+  if(showB)renderBuilder();
 }
 
 function statColorClass(k){
@@ -1111,6 +1190,74 @@ function itemDetailHtml(name, crit){
   return h;
 }
 
+function calcBuilderCost(){
+  const matAgg={};
+  SLOT_ORDER.forEach(sk=>{
+    const n=builder.slots[sk];
+    if(!n)return;
+    const cost=ITEM_COST_MAP[n];
+    if(!cost)return;
+    Object.entries(cost.materials).forEach(([mat,tiers])=>{
+      Object.entries(tiers).forEach(([quality,qty])=>{
+        if(!matAgg[mat])matAgg[mat]={};
+        matAgg[mat][quality]=(matAgg[mat][quality]||0)+qty;
+      });
+    });
+  });
+  return matAgg;
+}
+function matIconHtml(mat){
+  const src=MATERIAL_ICONS[mat];
+  if(src)return`<img src="${src}" class="mat-icon">`;
+  return'';
+}
+function matRowHtml(mat,tiers,showNormal){
+  const lbl=MATERIAL_LABELS[mat]||mat;
+  const icon=matIconHtml(mat);
+  const parts=Object.entries(tiers).sort((a,b)=>{
+    const o={LEGENDARY:5,EPIC:4,ELITE:3,ADVANCED:2,NORMAL:1};
+    return (o[b[0]]||0)-(o[a[0]]||0);
+  });
+  let h=parts.map(([quality,qty])=>{
+    const ql=quality.charAt(0).toUpperCase()+quality.slice(1).toLowerCase();
+    return`<span class="qty">${qty}</span><span class="tier">${ql}</span>`;
+  }).join('');
+  if(showNormal){
+    const normalTotal=parts.reduce((s,[q,t])=>s+t*(QUALITY_MULT[q]||1),0);
+    h+=`<span style="margin-left:8px;color:var(--text-muted);font-size:0.5rem">= ${normalTotal.toLocaleString('ru-RU')} N</span>`;
+  }
+  return`<div class="mat-row">${icon}<span style="min-width:48px;color:var(--text-dim)">${lbl}</span>${h}</div>`;
+}
+function itemCostHtml(name){
+  const cost=ITEM_COST_MAP[name];
+  if(!cost)return`<div style="font-family:var(--font-mono);font-size:0.55rem;color:var(--text-muted);padding:4px">${builder.costMode?t('cost_no_data'):''}</div>`;
+  let h=`<div class="id-title">${lang==='ru'?'Стоимость':'Cost'}</div>`;
+  h+=`<div class="id-name">${tn(name)}</div>`;
+  if(cost.quality)h+=`<div style="color:var(--text-muted);margin-bottom:6px;font-size:0.5rem">${cost.quality}</div>`;
+  Object.entries(cost.materials).sort((a,b)=>{
+    const ai=MATERIAL_ORDER.indexOf(a[0]),bi=MATERIAL_ORDER.indexOf(b[0]);
+    return (ai===-1?99:ai)-(bi===-1?99:bi);
+  }).forEach(([mat,tiers])=>{
+    h+=matRowHtml(mat,tiers,false);
+  });
+  return h;
+}
+function renderCostTotalHtml(matAgg){
+  const entries=Object.entries(matAgg);
+  if(!entries.length)return`<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);padding:8px 4px">${t('cost_empty')}</div>`;
+  let h='';
+  let totalNormal=0;
+  entries.sort((a,b)=>{
+    const ai=MATERIAL_ORDER.indexOf(a[0]),bi=MATERIAL_ORDER.indexOf(b[0]);
+    return (ai===-1?99:ai)-(bi===-1?99:bi);
+  }).forEach(([mat,tiers])=>{
+    h+=matRowHtml(mat,tiers,true);
+    totalNormal+=Object.entries(tiers).reduce((s,[q,t])=>s+t*(QUALITY_MULT[q]||1),0);
+  });
+  h+=`<div class="mat-row" style="border-top:1px solid rgba(255,230,0,0.2);margin-top:6px;padding-top:6px"><span style="font-weight:700;color:var(--neon-yellow)">${t('cost_normal')}:</span><span class="qty" style="min-width:auto;margin-left:8px;font-size:0.65rem">${totalNormal.toLocaleString('ru-RU')}</span></div>`;
+  return h;
+}
+
 function clearSlots(){builder.slots={};builder.crits={};builder.selectedSlot=null;builder.viewingItem=null;builder.viewingSlot=null;renderBuilder()}
 
 function renderBuilder(){
@@ -1127,9 +1274,9 @@ function renderBuilder(){
     const baseSrc=BASE_ICONS[sk]||'';
     const iconSrc=n?(ICON_MAP[n]||baseSrc):baseSrc;
     const rarity=n?RARITY_MAP[n]||'':'';
-    let h=`<div class="b-slot-cell${sel}${builder.crits[sk]?' crit':''}${rarity?' r-'+rarity:''}" data-sk="${sk}">`;
+    let h=`<div class="b-slot-cell${sel}${builder.crits[sk]&&!builder.costMode?' crit':''}${rarity?' r-'+rarity:''}" data-sk="${sk}">`;
     if(n)h+=`<button class="sc-remove" data-sk="${sk}">×</button>`;
-    if(n)h+=`<span class="crit-diamond${builder.crits[sk]?' crit-on':' crit-off'}"></span>`;
+    if(n&&!builder.costMode)h+=`<span class="crit-diamond${builder.crits[sk]?' crit-on':' crit-off'}"></span>`;
     h+=`<div class="sc-icon"><img src="${iconSrc}" alt="${n||lbl}" loading="lazy"></div>`;
     h+=`<div class="sc-label">${lbl}</div>`;
     if(n)h+=`<div class="sc-name" data-en="${n}">${tn(n)}</div>`;
@@ -1176,6 +1323,7 @@ function renderBuilder(){
   });
   grid.querySelectorAll('.crit-diamond').forEach(d=>{
     d.addEventListener('click',e=>{
+      if(builder.costMode)return;
       e.stopPropagation();
       const sk=d.closest('.b-slot-cell').dataset.sk;
       builder.crits[sk]=!builder.crits[sk];
@@ -1183,14 +1331,22 @@ function renderBuilder(){
     });
   });
 
-  const statsHtml=calcBuilderStats();
-  const emptyMsg=lang==='ru'?'Снарядите предметы для просмотра статов':'Equip items to see stats';
-  document.getElementById('builderStats').innerHTML=`<div class="section-title">${lang==='ru'?'Суммарные статы':'Total Stats'}</div>${statsHtml||`<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);padding:8px 4px">${emptyMsg}</div>`}`;
+  if(builder.costMode){
+    const costAgg=calcBuilderCost();
+    const costHtml=renderCostTotalHtml(costAgg);
+    document.getElementById('builderStats').innerHTML=`<div class="section-title">${t('cost_mats')}</div>${costHtml}`;
+  } else {
+    const statsHtml=calcBuilderStats();
+    const emptyMsg=lang==='ru'?'Снарядите предметы для просмотра статов':'Equip items to see stats';
+    document.getElementById('builderStats').innerHTML=`<div class="section-title">${lang==='ru'?'Суммарные статы':'Total Stats'}</div>${statsHtml||`<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);padding:8px 4px">${emptyMsg}</div>`}`;
+  }
 
   const detailEl=document.getElementById('builderItemDetail');
   detailEl.dataset.placeholder=lang==='ru'?'Нажмите на предмет в слоте':'Click an item in a slot';
-  if(builder.viewingItem)detailEl.innerHTML=itemDetailHtml(builder.viewingItem);
-  else detailEl.innerHTML='';
+  if(builder.viewingItem){
+    if(builder.costMode)detailEl.innerHTML=itemCostHtml(builder.viewingItem);
+    else detailEl.innerHTML=itemDetailHtml(builder.viewingItem);
+  } else detailEl.innerHTML='';
 
   renderItemList();
 }
