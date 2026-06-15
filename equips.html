@@ -84,7 +84,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
 .r-Epic{border-color:#a855f7!important;box-shadow:0 0 8px rgba(168,85,247,0.2)!important}
 .r-Elite{border-color:#3b82f6!important;box-shadow:0 0 8px rgba(59,130,246,0.2)!important}
 .r-Advanced{border-color:#22c55e!important;box-shadow:0 0 8px rgba(34,197,94,0.2)!important}
-.r-Normal{border-color:#6b7280!important}
+.r-Common{border-color:#6b7280!important}
 .b-slot-grid{display:grid;grid-template-columns:84px 84px 84px;gap:2px;justify-content:center;margin:0 auto 16px;max-width:260px}
 .b-mid{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;justify-items:stretch}
 .b-slot-cell{background:var(--panel-bg);border:1px solid rgba(255,230,0,0.1);border-radius:4px;padding:4px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
@@ -345,9 +345,9 @@ const SET_BONUSES = {
   'Vanguard':{2:'Cavalry Attack +2%'}
 };
 
-const QUALITY_MULT = { NORMAL:1, ADVANCED:4, ELITE:16, EPIC:64, LEGENDARY:256 };
+const QUALITY_MULT = { COMMON:1, ADVANCED:4, ELITE:16, EPIC:64, LEGENDARY:256 };
 const ITEM_COST_MAP = {
-  'Sharp Longsword':{slot:'weapon',quality:'NORMAL',materials:{"Leather":{NORMAL:100}}},
+  'Sharp Longsword':{slot:'weapon',quality:'COMMON',materials:{"Leather":{COMMON:100}}},
   'Blessed Blade':{slot:'weapon',quality:'ADVANCED',materials:{"Iron Ore":{ADVANCED:60},"Ebony":{ADVANCED:20}}},
   'Staff of the Lost':{slot:'weapon',quality:'ELITE',materials:{"Leather":{ELITE:20},"Iron Ore":{ELITE:20},"Ebony":{ELITE:50}}},
   'Gatekeepers Shield':{slot:'weapon',quality:'ELITE',materials:{"Leather":{ELITE:20},"Iron Ore":{ELITE:50},"Ebony":{ELITE:20}}},
@@ -370,7 +370,7 @@ const ITEM_COST_MAP = {
   'Expedition War Helm':{slot:'helmet',quality:'ELITE',materials:{"Leather":{ELITE:40},"Iron Ore":{ELITE:20}}},
   'Helm of Fear':{slot:'helmet',quality:'ADVANCED',materials:{"Leather":{ADVANCED:40},"Iron Ore":{ADVANCED:10}}},
   'Helm of Phoenix':{slot:'helmet',quality:'ADVANCED',materials:{"Ebony":{ADVANCED:40},"Iron Ore":{ADVANCED:10}}},
-  'Iron Helm':{slot:'helmet',quality:'NORMAL',materials:{"Iron Ore":{NORMAL:80}}},
+  'Iron Helm':{slot:'helmet',quality:'COMMON',materials:{"Iron Ore":{COMMON:80}}},
   "Shadow Legion's Retribution":{slot:'chest',quality:'LEGENDARY',materials:{"Leather":{LEGENDARY:40},"Iron Ore":{LEGENDARY:10},"Ebony":{LEGENDARY:10}}},
   'The Milky Way':{slot:'chest',quality:'LEGENDARY',materials:{"Ebony":{LEGENDARY:40},"Leather":{LEGENDARY:10},"Iron Ore":{LEGENDARY:10}}},
   'Hope Cloak':{slot:'chest',quality:'LEGENDARY',materials:{"Iron Ore":{LEGENDARY:40},"Leather":{LEGENDARY:10},"Ebony":{LEGENDARY:10}}},
@@ -379,7 +379,7 @@ const ITEM_COST_MAP = {
   "Commander's Heavy Armor":{slot:'chest',quality:'ELITE',materials:{"Ebony":{ELITE:40},"Iron Ore":{ELITE:20}}},
   'Milanese Plate':{slot:'chest',quality:'ADVANCED',materials:{"Leather":{ADVANCED:40},"Ebony":{ADVANCED:10}}},
   'Infantry Breastplate':{slot:'chest',quality:'ADVANCED',materials:{"Iron Ore":{ADVANCED:40},"Leather":{ADVANCED:10}}},
-  'Chain Mail':{slot:'chest',quality:'NORMAL',materials:{"Ebony":{NORMAL:80}}},
+  'Chain Mail':{slot:'chest',quality:'COMMON',materials:{"Ebony":{COMMON:80}}},
   "Knight's Valorous Cloak":{slot:'chest',quality:'EPIC',materials:{"Iron Ore":{EPIC:20},"Leather":{EPIC:20},"Ebony":{EPIC:20}}},
   "Navar's Control":{slot:'gloves',quality:'LEGENDARY',materials:{"Leather":{LEGENDARY:30},"Iron Ore":{LEGENDARY:10}}},
   'Sacred Grips':{slot:'gloves',quality:'LEGENDARY',materials:{"Iron Ore":{LEGENDARY:30},"Ebony":{LEGENDARY:10}}},
@@ -389,7 +389,7 @@ const ITEM_COST_MAP = {
   "Calvin's Hand":{slot:'gloves',quality:'ELITE',materials:{"Iron Ore":{ELITE:30},"Leather":{ELITE:5},"Ebony":{ELITE:5}}},
   "Saint's Song":{slot:'gloves',quality:'ELITE',materials:{"Leather":{ELITE:30},"Ebony":{ELITE:10}}},
   'Leather Gloves':{slot:'gloves',quality:'ADVANCED',materials:{"Ebony":{ADVANCED:20},"Iron Ore":{ADVANCED:15}}},
-  'Cloth Gloves':{slot:'gloves',quality:'NORMAL',materials:{"Iron Ore":{NORMAL:60}}},
+  'Cloth Gloves':{slot:'gloves',quality:'COMMON',materials:{"Iron Ore":{COMMON:60}}},
   "Knight's Battleworn Gauntlets":{slot:'gloves',quality:'EPIC',materials:{"Leather":{EPIC:10},"Iron Ore":{EPIC:15},"Ebony":{EPIC:15}}},
   'Bronze Bracers':{slot:'gloves',quality:'ADVANCED',materials:{"Leather":{ADVANCED:20},"Iron Ore":{ADVANCED:15}}},
   'Tassets of the War God':{slot:'pants',quality:'LEGENDARY',materials:{"Ebony":{LEGENDARY:40},"Leather":{LEGENDARY:10},"Iron Ore":{LEGENDARY:10}}},
@@ -400,7 +400,7 @@ const ITEM_COST_MAP = {
   "Fanatic's Tassets":{slot:'pants',quality:'EPIC',materials:{"Ebony":{EPIC:40},"Leather":{EPIC:20}}},
   'Greaves of the Exile':{slot:'pants',quality:'ELITE',materials:{"Iron Ore":{ELITE:40},"Ebony":{ELITE:20}}},
   'Sentry Breeches':{slot:'pants',quality:'ELITE',materials:{"Iron Ore":{ELITE:40},"Leather":{ELITE:10},"Ebony":{ELITE:10}}},
-  'Coarse Breeches':{slot:'pants',quality:'NORMAL',materials:{"Leather":{NORMAL:60}}},
+  'Coarse Breeches':{slot:'pants',quality:'COMMON',materials:{"Leather":{COMMON:60}}},
   'Ranger Trousers':{slot:'pants',quality:'ADVANCED',materials:{"Iron Ore":{ADVANCED:40},"Ebony":{ADVANCED:10}}},
   "Knight's Triumphant Tassets":{slot:'pants',quality:'EPIC',materials:{"Leather":{EPIC:20},"Iron Ore":{EPIC:20},"Ebony":{EPIC:20}}},
   'Mountain Crushers':{slot:'boots',quality:'LEGENDARY',materials:{"Leather":{LEGENDARY:30},"Ebony":{LEGENDARY:10}}},
@@ -412,7 +412,7 @@ const ITEM_COST_MAP = {
   'The Scarlet Hounds':{slot:'boots',quality:'ELITE',materials:{"Iron Ore":{ELITE:40}}},
   'Edged Boots':{slot:'boots',quality:'ADVANCED',materials:{"Ebony":{ADVANCED:20},"Leather":{ADVANCED:15}}},
   'Boots of Reverence':{slot:'boots',quality:'ADVANCED',materials:{"Ebony":{ADVANCED:15},"Iron Ore":{ADVANCED:20}}},
-  'Sturdy Boots':{slot:'boots',quality:'NORMAL',materials:{"Ebony":{NORMAL:60}}},
+  'Sturdy Boots':{slot:'boots',quality:'COMMON',materials:{"Ebony":{COMMON:60}}},
   "Knight's Winter Sabatons":{slot:'boots',quality:'EPIC',materials:{"Leather":{EPIC:15},"Iron Ore":{EPIC:10},"Ebony":{EPIC:15}}},
   "Dragon's Breath Helm":{slot:'helmet',quality:'LEGENDARY',materials:{"Ebony":{LEGENDARY:40},"Leather":{LEGENDARY:10},"Iron Ore":{LEGENDARY:10}}},
   "Dragon's Breath Plate":{slot:'chest',quality:'LEGENDARY',materials:{"Ebony":{LEGENDARY:40},"Leather":{LEGENDARY:10},"Iron Ore":{LEGENDARY:10}}},
@@ -823,7 +823,7 @@ const STATS_MAP = {
   "Hero's Hilt":'50% chance +3% combo attack 5s, stacks 5x (proc)'
 };
 const RARITY_MAP = {
-  'Sharp Longsword':'Normal','Blessed Blade':'Advanced','Staff of the Lost':'Elite',
+  'Sharp Longsword':'Common','Blessed Blade':'Advanced','Staff of the Lost':'Elite',
   'Gatekeepers Shield':'Elite','Blazing Axe':'Elite',"Knight's Oathsworn Bow":'Epic',
   'Heart of the Saint':'Epic','Sakura Fubuki':'Epic','Golden Age':'Epic',
   'Twilight Epiphany':'Legendary','Trial of the Lost Kingdom':'Legendary',
@@ -831,21 +831,21 @@ const RARITY_MAP = {
   'Sacred Dominion':'Legendary','Pride of the Khan':'Legendary','Helm of the Conqueror':'Legendary',
   'Ancestral Mask of Night':'Legendary','Abyssal Visage':'Epic',"Witch's Lineage":'Epic',
   "Knight's Steel Diadem":'Epic','Expedition War Helm':'Elite','Helm of Fear':'Advanced',
-  'Helm of Phoenix':'Advanced','Iron Helm':'Normal',"Shadow Legion's Retribution":'Legendary',
+  'Helm of Phoenix':'Advanced','Iron Helm':'Common',"Shadow Legion's Retribution":'Legendary',
   'The Milky Way':'Legendary','Hope Cloak':'Legendary',"Quinn's Soul":'Epic',
   "Dark Lord's Blessing":'Epic',"Commander's Heavy Armor":'Elite','Milanese Plate':'Advanced',
-  'Infantry Breastplate':'Advanced','Chain Mail':'Normal',"Knight's Valorous Cloak":'Epic',
+  'Infantry Breastplate':'Advanced','Chain Mail':'Common',"Knight's Valorous Cloak":'Epic',
   "Navar's Control":'Legendary','Sacred Grips':'Legendary',"Ian's Choice":'Legendary',
   "Iset's Sufferance":'Epic',"Seth's Brutality":'Epic',"Calvin's Hand":'Elite',
-  "Saint's Song":'Elite','Leather Gloves':'Advanced','Cloth Gloves':'Normal',
+  "Saint's Song":'Elite','Leather Gloves':'Advanced','Cloth Gloves':'Common',
   "Knight's Battleworn Gauntlets":'Epic','Bronze Bracers':'Advanced',
   'Tassets of the War God':'Legendary','Eternal Night':'Legendary','Ash of the Dawn':'Legendary',
   "Karuak's Humility":'Epic','Gladiator':'Epic',"Fanatic's Tassets":'Epic',
-  "Greaves of the Exile":'Elite','Sentry Breeches':'Elite','Coarse Breeches':'Normal',
+  "Greaves of the Exile":'Elite','Sentry Breeches':'Elite','Coarse Breeches':'Common',
   'Ranger Trousers':'Advanced',"Knight's Triumphant Tassets":'Epic',
   'Mountain Crushers':'Legendary',"Shio's Return":'Legendary',"Commander's Boots":'Legendary',
   'Cloud Racers':'Epic','Frost Treads':'Epic','Flame Treads':'Epic','The Scarlet Hounds':'Elite',
-  'Edged Boots':'Advanced','Boots of Reverence':'Advanced','Sturdy Boots':'Normal',
+  'Edged Boots':'Advanced','Boots of Reverence':'Advanced','Sturdy Boots':'Common',
   "Knight's Winter Sabatons":'Epic',"Dragon's Breath Helm":'Legendary',
   "Dragon's Breath Plate":'Legendary',"Dragon's Breath Bow":'Legendary',
   "Dragon's Breath Vambraces":'Legendary',"Dragon's Breath Tassets":'Legendary',
@@ -892,7 +892,7 @@ const LANG = {
     cost_title:'Стоимость комплекта',
     cost_empty:'Наденьте предметы для расчета стоимости',
     cost_no_data:'Нет данных о стоимости',
-    cost_normal:'Всего Normal',
+    cost_normal:'Всего Обычный',
     cost_mats:'Материалы',
     disclaimer:'Некоторые названия предметов на русском могут не совпадать с оригинальными',
     placeholder:'Данные скоро появятся',
@@ -909,7 +909,7 @@ const LANG = {
     cost_title:'Set Cost',
     cost_empty:'Equip items to calculate cost',
     cost_no_data:'No cost data',
-    cost_normal:'Normal Total',
+    cost_normal:'Common Total',
     cost_mats:'Materials',
     disclaimer:'',
     placeholder:'Data coming soon',
@@ -1325,11 +1325,11 @@ function matRowHtml(mat,tiers,showNormal){
   const lbl=MATERIAL_LABELS[mat]||mat;
   const icon=matIconHtml(mat);
   const parts=Object.entries(tiers).sort((a,b)=>{
-    const o={LEGENDARY:5,EPIC:4,ELITE:3,ADVANCED:2,NORMAL:1};
+    const o={LEGENDARY:5,EPIC:4,ELITE:3,ADVANCED:2,COMMON:1};
     return (o[b[0]]||0)-(o[a[0]]||0);
   });
   let h=parts.map(([quality,qty])=>{
-    const ql=quality.charAt(0).toUpperCase()+quality.slice(1).toLowerCase();
+    const ql=quality==='COMMON'?(lang==='ru'?'Обычный':'Common'):quality.charAt(0).toUpperCase()+quality.slice(1).toLowerCase();
     return`<span class="qty">${qty}</span><span class="tier">${ql}</span>`;
   }).join('');
   if(showNormal){
@@ -1464,7 +1464,7 @@ function renderItemList(){
   const allNames=Object.keys(SLOT_MAP);
   const troopTypes=['infantry','cavalry','archer','siege'];
   const slotTypes=[...new Set(Object.values(SLOT_MAP))];
-  const rarityTypes=['Legendary','Epic','Elite','Advanced','Normal'];
+  const rarityTypes=['Legendary','Epic','Elite','Advanced','Common'];
 
   const f=builder.filters;
   let filtered=allNames.filter(n=>{
@@ -1476,7 +1476,7 @@ function renderItemList(){
     return true;
   }).sort((a,b)=>{
     const ra=RARITY_MAP[a]||'',rb=RARITY_MAP[b]||'';
-    const order={Legendary:5,Epic:4,Elite:3,Advanced:2,Normal:1};
+    const order={Legendary:5,Epic:4,Elite:3,Advanced:2,Common:1};
     return (order[rb]||0)-(order[ra]||0) || a.localeCompare(b);
   });
 
