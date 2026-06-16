@@ -1095,6 +1095,8 @@ mergeClearBtn.addEventListener('click', () => {
   showMergeMsg('info', t('merge_clear'));
 });
 
+const SUM_COLS = ['Смерти T4','Смерти T5','Убийства T4','Убийства T5','Суммарные очки убийств'];
+
 function mergeData() {
   if (mergeFiles.length === 0) throw new Error(t('merge_no_files'));
   const merged = {};
@@ -1106,11 +1108,9 @@ function mergeData() {
       if (!merged[id]) {
         merged[id] = { ...row };
       } else {
-        Object.keys(row).forEach(key => {
-          if (key === 'id' || key === 'name') return;
-          const a = parseFloat(merged[id][key]) || 0;
-          const b = parseFloat(row[key]) || 0;
-          merged[id][key] = a + b;
+        SUM_COLS.forEach(key => {
+          const v = parseFloat(row[key]);
+          if (!isNaN(v)) merged[id][key] = (parseFloat(merged[id][key]) || 0) + v;
         });
       }
     });
