@@ -1154,6 +1154,15 @@ const COL_ALIASES = {
   'Мощь': 'Power',
   'Макс. мощь': 'Highest Power',
 };
+const ALIAS_KEYS = {
+  'dead_t4': 'Смерти T4',
+  'dead_t5': 'Смерти T5',
+  't4': 'Убийства T4',
+  't5': 'Убийства T5',
+  'power': 'Мощь',
+  'max_power': 'Макс. мощь',
+  'kill': 'Суммарные очки убийств',
+};
 let colMap = {};
 
 function buildColMap() {
@@ -1161,14 +1170,21 @@ function buildColMap() {
   for (const [ru, en] of Object.entries(COL_ALIASES)) {
     if (headers.includes(ru)) colMap[ru] = ru;
     else if (headers.includes(en)) colMap[ru] = en;
-    else colMap[ru] = ru;
+    else {
+      let found = false;
+      for (const [key, mappedRu] of Object.entries(ALIAS_KEYS)) {
+        if (mappedRu === ru && headers.includes(key)) { colMap[ru] = key; found = true; break; }
+      }
+      if (!found) colMap[ru] = ru;
+    }
   }
 }
 function col(ru) { return colMap[ru] || ru; }
+function hasHeader(ru) { return headers.includes(ru) || headers.includes(COL_ALIASES[ru]) || Object.entries(ALIAS_KEYS).some(([k,v])=>v===ru && headers.includes(k)); }
 
 // ===== GET PLAYER NAME =====
 function getPlayerName(row) {
-  const names = ['Имя пользователя', 'Ник', 'Игрок', 'Username', 'Nick', 'Player', 'Name', 'Имя'];
+  const names = ['Имя пользователя', 'Ник', 'Игрок', 'Username', 'Nick', 'Player', 'Name', 'name', 'Имя'];
   for (const n of names) {
     if (row[n] !== undefined && row[n] !== null && String(row[n]).trim() !== '') return String(row[n]).trim();
   }
@@ -1184,7 +1200,8 @@ function fmtNum(n) {
 // ===== CALCULATE DKP FORMULA =====
 function calculateFormulaColumn(data) {
   const required = ['Смерти T4', 'Смерти T5', 'Убийства T4', 'Убийства T5'];
-  const missing = required.filter(c => !headers.includes(c) && !headers.includes(COL_ALIASES[c]));
+  function hasCol(c) { return headers.includes(c) || headers.includes(COL_ALIASES[c]) || Object.keys(ALIAS_KEYS).some(k => ALIAS_KEYS[k]===c && headers.includes(k)); }
+  const missing = required.filter(c => !hasCol(c));
   if (missing.length > 0) {
     const missingLabels = missing.map(c => `${c} / ${COL_ALIASES[c]}`);
     throw new Error(`${t('err_missing_cols')}: ${missingLabels.join(', ')}`);
@@ -1216,7 +1233,8 @@ calcBtn.addEventListener('click', async () => {
     let column;
 
     const formulaValues = calculateFormulaColumn(data);
-    const useEn = headers.includes('T4 Deaths') || headers.includes('T4 Kills');
+    const enHeaders = ['T4 Deaths','T4 Kills','T5 Deaths','T5 Kills','Power','Highest Power','power','t4','t5','dead_t4','dead_t5'];
+    const useEn = enHeaders.some(h => headers.includes(h));
     const formulaColName = useEn
       ? 'DKP (Deaths T4×30 + Deaths T5×30 + Kills T4×10 + Kills T5×20)'
       : 'ДКП (Смерти T4×30 + Смерти T5×30 + Убийства T4×10 + Убийства T5×20)';
@@ -1265,12 +1283,12 @@ calcBtn.addEventListener('click', async () => {
 
     // Build data array with computed display values
     const mult = parseInt(multiplier.value) || 1;
-    const hasPower = headers.includes('Мощь') || headers.includes('Power');
+    const hasPower = hasHeader('Мощь');
     let displayData = filtered.map((row, idx) => {
       const name = getPlayerName(row);
       const dkpVal = parseInt(row[column]) || 0;
       const powerVal = hasPower ? (parseInt(row[col('Мощь')]) || 0) : 0;
-      const maxPowerVal = hasPower && (headers.includes('Макс. мощь') || headers.includes('Highest Power')) ? (parseInt(row[col('Макс. мощь')]) || 0) : powerVal;
+      const maxPowerVal = hasPower && hasHeader('Макс. мощь') ? (parseInt(row[col('Макс. мощь')]) || 0) : powerVal;
       const normVal = powerVal * mult;
       const pct = normVal > 0 ? (dkpVal / normVal * 100) : 0;
       const killsT4 = parseInt(row[col('Убийства T4')]) || 0;
@@ -1374,8 +1392,8 @@ downloadBtn.addEventListener('click', () => {
 
   try {
     const mult = parseInt(multiplier.value) || 1;
-    const hasPower = headers.includes('Мощь') || headers.includes('Power');
-    const hasMaxPower = headers.includes('Макс. мощь') || headers.includes('Highest Power');
+    const hasPower = hasHeader('Мощь');
+    const hasMaxPower = hasHeader('Макс. мощь');
     const goalLabel = t('th_goal') + ` (${t('th_power').replace(/ \(.*\)/, '')} x${mult})`;
 
     const exportData = currentData.map(row => ({
