@@ -1041,6 +1041,32 @@ function renderMergeFileList() {
   mergeCount.textContent = mergeFiles.length + ' ' + t('merge_files');
 }
 
+function normalizeRowSchema(row) {
+  const SCHEMA_MAP = {
+    'id': 'id', 'ID': 'id', 'ID персонажа': 'id',
+    'name': 'name', 'Имя пользователя': 'name', 'Ник': 'name', 'Username': 'name', 'Nick': 'name', 'Player': 'name', 'Имя': 'name',
+    'Смерти T4': 'Смерти T4', 'T4 Deaths': 'Смерти T4', 'deaths_t4': 'Смерти T4', 'dead_t4': 'Смерти T4',
+    'Смерти T5': 'Смерти T5', 'T5 Deaths': 'Смерти T5', 'deaths_t5': 'Смерти T5', 'dead_t5': 'Смерти T5',
+    'Убийства T4': 'Убийства T4', 'T4 Kills': 'Убийства T4', 'kills_t4': 'Убийства T4', 't4': 'Убийства T4',
+    'Убийства T5': 'Убийства T5', 'T5 Kills': 'Убийства T5', 'kills_t5': 'Убийства T5', 't5': 'Убийства T5',
+    'Мощь': 'Мощь', 'Power': 'Мощь', 'power': 'Мощь',
+    'Макс. мощь': 'Макс. мощь', 'Highest Power': 'Макс. мощь', 'max_power': 'Макс. мощь', 'Максимальная мощь': 'Макс. мощь',
+    'Суммарные очки убийств': 'Суммарные очки убийств', 'kill': 'Суммарные очки убийств',
+  };
+  const norm = {};
+  for (const [orig, common] of Object.entries(SCHEMA_MAP)) {
+    if (orig in row) {
+      norm[common] = row[orig];
+      if (common !== orig) delete row[orig];
+    }
+  }
+  // Copy any unmapped columns as-is
+  for (const key of Object.keys(row)) {
+    if (!(key in norm)) norm[key] = row[key];
+  }
+  return norm;
+}
+
 mergeLoadBtn.addEventListener('click', () => {
   const input = document.createElement('input');
   input.type = 'file';
@@ -1054,7 +1080,8 @@ mergeLoadBtn.addEventListener('click', () => {
         const sheet = wb.Sheets[wb.SheetNames[0]];
         const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
         if (!json || json.length === 0) continue;
-        mergeFiles.push({ name: file.name, data: json, headers: Object.keys(json[0]) });
+        const normalized = json.map(normalizeRowSchema);
+        mergeFiles.push({ name: file.name, data: normalized, headers: Object.keys(normalized[0]) });
       } catch (err) { /* skip bad files */ }
     }
     renderMergeFileList();
@@ -1070,24 +1097,17 @@ mergeClearBtn.addEventListener('click', () => {
 
 function mergeData() {
   if (mergeFiles.length === 0) throw new Error(t('merge_no_files'));
-  const idCandidates = ['id', 'ID', 'ID персонажа'];
-  let idKey = null;
-  for (const f of mergeFiles) {
-    for (const cand of idCandidates) {
-      if (f.headers.includes(cand)) { idKey = cand; break; }
-    }
-    if (!idKey) throw new Error(`${t('err_merge_cols')}: ${f.name}`);
-  }
   const merged = {};
   mergeFiles.forEach(f => {
+    if (!f.headers.includes('id')) throw new Error(`${t('err_merge_cols')}: ${f.name}`);
     f.data.forEach(row => {
-      const id = String(row[idKey]);
-      if (!id) return;
+      const id = String(row['id']);
+      if (!id || id === 'undefined') return;
       if (!merged[id]) {
         merged[id] = { ...row };
       } else {
         Object.keys(row).forEach(key => {
-          if (key === idKey || key === 'name' || key === 'Имя пользователя') return;
+          if (key === 'id' || key === 'name') return;
           const a = parseFloat(merged[id][key]) || 0;
           const b = parseFloat(row[key]) || 0;
           merged[id][key] = a + b;
@@ -1581,6 +1601,7 @@ function switchMode(mode) {
     $('mergePanel').classList.add('hidden');
     $('filtersPanel').classList.remove('hidden');
     $('tablePanel').classList.remove('hidden');
+    $('calcBtn').classList.remove('hidden');
   } else if (mode === 'merge') {
     $('loader-panel').classList.add('hidden');
     $('preloadPanel').classList.add('hidden');
@@ -1588,6 +1609,7 @@ function switchMode(mode) {
     $('mergePanel').classList.remove('hidden');
     $('filtersPanel').classList.remove('hidden');
     $('tablePanel').classList.remove('hidden');
+    $('calcBtn').classList.add('hidden');
   } else {
     $('loader-panel').classList.add('hidden');
     $('preloadPanel').classList.add('hidden');
