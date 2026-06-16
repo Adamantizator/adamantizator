@@ -93,8 +93,7 @@ input:focus{border-color:var(--neon-yellow);box-shadow:0 0 15px rgba(255,230,0,0
 
     <div class="suggestion" id="suggestion">
       Снизить с <span class="hl" id="curP">1</span> до <span class="hl" id="prevP">1</span> паспортов: мощь до <span class="hl" id="targetPower">0</span> (сбросить <span class="hl" id="shedPower">0</span>)
-      <br>T4: <span class="hl" id="t4suggest">0</span>
-      <span class="dim" id="mixSpan">(T5: <span id="t5suggest">0</span> + T4: <span id="t4mix">0</span>)</span>
+      <br>Это либо <span class="hl" id="t4suggest">0</span> T4, либо <span class="hl" id="t5suggest">0</span> T5 + <span class="hl" id="t4mix">0</span> T4
       <div class="sug-death" id="sugDeath">
         <div id="sugDeathT4"></div>
         <div id="sugDeathT5" style="margin-top:4px;"></div>
@@ -201,21 +200,32 @@ function calc(){
       document.getElementById('t4suggest').textContent=fn(t4only);
       document.getElementById('t5suggest').textContent=t5cnt;
       document.getElementById('t4mix').textContent=t4mix;
-      const ms=document.getElementById('mixSpan');
-      ms.style.display=(t5cnt>0||t4mix>0)?'inline':'none';
       const sd=document.getElementById('sugDeath');
       const sdT4=document.getElementById('sugDeathT4');
       const sdT5=document.getElementById('sugDeathT5');
-      if(cap>0&&cap<t4only){
-        sd.classList.add('visible');
-        sdT4.textContent='⚠ '+fn(t4only-cap)+' '+t('tdie')+' (T4)';
-        const t5die=Math.max(0,t5cnt-cap);
-        const remCap=Math.max(0,cap-t5cnt);
-        const t4dieMix=Math.max(0,t4mix-remCap);
-        const mixDie=t5die+t4dieMix;
-        sdT5.textContent='Или ⚠ '+fn(t5die)+' '+t('tdie')+' (T5)+'+fn(t4dieMix)+' '+t('tdie')+' (T4)';
-        sdT5.className=mixDie===0?'green':'';
-      }else{sd.classList.remove('visible')}
+      sd.classList.add('visible');
+      const hospLabel='при госпитале '+fn(cap);
+      if(cap>=t4only){
+        sdT4.textContent='✅ '+hospLabel+' все T4 поместятся';
+        sdT4.className='green';
+      }else{
+        sdT4.textContent='⚠ '+hospLabel+' погибнет '+fn(t4only-cap)+' T4';
+        sdT4.className='';
+      }
+      const t5die=Math.max(0,t5cnt-cap);
+      const remCap=Math.max(0,cap-t5cnt);
+      const t4dieMix=Math.max(0,t4mix-remCap);
+      const mixDie=t5die+t4dieMix;
+      if(mixDie===0){
+        sdT5.textContent='✅ '+hospLabel+' все T5+T4 поместятся';
+        sdT5.className='green';
+      }else{
+        const parts=[];
+        if(t5die>0)parts.push(fn(t5die)+' T5');
+        if(t4dieMix>0)parts.push(fn(t4dieMix)+' T4');
+        sdT5.textContent='⚠ '+hospLabel+' погибнет '+parts.join(' + ');
+        sdT5.className='';
+      }
     }else{sug.style.display='none'}
   }else{sug.style.display='none'}
   render(effPm);
