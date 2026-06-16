@@ -1,1 +1,5 @@
 equipment_*.json
+batch_export.py
+rok_exporter_gui.py
+config.json
+config.json.example
