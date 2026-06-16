@@ -347,7 +347,23 @@ function computeDKPColumn(){
 }
 
 // ===== PRELOADED =====
-const PRELOADED_FILES=[];
+const PRELOADED_FILES=[
+  '14-15.06-2026_3814.xlsx',
+  '14-15.06-2026_3815.xlsx',
+  '14-15.06-2026_3821.xlsx',
+  '14-15.06-2026_3822.xlsx',
+  '14-15.06-2026_3823.xlsx',
+  '14-15.06-2026_3899.xlsx',
+  '14-15.06-2026_3901.xlsx',
+  '14-15.06-2026_3906.xlsx',
+  '14-15.06-2026_3907.xlsx',
+  '14-15.06-2026_3910.xlsx',
+  '14-15.06-2026_3911.xlsx',
+  '14-15.06-2026_3914.xlsx',
+  '14-15.06-2026_3920.xlsx',
+  '14-15.06-2026_3926.xlsx',
+  '14-15.06-2026_3928.xlsx',
+];
 function preloadLabel(fn){return fn.replace(/\.[^.]+$/,'').replace(/_/g,' ')}
 function showPreloadMsg(tp,text){preloadMsg.className='msg-'+tp;preloadMsg.textContent=text;setTimeout(()=>{preloadMsg.className='hidden'},4000)}
 async function loadPreloadedFile(filename){
