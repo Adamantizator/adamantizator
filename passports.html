@@ -198,8 +198,8 @@ function calc(){
       const remain=shed-t5cnt*P5;
       const t4mix=remain>0?Math.ceil(remain/P4):0;
       document.getElementById('t4suggest').textContent=fn(t4only);
-      document.getElementById('t5suggest').textContent=t5cnt;
-      document.getElementById('t4mix').textContent=t4mix;
+      document.getElementById('t5suggest').textContent=fn(t5cnt);
+      document.getElementById('t4mix').textContent=fn(t4mix);
       const sd=document.getElementById('sugDeath');
       const sdT4=document.getElementById('sugDeathT4');
       const sdT5=document.getElementById('sugDeathT5');
