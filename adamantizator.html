@@ -551,6 +551,7 @@ td.pct { color: var(--neon-yellow); }
 }
 .mode-btn:first-child { border-radius: 3px 0 0 3px; }
 .mode-btn:last-child { border-radius: 0 3px 3px 0; }
+.mode-btn:not(:first-child):not(:last-child) { border-radius: 0; }
 .mode-btn.active {
   background: linear-gradient(135deg, var(--neon-yellow), var(--neon-amber));
   color: #000;
@@ -702,6 +703,7 @@ td.pct { color: var(--neon-yellow); }
     <div class="mode-switch">
       <button class="mode-btn active" data-mode="table" data-i18n="table_mode">[ ТАБЛИЦА ]</button>
       <button class="mode-btn" data-mode="manual" data-i18n="manual_mode">[ РУЧНОЙ ]</button>
+      <button class="mode-btn" data-mode="merge" data-i18n="merge_mode">[ СБОРКА ]</button>
     </div>
 
     <!-- LOADER -->
@@ -794,6 +796,21 @@ td.pct { color: var(--neon-yellow); }
     <div id="manualResult" class="manual-result">ДКП: 0</div>
   </div>
 
+  <!-- СБОРКА -->
+  <div class="panel hidden" id="mergePanel">
+    <div class="panel-title" data-i18n="merge_title">Сборка данных</div>
+    <div class="row" style="margin-bottom:12px;">
+      <button class="btn btn-primary" id="mergeLoadBtn" data-i18n="merge_load">[ ЗАГРУЗИТЬ ФАЙЛЫ ]</button>
+      <span id="mergeCount" style="color:var(--text-dim);font-size:0.9rem;">0 файлов</span>
+    </div>
+    <div id="mergeFileList" style="font-family:var(--font-mono);font-size:0.75rem;margin-bottom:12px;"></div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" id="mergeCalcBtn" data-i18n="merge_calc" style="background:linear-gradient(135deg,var(--neon-yellow),var(--neon-amber));color:#000;">[ СЛИТЬ И РАССЧИТАТЬ ]</button>
+      <button class="btn btn-outline btn-small" id="mergeClearBtn" data-i18n="merge_clear">[ ОЧИСТИТЬ ]</button>
+    </div>
+    <div id="mergeMsg" class="hidden" style="margin-top:8px;font-family:var(--font-mono);font-size:0.75rem;padding:8px 12px;border-radius:3px;"></div>
+  </div>
+
   <!-- ФИЛЬТРЫ -->
   <div class="panel" id="filtersPanel">
     <div class="panel-title" data-i18n="filters_title">Фильтры и опции</div>
@@ -882,6 +899,7 @@ const LANG = {
     min_val: 'Нижняя граница (≥)', max_val: 'Верхняя граница (≤)',
     search_nick: 'Поиск по нику', search_placeholder: 'Введите ник...',
     calc_btn: '[ РАССЧИТАТЬ ]', download_btn: '[ СКАЧАТЬ EXCEL ]', err_missing_cols: 'Отсутствуют столбцы',
+    cols: 'Столбцов:',
     th_name: 'Имя', th_power: 'Мощь (акт.)', th_maxpower: 'Макс. мощь',
     th_kill4: 'Убийства T4', th_kill5: 'Убийства T5',
     th_death4: 'Смерти T4', th_death5: 'Смерти T5',
@@ -889,7 +907,12 @@ const LANG = {
     sum_dkp: 'Сумма ДКП:', total_players: 'Всего игроков:',
     players_filtered: 'Игроков:', of: '/',
     calendar_btn: '📅 Календарь',
-    table_mode: '[ ТАБЛИЦА ]', manual_mode: '[ РУЧНОЙ ]',
+    table_mode: '[ ТАБЛИЦА ]', manual_mode: '[ РУЧНОЙ ]', merge_mode: '[ СБОРКА ]',
+    merge_title: 'Сборка данных', merge_load: '[ ЗАГРУЗИТЬ ФАЙЛЫ ]',
+    merge_calc: '[ СЛИТЬ И РАССЧИТАТЬ ]', merge_clear: '[ ОЧИСТИТЬ ]',
+    merge_loaded: 'загружен', merge_rows: 'строк', merge_files: 'файлов',
+    merge_done: 'Слияние завершено!', merge_no_files: 'Нет файлов для слияния',
+    err_merge_cols: 'В файлах нет колонки id',
     manual_title: 'Ручной ввод', manual_result: 'ДКП:',
   },
   en: {
@@ -907,6 +930,7 @@ const LANG = {
     min_val: 'Min value (≥)', max_val: 'Max value (≤)',
     search_nick: 'Search nickname', search_placeholder: 'Enter nickname...',
     calc_btn: '[ CALCULATE ]', download_btn: '[ DOWNLOAD EXCEL ]', err_missing_cols: 'Missing columns',
+    cols: 'Columns:',
     th_name: 'Name', th_power: 'Power (act.)', th_maxpower: 'Max power',
     th_kill4: 'Kills T4', th_kill5: 'Kills T5',
     th_death4: 'Deaths T4', th_death5: 'Deaths T5',
@@ -914,7 +938,12 @@ const LANG = {
     sum_dkp: 'DKP Sum:', total_players: 'Total players:',
     players_filtered: 'Players:', of: '/',
     calendar_btn: '📅 Calendar',
-    table_mode: '[ TABLE ]', manual_mode: '[ MANUAL ]',
+    table_mode: '[ TABLE ]', manual_mode: '[ MANUAL ]', merge_mode: '[ MERGE ]',
+    merge_title: 'Data Merge', merge_load: '[ LOAD FILES ]',
+    merge_calc: '[ MERGE & CALCULATE ]', merge_clear: '[ CLEAR ]',
+    merge_loaded: 'loaded', merge_rows: 'rows', merge_files: 'files',
+    merge_done: 'Merge complete!', merge_no_files: 'No files to merge',
+    err_merge_cols: 'Files have no id column',
     manual_title: 'Manual Input', manual_result: 'DKP:',
   },
 };
@@ -979,6 +1008,109 @@ const sumDisplay = $('sumDisplay');
 const countDisplay = $('countDisplay');
 const preloadList = $('preloadList');
 const preloadMsg = $('preloadMsg');
+const mergeLoadBtn = $('mergeLoadBtn');
+const mergeCalcBtn = $('mergeCalcBtn');
+const mergeClearBtn = $('mergeClearBtn');
+const mergeCount = $('mergeCount');
+const mergeFileList = $('mergeFileList');
+const mergeMsg = $('mergeMsg');
+const mergePanel = $('mergePanel');
+
+let mergeFiles = [];
+
+function showMergeMsg(type, text) {
+  mergeMsg.className = type;
+  mergeMsg.textContent = text;
+  mergeMsg.style.display = 'block';
+  setTimeout(() => { mergeMsg.style.display = 'none'; }, 4000);
+}
+
+function renderMergeFileList() {
+  mergeFileList.innerHTML = '';
+  mergeFiles.forEach((f, i) => {
+    const d = document.createElement('div');
+    d.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:4px 8px;border-bottom:1px solid rgba(255,230,0,0.08);';
+    const label = f.name.replace(/\.[^.]+$/, '');
+    d.innerHTML = `<span>${i+1}. ${label} — ${f.data.length} ${t('merge_rows')}</span><button class="btn btn-outline btn-small" style="font-size:0.6rem;padding:2px 6px;" data-idx="${i}">✕</button>`;
+    d.querySelector('button').addEventListener('click', () => {
+      mergeFiles.splice(i, 1);
+      renderMergeFileList();
+    });
+    mergeFileList.appendChild(d);
+  });
+  mergeCount.textContent = mergeFiles.length + ' ' + t('merge_files');
+}
+
+mergeLoadBtn.addEventListener('click', () => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.xlsx,.xls';
+  input.multiple = true;
+  input.onchange = async (e) => {
+    for (const file of e.target.files) {
+      try {
+        const buf = await file.arrayBuffer();
+        const wb = XLSX.read(buf, { type: 'array' });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+        if (!json || json.length === 0) continue;
+        mergeFiles.push({ name: file.name, data: json, headers: Object.keys(json[0]) });
+      } catch (err) { /* skip bad files */ }
+    }
+    renderMergeFileList();
+  };
+  input.click();
+});
+
+mergeClearBtn.addEventListener('click', () => {
+  mergeFiles = [];
+  renderMergeFileList();
+  showMergeMsg('info', t('merge_clear'));
+});
+
+function mergeData() {
+  if (mergeFiles.length === 0) throw new Error(t('merge_no_files'));
+  const idKey = 'id';
+  for (const f of mergeFiles) {
+    if (!f.headers.includes(idKey)) throw new Error(`${t('err_merge_cols')}: ${f.name}`);
+  }
+  const merged = {};
+  mergeFiles.forEach(f => {
+    f.data.forEach(row => {
+      const id = String(row[idKey]);
+      if (!id) return;
+      if (!merged[id]) {
+        merged[id] = { ...row };
+      } else {
+        Object.keys(row).forEach(key => {
+          if (key === 'id' || key === 'name') return;
+          const a = parseFloat(merged[id][key]) || 0;
+          const b = parseFloat(row[key]) || 0;
+          merged[id][key] = a + b;
+        });
+      }
+    });
+  });
+  return Object.values(merged);
+}
+
+function runMergeCalculation() {
+  try {
+    const merged = mergeData();
+    if (merged.length === 0) { showMergeMsg('error', t('merge_no_files')); return; }
+    df = merged;
+    headers = Object.keys(df[0]);
+    buildColMap();
+    fileLabel.textContent = `${t('merge_done')} ${mergeFiles.map(f=>f.name.replace(/\.[^.]+$/,'')).join(' + ')}`;
+    fileInfo.textContent = `| ${t('merge_rows')}: ${df.length} | ${t('cols')} ${headers.length}`;
+    showMergeMsg('info', `${t('merge_done')} ${df.length} ${t('merge_rows')}`);
+    calcBtn.click();
+  } catch (err) {
+    showMergeMsg('error', err.message);
+  }
+}
+
+mergeCalcBtn.addEventListener('click', runMergeCalculation);
 
 // ===== PRELOADED FILES =====
 const PRELOADED_FILES = [
@@ -1210,6 +1342,13 @@ calcBtn.addEventListener('click', async () => {
     return;
   }
   if (!df || df.length === 0) {
+    if (currentMode === 'merge') {
+      showMsg('error', 'Сначала выполните слияние — нажмите [ СЛИТЬ И РАССЧИТАТЬ ]');
+    } else {
+      showMsg('error', 'Сначала выберите Excel файл.');
+    }
+    return;
+  }
     showMsg('error', 'Сначала выберите Excel файл.');
     return;
   }
@@ -1438,12 +1577,21 @@ function switchMode(mode) {
     $('loader-panel').classList.remove('hidden');
     $('preloadPanel').classList.remove('hidden');
     $('manualPanel').classList.add('hidden');
+    $('mergePanel').classList.add('hidden');
+    $('filtersPanel').classList.remove('hidden');
+    $('tablePanel').classList.remove('hidden');
+  } else if (mode === 'merge') {
+    $('loader-panel').classList.add('hidden');
+    $('preloadPanel').classList.add('hidden');
+    $('manualPanel').classList.add('hidden');
+    $('mergePanel').classList.remove('hidden');
     $('filtersPanel').classList.remove('hidden');
     $('tablePanel').classList.remove('hidden');
   } else {
     $('loader-panel').classList.add('hidden');
     $('preloadPanel').classList.add('hidden');
     $('manualPanel').classList.remove('hidden');
+    $('mergePanel').classList.add('hidden');
     $('filtersPanel').classList.add('hidden');
     $('tablePanel').classList.add('hidden');
     calculateManual();
