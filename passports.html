@@ -135,7 +135,11 @@ document.querySelectorAll('.lang-btn').forEach(b=>{b.addEventListener('click',()
 applyLang();
 function fn(n){return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ')}
 function pass(pm){if(pm<=0)return 0;for(const t of THR){if(pm<t.max)return t.p}return 30+Math.ceil((pm-60)/5)*5}
-function getPrevTier(curP){
+function getPrevTier(curP,pm){
+  if(pm>60){
+    const prevM=Math.floor((pm-1)/5)*5;
+    if(prevM>60)return {max:prevM,p:pass(prevM)};
+  }
   let prev=null;
   for(const t of THR){
     if(t.p<curP)prev=t;
@@ -179,7 +183,7 @@ function calc(){
   // Suggestion for previous tier (based on FULL power)
   const sug=document.getElementById('suggestion');
   const curP=pass(pm);
-  const prev=getPrevTier(curP);
+  const prev=getPrevTier(curP,pm);
   if(prev){
     const targetMax=prev.max*1000000-1;
     const shed=pw-targetMax;
