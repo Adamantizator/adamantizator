@@ -1070,9 +1070,13 @@ mergeClearBtn.addEventListener('click', () => {
 
 function mergeData() {
   if (mergeFiles.length === 0) throw new Error(t('merge_no_files'));
-  const idKey = 'id';
+  const idCandidates = ['id', 'ID', 'ID персонажа'];
+  let idKey = null;
   for (const f of mergeFiles) {
-    if (!f.headers.includes(idKey)) throw new Error(`${t('err_merge_cols')}: ${f.name}`);
+    for (const cand of idCandidates) {
+      if (f.headers.includes(cand)) { idKey = cand; break; }
+    }
+    if (!idKey) throw new Error(`${t('err_merge_cols')}: ${f.name}`);
   }
   const merged = {};
   mergeFiles.forEach(f => {
@@ -1083,7 +1087,7 @@ function mergeData() {
         merged[id] = { ...row };
       } else {
         Object.keys(row).forEach(key => {
-          if (key === 'id' || key === 'name') return;
+          if (key === idKey || key === 'name' || key === 'Имя пользователя') return;
           const a = parseFloat(merged[id][key]) || 0;
           const b = parseFloat(row[key]) || 0;
           merged[id][key] = a + b;
