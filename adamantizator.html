@@ -1200,8 +1200,7 @@ function fmtNum(n) {
 // ===== CALCULATE DKP FORMULA =====
 function calculateFormulaColumn(data) {
   const required = ['Смерти T4', 'Смерти T5', 'Убийства T4', 'Убийства T5'];
-  function hasCol(c) { return headers.includes(c) || headers.includes(COL_ALIASES[c]) || Object.keys(ALIAS_KEYS).some(k => ALIAS_KEYS[k]===c && headers.includes(k)); }
-  const missing = required.filter(c => !hasCol(c));
+  const missing = required.filter(c => col(c) === c && !headers.includes(c));
   if (missing.length > 0) {
     const missingLabels = missing.map(c => `${c} / ${COL_ALIASES[c]}`);
     throw new Error(`${t('err_missing_cols')}: ${missingLabels.join(', ')}`);
