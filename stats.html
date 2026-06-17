@@ -556,7 +556,7 @@ applyLang();
 function fmtNum(n) { return Math.floor(n).toLocaleString('ru-RU'); }
 
 function getPlayerName(row) {
-  const nameCols = ['Имя пользователя', 'Ник', 'Игрок', 'Username', 'Nick', 'Player', 'Name', 'Имя'];
+  const nameCols = ['Имя пользователя', 'Ник', 'Игрок', 'Username', 'Nick', 'Player', 'Name', 'name', 'Имя'];
   for (const c of nameCols) {
     const idx = headers.indexOf(c);
     if (idx !== -1 && row[idx] && String(row[idx]).trim()) return String(row[idx]).trim();
