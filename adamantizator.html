@@ -740,7 +740,22 @@ td.pct { color: var(--neon-yellow); }
       <div id="preloadMsg" class="hidden"></div>
     </div>
 
-   <div class="panel" id="formulaPanel">
+  <!-- СБОРКА -->
+  <div class="panel hidden" id="mergePanel">
+    <div class="panel-title" data-i18n="merge_title">Сборка данных</div>
+    <div class="row" style="margin-bottom:12px;">
+      <button class="btn btn-primary" id="mergeLoadBtn" data-i18n="merge_load">[ ЗАГРУЗИТЬ ФАЙЛЫ ]</button>
+      <span id="mergeCount" style="color:var(--text-dim);font-size:0.9rem;">0 файлов</span>
+    </div>
+    <div id="mergeFileList" style="font-family:var(--font-mono);font-size:0.75rem;margin-bottom:12px;"></div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" id="mergeCalcBtn" data-i18n="merge_calc" style="background:linear-gradient(135deg,var(--neon-yellow),var(--neon-amber));color:#000;">[ СЛИТЬ И РАССЧИТАТЬ ]</button>
+      <button class="btn btn-outline btn-small" id="mergeClearBtn" data-i18n="merge_clear">[ ОЧИСТИТЬ ]</button>
+    </div>
+    <div id="mergeMsg" class="hidden" style="margin-top:8px;font-family:var(--font-mono);font-size:0.75rem;padding:8px 12px;border-radius:3px;"></div>
+  </div>
+
+    <div class="panel" id="formulaPanel">
     <div class="panel-title" data-i18n="formula_title">Редактор формулы ДКП</div>
     <div class="formula-editor">
       <div class="formula-preview" id="formulaPreview" data-i18n="formula_init">(Смерти T4 + Смерти T5) × 30 + Убийства T4 × 10 + Убийства T5 × 20</div>
@@ -794,21 +809,6 @@ td.pct { color: var(--neon-yellow); }
       </div>
     </div>
     <div id="manualResult" class="manual-result">ДКП: 0</div>
-  </div>
-
-  <!-- СБОРКА -->
-  <div class="panel hidden" id="mergePanel">
-    <div class="panel-title" data-i18n="merge_title">Сборка данных</div>
-    <div class="row" style="margin-bottom:12px;">
-      <button class="btn btn-primary" id="mergeLoadBtn" data-i18n="merge_load">[ ЗАГРУЗИТЬ ФАЙЛЫ ]</button>
-      <span id="mergeCount" style="color:var(--text-dim);font-size:0.9rem;">0 файлов</span>
-    </div>
-    <div id="mergeFileList" style="font-family:var(--font-mono);font-size:0.75rem;margin-bottom:12px;"></div>
-    <div style="display:flex;gap:8px;">
-      <button class="btn btn-primary" id="mergeCalcBtn" data-i18n="merge_calc" style="background:linear-gradient(135deg,var(--neon-yellow),var(--neon-amber));color:#000;">[ СЛИТЬ И РАССЧИТАТЬ ]</button>
-      <button class="btn btn-outline btn-small" id="mergeClearBtn" data-i18n="merge_clear">[ ОЧИСТИТЬ ]</button>
-    </div>
-    <div id="mergeMsg" class="hidden" style="margin-top:8px;font-family:var(--font-mono);font-size:0.75rem;padding:8px 12px;border-radius:3px;"></div>
   </div>
 
   <!-- ФИЛЬТРЫ -->
@@ -1186,13 +1186,34 @@ async function loadPreloadedFile(filename) {
   }
 }
 
+async function loadPreloadedToMerge(filename) {
+  try {
+    const resp = await fetch(`data/${encodeURIComponent(filename)}`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const buf = await resp.arrayBuffer();
+    const wb = XLSX.read(buf, { type: 'array' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+    if (!json || json.length === 0) throw new Error('empty');
+    const normalized = json.map(normalizeRowSchema);
+    mergeFiles.push({ name: filename, data: normalized, headers: Object.keys(normalized[0]) });
+    renderMergeFileList();
+    showMergeMsg('info', `"${preloadLabel(filename)}" ${t('merge_loaded')}`);
+  } catch (err) {
+    showMergeMsg('error', `Ошибка загрузки "${preloadLabel(filename)}" в сборку: ${err.message}`);
+  }
+}
+
 function renderPreloadedFiles() {
   preloadList.innerHTML = '';
   PRELOADED_FILES.forEach(f => {
     const btn = document.createElement('button');
     btn.className = 'btn btn-outline btn-small';
     btn.textContent = preloadLabel(f);
-    btn.addEventListener('click', () => loadPreloadedFile(f));
+    btn.addEventListener('click', () => {
+      if (currentMode === 'merge') loadPreloadedToMerge(f);
+      else loadPreloadedFile(f);
+    });
     preloadList.appendChild(btn);
   });
 }
@@ -1604,7 +1625,7 @@ function switchMode(mode) {
     $('calcBtn').classList.remove('hidden');
   } else if (mode === 'merge') {
     $('loader-panel').classList.add('hidden');
-    $('preloadPanel').classList.add('hidden');
+    $('preloadPanel').classList.remove('hidden');
     $('manualPanel').classList.add('hidden');
     $('mergePanel').classList.remove('hidden');
     $('filtersPanel').classList.remove('hidden');
