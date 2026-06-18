@@ -88,20 +88,13 @@ td.pct{color:var(--neon-yellow)}
 
   <div id="mainContent" class="hidden">
     <div class="panel" id="infoPanel">
-      <div class="panel-title i18n" data-key="info_title">Источники данных</div>
-      <div class="row">
-        <span id="fileLabels" style="color:var(--text-dim);font-size:0.9rem"></span>
-        <span id="rowCountInfo" style="color:var(--text-dim);font-size:0.85rem;font-family:var(--font-mono)"></span>
-      </div>
+      <div class="panel-title i18n" data-key="info_title">Информация</div>
+      <span style="color:var(--text-dim);font-size:0.9rem" class="i18n" data-key="info_date">Информация актуальна до 18.06</span>
     </div>
 
     <div class="panel" id="filtersPanel">
       <div class="panel-title i18n" data-key="filters_title">Фильтры и поиск</div>
       <div class="filters-row">
-        <div class="filter-group search-wrap">
-          <label class="i18n" data-key="search">Поиск по нику</label>
-          <input type="text" id="searchInput" placeholder="" class="i18n" data-key="search_placeholder" data-fallback="Введите ник...">
-        </div>
         <div class="filter-group">
           <label class="i18n" data-key="from">С (поз.)</label>
           <input type="number" id="fromInput" value="1" min="1">
@@ -118,15 +111,17 @@ td.pct{color:var(--neon-yellow)}
           <label class="i18n" data-key="max_dkp">Макс. ДКП</label>
           <input type="number" id="maxDkp" min="0">
         </div>
-        <div class="filter-group">
-          <label class="i18n" data-key="goal">Множитель цели</label>
-          <input type="number" id="multiplier" value="1" min="1" step="1">
-        </div>
       </div>
     </div>
 
     <div class="panel" id="tablePanel">
-      <div class="panel-title i18n" data-key="table_title">Таблица ДКП</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div class="panel-title i18n" style="margin-bottom:0" data-key="table_title">Таблица ДКП</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <label for="searchInput" style="margin:0;white-space:nowrap" class="i18n" data-key="search">Поиск:</label>
+          <input type="text" id="searchInput" placeholder="" class="i18n" data-key="search_placeholder" data-fallback="Введите ник..." style="width:200px">
+        </div>
+      </div>
       <div class="table-wrap" id="tableWrap">
         <table>
           <thead>
@@ -206,27 +201,27 @@ const i18nMap = {
   ru: {
     h1:'ДКП СПИСОК ДЛЯ 3901',subtitle:'Автоматическая сборка данных',
     back:'← Главная',loading:'Загрузка данных...',
-    info_title:'Источники данных',filters_title:'Фильтры и поиск',
-    search:'Поиск по нику',search_placeholder:'Введите ник...',
+    info_title:'Информация',info_date:'Информация актуальна до 18.06',filters_title:'Фильтры',
+    search:'Поиск:',search_placeholder:'Введите ник...',
     from:'С (поз.)',to:'По (поз.)',min_dkp:'Мин. ДКП',max_dkp:'Макс. ДКП',
-    goal:'Множитель цели',table_title:'Таблица ДКП',
+    table_title:'Таблица ДКП',
     th_name:'Игрок',th_power:'Мощь',th_maxpower:'Макс. мощь',
     th_kill4:'Уб. T4',th_kill5:'Уб. T5',th_death4:'См. T4',th_death5:'См. T5',
     th_dkp:'ДКП',th_goal:'Цель',th_pct:'%',
-    merged_from:'Сборка из:','of':'из','players_filtered':'Найдено','total_players':'Всего игроков:',
+    'of':'из','players_filtered':'Найдено','total_players':'Всего игроков:',
     sum_dkp:'Сумма ДКП:','loading_err':'Ошибка загрузки данных'
   },
   en: {
     h1:'DKP LIST FOR 3901',subtitle:'Auto-merged data',
     back:'← Home',loading:'Loading data...',
-    info_title:'Data Sources',filters_title:'Filters & Search',
-    search:'Search by name',search_placeholder:'Enter name...',
+    info_title:'Info',info_date:'Info valid until 18.06',filters_title:'Filters',
+    search:'Search:',search_placeholder:'Enter name...',
     from:'From (#)',to:'To (#)',min_dkp:'Min DKP',max_dkp:'Max DKP',
-    goal:'Goal multiplier',table_title:'DKP Table',
+    table_title:'DKP Table',
     th_name:'Player',th_power:'Power',th_maxpower:'Max Power',
     th_kill4:'Kill T4',th_kill5:'Kill T5',th_death4:'Death T4',th_death5:'Death T5',
     th_dkp:'DKP',th_goal:'Goal',th_pct:'%',
-    merged_from:'Merged from:','of':'of','players_filtered':'Found','total_players':'Total players:',
+    'of':'of','players_filtered':'Found','total_players':'Total players:',
     sum_dkp:'Total DKP:','loading_err':'Error loading data'
   }
 };
@@ -241,9 +236,8 @@ function applyLang(){
     const key = el.dataset.key;
     if (key) el.textContent = t(key);
   });
-  document.querySelectorAll('[data-fallback]').forEach(el => {
-    if (!el.value && el.placeholder !== undefined) el.placeholder = t(el.dataset.key);
-  });
+  const searchEl = $('searchInput');
+  if (searchEl) searchEl.placeholder = t('search_placeholder');
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
@@ -299,10 +293,7 @@ async function loadAndMerge(){
     mergedData = Object.values(merged);
     if (mergedData.length === 0) throw new Error('no data after merge');
 
-    $('fileLabels').textContent = t('merged_from') + ' ' + [f1Labels, f2Labels].flat().join(' + ');
-    $('rowCountInfo').textContent = `| ${t('total_players')} ${mergedData.length}`;
     $('toInput').value = mergedData.length;
-    $('multiplier').value = 1;
     $('searchInput').placeholder = t('search_placeholder');
     $('loadingMsg').classList.add('hidden');
     $('mainContent').classList.remove('hidden');
@@ -336,7 +327,7 @@ function renderTable(){
     const v = calcDkp(row); return v <= maxV;
   });
 
-  const mult = parseInt($('multiplier').value) || 1;
+  const mult = 2;
 
   let displayData = filtered.map((row, idx) => {
     const name = getPlayerName(row);
@@ -435,7 +426,6 @@ $('fromInput').addEventListener('input', renderTable);
 $('toInput').addEventListener('input', renderTable);
 $('minDkp').addEventListener('input', renderTable);
 $('maxDkp').addEventListener('input', renderTable);
-$('multiplier').addEventListener('input', renderTable);
 
 document.querySelector('#tableWrap thead').addEventListener('click', e => {
   const th = e.target.closest('th[data-sort]');

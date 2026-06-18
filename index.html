@@ -252,6 +252,10 @@ body::after {
 }
 .card-calendar .card-title{color:#cc66ff}
 
+.btn{font-family:var(--font-body);font-weight:700;font-size:0.95rem;padding:10px 24px;border:none;border-radius:3px;cursor:pointer;text-transform:uppercase;letter-spacing:1.5px;transition:all 0.2s;text-decoration:none;display:inline-block}
+.btn-primary{background:linear-gradient(135deg,var(--neon-yellow),var(--neon-amber));color:#000;box-shadow:0 0 20px rgba(255,230,0,0.3)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(255,230,0,0.5);transform:translateY(-1px)}
+
 .footer {
   margin-top: 40px;
   font-family: var(--font-mono);
@@ -513,14 +517,6 @@ body::after {
       </a>
     </div>
     <div class="card-wrap">
-      <a class="card card-dkplist" href="dkp_list_3901.html">
-        <div class="card-icon"><img src="icons/dkp.png" alt="DKP" style="width:1.6rem;height:1.6rem;vertical-align:middle"></div>
-        <div class="card-title" data-i18n="card13_title">DKP List 3901</div>
-        <div class="card-desc" data-i18n="card13_desc">Готовая таблица ДКП для 3901: сборка 06-07.06 и 10-16.06</div>
-        <div class="tag" data-i18n="card13_tag">Сортировка · Поиск · Готовые данные</div>
-      </a>
-    </div>
-    <div class="card-wrap">
       <a class="card card-list" href="listbuilder.html">
         <div class="card-icon">📋</div>
         <div class="card-title" data-i18n="card11_title">List Builder</div>
@@ -536,6 +532,10 @@ body::after {
         <div class="tag" data-i18n="card5_tag">MGE · WoF · MTG · Ark</div>
       </a>
     </div>
+  </div>
+
+  <div style="text-align:center;margin:24px 0">
+    <a href="dkp_list_3901.html" class="btn btn-primary" data-i18n="dkp_list_btn">[ ДКП СПИСОК 3901 ]</a>
   </div>
 
   <div class="footer">
@@ -585,9 +585,7 @@ const LANG = {
     card12_title: 'Очки действий, гемы, материалы',
     card12_desc: 'Калькулятор для подсчёта общего числа очков действия, материалов и гемов в инвентаре',
     card12_tag: '50 · 100 · 500 · 1000',
-    card13_title: 'ДКП Список 3901',
-    card13_desc: 'Готовая таблица ДКП для 3901: автоматическая сборка 06-07.06 и 10-16.06',
-    card13_tag: 'Сортировка · Поиск · Готовые данные',
+    dkp_list_btn: '[ ДКП СПИСОК 3901 ]',
     calendar_btn: '📅 Календарь',
   },
   en: {
@@ -628,9 +626,7 @@ const LANG = {
     card12_title: 'AP, Gems, Materials',
     card12_desc: 'Calculator for total AP, materials and gems in inventory',
     card12_tag: '50 · 100 · 500 · 1000',
-    card13_title: 'DKP List 3901',
-    card13_desc: 'Ready DKP table for kingdom 3901: auto-merge of 06-07.06 and 10-16.06',
-    card13_tag: 'Sorting · Search · Preloaded data',
+    dkp_list_btn: '[ DKP LIST 3901 ]',
     calendar_btn: '📅 Calendar',
   },
 };
