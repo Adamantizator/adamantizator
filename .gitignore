@@ -3,3 +3,10 @@ equipment_*.json
 __pycache__/
 data_kingdom_collect/
 Авто-паршенные эксели/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
