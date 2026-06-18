@@ -35,7 +35,6 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
 .col-grow{flex:1;min-width:140px}
 input{font-family:var(--font-body);font-size:0.95rem;padding:8px 12px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.25);color:var(--text-primary);border-radius:3px;outline:none;transition:border-color 0.2s}
 input:focus{border-color:var(--neon-yellow);box-shadow:0 0 15px rgba(255,230,0,0.15)}
-label{font-family:var(--font-display);font-size:0.65rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:4px}
 .table-wrap{overflow-x:auto;border:1px solid rgba(0,240,255,0.15);border-radius:3px;background:var(--dark-bg)}
 table{width:100%;border-collapse:collapse;font-family:var(--font-body);font-size:0.9rem}
 thead th{background:linear-gradient(180deg,rgba(255,230,0,0.2),rgba(255,230,0,0.05));color:var(--text-primary);font-family:var(--font-display);font-size:0.65rem;letter-spacing:1.5px;text-transform:uppercase;padding:12px 14px;text-align:left;border-bottom:2px solid var(--neon-yellow);white-space:nowrap;position:sticky;top:0;z-index:1;cursor:pointer;user-select:none}
@@ -59,15 +58,10 @@ td.pct{color:var(--neon-yellow)}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes flicker{0%,82%{opacity:1}86%{opacity:1}90%{opacity:0.85}94%{opacity:1}98%{opacity:0.85}100%{opacity:1}}
 .flicker{animation:flicker 4s infinite}
-.filters-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
-.filters-row .filter-group{display:flex;flex-direction:column;gap:4px}
-.filters-row .filter-group input{width:120px}
-.filters-row .search-wrap{flex:1;min-width:200px}
-.filters-row .search-wrap input{width:100%}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:var(--dark-bg)}
 ::-webkit-scrollbar-thumb{background:var(--neon-yellow);border-radius:3px}
-@media(max-width:768px){.header h1{font-size:1.6rem;letter-spacing:3px}.row,.filters-row{flex-direction:column;align-items:stretch}.filters-row .filter-group input{width:100%}table{font-size:0.7rem}thead th{font-size:0.55rem;padding:6px 4px}tbody td{padding:6px 4px}td.num{font-size:0.65rem}.status-bar{flex-direction:column;gap:4px}.app{padding:10px}.header h1::after{font-size:0.5rem;margin-left:4px}}
+@media(max-width:768px){.header h1{font-size:1.6rem;letter-spacing:3px}table{font-size:0.7rem}thead th{font-size:0.55rem;padding:6px 4px}tbody td{padding:6px 4px}td.num{font-size:0.65rem}.status-bar{flex-direction:column;gap:4px}.app{padding:10px}.header h1::after{font-size:0.5rem;margin-left:4px}}
 #loadingMsg{text-align:center;padding:40px;font-family:var(--font-display);font-size:1rem;color:var(--text-dim);letter-spacing:2px}
 </style>
 </head>
@@ -90,28 +84,6 @@ td.pct{color:var(--neon-yellow)}
     <div class="panel" id="infoPanel">
       <div class="panel-title i18n" data-key="info_title">Информация</div>
       <span style="color:var(--text-dim);font-size:0.9rem" class="i18n" data-key="info_date">Информация актуальна до 18.06</span>
-    </div>
-
-    <div class="panel" id="filtersPanel">
-      <div class="panel-title i18n" data-key="filters_title">Фильтры и поиск</div>
-      <div class="filters-row">
-        <div class="filter-group">
-          <label class="i18n" data-key="from">С (поз.)</label>
-          <input type="number" id="fromInput" value="1" min="1">
-        </div>
-        <div class="filter-group">
-          <label class="i18n" data-key="to">По (поз.)</label>
-          <input type="number" id="toInput" min="1">
-        </div>
-        <div class="filter-group">
-          <label class="i18n" data-key="min_dkp">Мин. ДКП</label>
-          <input type="number" id="minDkp" min="0">
-        </div>
-        <div class="filter-group">
-          <label class="i18n" data-key="max_dkp">Макс. ДКП</label>
-          <input type="number" id="maxDkp" min="0">
-        </div>
-      </div>
     </div>
 
     <div class="panel" id="tablePanel">
@@ -201,9 +173,8 @@ const i18nMap = {
   ru: {
     h1:'ДКП СПИСОК ДЛЯ 3901',subtitle:'Автоматическая сборка данных',
     back:'← Главная',loading:'Загрузка данных...',
-    info_title:'Информация',info_date:'Информация актуальна до 18.06',filters_title:'Фильтры',
+    info_title:'Информация',info_date:'Информация актуальна до 18.06',
     search:'Поиск:',search_placeholder:'Введите ник...',
-    from:'С (поз.)',to:'По (поз.)',min_dkp:'Мин. ДКП',max_dkp:'Макс. ДКП',
     table_title:'Таблица ДКП',
     th_name:'Игрок',th_power:'Мощь',th_maxpower:'Макс. мощь',
     th_kill4:'Уб. T4',th_kill5:'Уб. T5',th_death4:'См. T4',th_death5:'См. T5',
@@ -214,9 +185,8 @@ const i18nMap = {
   en: {
     h1:'DKP LIST FOR 3901',subtitle:'Auto-merged data',
     back:'← Home',loading:'Loading data...',
-    info_title:'Info',info_date:'Info valid until 18.06',filters_title:'Filters',
+    info_title:'Info',info_date:'Info valid until 18.06',
     search:'Search:',search_placeholder:'Enter name...',
-    from:'From (#)',to:'To (#)',min_dkp:'Min DKP',max_dkp:'Max DKP',
     table_title:'DKP Table',
     th_name:'Player',th_power:'Power',th_maxpower:'Max Power',
     th_kill4:'Kill T4',th_kill5:'Kill T5',th_death4:'Death T4',th_death5:'Death T5',
@@ -293,7 +263,6 @@ async function loadAndMerge(){
     mergedData = Object.values(merged);
     if (mergedData.length === 0) throw new Error('no data after merge');
 
-    $('toInput').value = mergedData.length;
     $('searchInput').placeholder = t('search_placeholder');
     $('loadingMsg').classList.add('hidden');
     $('mainContent').classList.remove('hidden');
@@ -308,24 +277,6 @@ function renderTable(){
   let filtered = [...mergedData];
   const q = $('searchInput').value.trim().toLowerCase();
   if (q) filtered = filtered.filter(row => getPlayerName(row).toLowerCase().includes(q));
-
-  const totalRows = filtered.length;
-  let from = parseInt($('fromInput').value) || 1;
-  let to = parseInt($('toInput').value) || totalRows;
-  if (from < 1) from = 1;
-  if (to > totalRows) to = totalRows;
-  if (from > to) [from, to] = [to, from];
-
-  filtered = filtered.slice(from - 1, to);
-
-  const minV = parseFloat($('minDkp').value);
-  if ($('minDkp').value !== '' && !isNaN(minV)) filtered = filtered.filter(row => {
-    const v = calcDkp(row); return v >= minV;
-  });
-  const maxV = parseFloat($('maxDkp').value);
-  if ($('maxDkp').value !== '' && !isNaN(maxV)) filtered = filtered.filter(row => {
-    const v = calcDkp(row); return v <= maxV;
-  });
 
   const mult = 2;
 
@@ -422,10 +373,6 @@ function calcDkp(row){
 
 // Event listeners
 $('searchInput').addEventListener('input', renderTable);
-$('fromInput').addEventListener('input', renderTable);
-$('toInput').addEventListener('input', renderTable);
-$('minDkp').addEventListener('input', renderTable);
-$('maxDkp').addEventListener('input', renderTable);
 
 document.querySelector('#tableWrap thead').addEventListener('click', e => {
   const th = e.target.closest('th[data-sort]');
