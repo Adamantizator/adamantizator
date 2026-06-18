@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ДКП Список для 3901 — v2.0</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--neon-yellow:#ffe600;--neon-gold:#ffdd00;--neon-amber:#ffb300;--neon-red:#ff1030;--neon-crimson:#cc0033;--neon-white:#ffffff;--neon-cream:#fff8dc;--dark-bg:#0a0a0f;--panel-bg:#12121a;--card-bg:#1a1a2e;--input-bg:#0d0d1a;--border-glow:rgba(255,230,0,0.3);--text-primary:#fff8dc;--text-dim:#e0d8b0;--text-muted:#c0b080;--font-display:'Orbitron',monospace;--font-body:'Rajdhani',sans-serif;--font-mono:'Fira Code',monospace}
+body{background:var(--dark-bg);color:var(--text-primary);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(rgba(255,230,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,230,0,0.05) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px);pointer-events:none;z-index:1}
+.app{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:20px}
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:8px;z-index:10}
+.lang-btn,.cal-btn{font-family:var(--font-display);font-size:0.65rem;padding:6px 12px;border:1px solid var(--neon-yellow);background:transparent;color:var(--neon-yellow);cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all 0.2s;text-decoration:none}
+.lang-btn.active,.lang-btn:hover,.cal-btn:hover{background:rgba(255,230,0,0.1);box-shadow:0 0 20px rgba(255,230,0,0.2)}
+.header{text-align:center;padding:30px 0 20px}
+.header h1{font-family:var(--font-display);font-size:2.6rem;font-weight:900;text-transform:uppercase;letter-spacing:6px;background:linear-gradient(135deg,var(--neon-yellow),var(--neon-amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 30px rgba(255,230,0,0.4))}
+.header h1::after{content:'v2.0';font-size:0.7rem;letter-spacing:2px;-webkit-text-fill-color:var(--neon-yellow);vertical-align:super;margin-left:8px}
+.header .subtitle{font-family:var(--font-display);font-size:0.75rem;letter-spacing:8px;color:var(--text-dim);margin-top:8px;text-transform:uppercase}
+.glitch-line{height:2px;background:linear-gradient(90deg,transparent,var(--neon-yellow),var(--neon-gold),transparent);margin:10px 0 0;box-shadow:0 0 20px rgba(255,230,0,0.4)}
+.panel{background:var(--panel-bg);border:1px solid var(--border-glow);border-radius:4px;padding:20px;margin-bottom:16px;box-shadow:0 0 20px rgba(255,230,0,0.06),inset 0 0 30px rgba(255,230,0,0.03)}
+.panel-title{font-family:var(--font-display);font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--neon-yellow);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.panel-title::before{content:'>';color:var(--neon-gold);font-weight:700}
+.btn{font-family:var(--font-body);font-weight:700;font-size:0.95rem;padding:10px 24px;border:none;border-radius:3px;cursor:pointer;text-transform:uppercase;letter-spacing:1.5px;transition:all 0.2s}
+.btn-primary{background:linear-gradient(135deg,var(--neon-yellow),var(--neon-amber));color:#000;box-shadow:0 0 20px rgba(255,230,0,0.3)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(255,230,0,0.5);transform:translateY(-1px)}
+.btn-small{font-size:0.75rem;padding:6px 14px;letter-spacing:1px}
+.btn-outline{background:transparent;border:1px solid var(--neon-yellow);color:var(--neon-yellow)}
+.btn-outline:hover{background:rgba(255,230,0,0.1);box-shadow:0 0 20px rgba(255,230,0,0.2)}
+.row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.col{display:flex;flex-direction:column;gap:6px}
+.col-grow{flex:1;min-width:140px}
+input{font-family:var(--font-body);font-size:0.95rem;padding:8px 12px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.25);color:var(--text-primary);border-radius:3px;outline:none;transition:border-color 0.2s}
+input:focus{border-color:var(--neon-yellow);box-shadow:0 0 15px rgba(255,230,0,0.15)}
+label{font-family:var(--font-display);font-size:0.65rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:4px}
+.table-wrap{overflow-x:auto;border:1px solid rgba(0,240,255,0.15);border-radius:3px;background:var(--dark-bg)}
+table{width:100%;border-collapse:collapse;font-family:var(--font-body);font-size:0.9rem}
+thead th{background:linear-gradient(180deg,rgba(255,230,0,0.2),rgba(255,230,0,0.05));color:var(--text-primary);font-family:var(--font-display);font-size:0.65rem;letter-spacing:1.5px;text-transform:uppercase;padding:12px 14px;text-align:left;border-bottom:2px solid var(--neon-yellow);white-space:nowrap;position:sticky;top:0;z-index:1;cursor:pointer;user-select:none}
+thead th:hover{background:rgba(255,230,0,0.15)}
+tbody tr{border-bottom:1px solid rgba(255,230,0,0.06);transition:background 0.15s}
+tbody tr:hover{background:rgba(255,230,0,0.04)}
+tbody tr:nth-child(even){background:rgba(255,230,0,0.02)}
+tbody tr:nth-child(even):hover{background:rgba(255,230,0,0.04)}
+tbody td{padding:10px 14px;white-space:nowrap}
+td.num{text-align:right;font-family:var(--font-mono);font-size:0.85rem}
+td.center{text-align:center}
+td.player{color:var(--neon-yellow);font-weight:600}
+td.pct{color:var(--neon-yellow)}
+.status-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.1);border-radius:3px;margin-top:12px;font-family:var(--font-mono);font-size:0.85rem}
+.status-bar .sum{color:var(--neon-yellow);font-weight:600}
+.status-bar .count{color:var(--text-dim)}
+.msg-info{padding:10px 16px;background:rgba(0,240,255,0.08);border-left:3px solid var(--neon-yellow);color:var(--neon-yellow);border-radius:2px;margin:8px 0;font-size:0.9rem}
+.msg-error{padding:10px 16px;background:rgba(255,45,149,0.08);border-left:3px solid var(--neon-red);color:var(--neon-red);border-radius:2px;margin:8px 0;font-size:0.9rem}
+.hidden{display:none!important}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,16,48,0.2);border-top-color:var(--neon-red);border-radius:50%;animation:spin 0.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes flicker{0%,82%{opacity:1}86%{opacity:1}90%{opacity:0.85}94%{opacity:1}98%{opacity:0.85}100%{opacity:1}}
+.flicker{animation:flicker 4s infinite}
+.filters-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.filters-row .filter-group{display:flex;flex-direction:column;gap:4px}
+.filters-row .filter-group input{width:120px}
+.filters-row .search-wrap{flex:1;min-width:200px}
+.filters-row .search-wrap input{width:100%}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--dark-bg)}
+::-webkit-scrollbar-thumb{background:var(--neon-yellow);border-radius:3px}
+@media(max-width:768px){.header h1{font-size:1.6rem;letter-spacing:3px}.row,.filters-row{flex-direction:column;align-items:stretch}.filters-row .filter-group input{width:100%}table{font-size:0.7rem}thead th{font-size:0.55rem;padding:6px 4px}tbody td{padding:6px 4px}td.num{font-size:0.65rem}.status-bar{flex-direction:column;gap:4px}.app{padding:10px}.header h1::after{font-size:0.5rem;margin-left:4px}}
+#loadingMsg{text-align:center;padding:40px;font-family:var(--font-display);font-size:1rem;color:var(--text-dim);letter-spacing:2px}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <button class="lang-btn active" data-lang="ru">RU</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
+<div class="app">
+  <header class="header flicker">
+    <div style="text-align:left;margin-bottom:4px"><a href="index.html" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-decoration:none;letter-spacing:1px" class="i18n" data-key="back">← Главная</a></div>
+    <h1 class="i18n" data-key="h1">DKP LIST FOR 3901</h1>
+    <div class="subtitle i18n" data-key="subtitle">Автоматическая сборка данных</div>
+    <div class="glitch-line"></div>
+  </header>
+
+  <div id="loadingMsg"><span class="spinner"></span> <span class="i18n" data-key="loading">Загрузка данных...</span></div>
+
+  <div id="mainContent" class="hidden">
+    <div class="panel" id="infoPanel">
+      <div class="panel-title i18n" data-key="info_title">Источники данных</div>
+      <div class="row">
+        <span id="fileLabels" style="color:var(--text-dim);font-size:0.9rem"></span>
+        <span id="rowCountInfo" style="color:var(--text-dim);font-size:0.85rem;font-family:var(--font-mono)"></span>
+      </div>
+    </div>
+
+    <div class="panel" id="filtersPanel">
+      <div class="panel-title i18n" data-key="filters_title">Фильтры и поиск</div>
+      <div class="filters-row">
+        <div class="filter-group search-wrap">
+          <label class="i18n" data-key="search">Поиск по нику</label>
+          <input type="text" id="searchInput" placeholder="" class="i18n" data-key="search_placeholder" data-fallback="Введите ник...">
+        </div>
+        <div class="filter-group">
+          <label class="i18n" data-key="from">С (поз.)</label>
+          <input type="number" id="fromInput" value="1" min="1">
+        </div>
+        <div class="filter-group">
+          <label class="i18n" data-key="to">По (поз.)</label>
+          <input type="number" id="toInput" min="1">
+        </div>
+        <div class="filter-group">
+          <label class="i18n" data-key="min_dkp">Мин. ДКП</label>
+          <input type="number" id="minDkp" min="0">
+        </div>
+        <div class="filter-group">
+          <label class="i18n" data-key="max_dkp">Макс. ДКП</label>
+          <input type="number" id="maxDkp" min="0">
+        </div>
+        <div class="filter-group">
+          <label class="i18n" data-key="goal">Множитель цели</label>
+          <input type="number" id="multiplier" value="1" min="1" step="1">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="tablePanel">
+      <div class="panel-title i18n" data-key="table_title">Таблица ДКП</div>
+      <div class="table-wrap" id="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="center" data-sort="idx">#</th>
+              <th data-sort="name" class="i18n" data-key="th_name">Игрок</th>
+              <th data-sort="power" class="i18n" data-key="th_power">Мощь</th>
+              <th data-sort="maxpower" class="i18n" data-key="th_maxpower">Макс. мощь</th>
+              <th data-sort="kill4" class="i18n" data-key="th_kill4">Уб. T4</th>
+              <th data-sort="kill5" class="i18n" data-key="th_kill5">Уб. T5</th>
+              <th data-sort="death4" class="i18n" data-key="th_death4">См. T4</th>
+              <th data-sort="death5" class="i18n" data-key="th_death5">См. T5</th>
+              <th data-sort="dkp" class="i18n" data-key="th_dkp">ДКП</th>
+              <th data-sort="goal" class="i18n" data-key="th_goal">Цель</th>
+              <th data-sort="pct" class="i18n" data-key="th_pct">%</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="status-bar">
+        <span class="sum" id="sumDisplay"></span>
+        <span class="count" id="countDisplay"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FILES = ['06-07.06-2026_3901.xlsx', '10-16.06-2026_3901.xlsx'];
+const SUM_COLS = ['Смерти T4','Смерти T5','Убийства T4','Убийства T5','Суммарные очки убийств'];
+const COL_ALIASES = {
+  'Смерти T4':'T4 Deaths','Смерти T5':'T5 Deaths','Убийства T4':'T4 Kills','Убийства T5':'T5 Kills',
+  'Мощь':'Power','Макс. мощь':'Highest Power'
+};
+const ALIAS_KEYS = {
+  'dead_t4':'Смерти T4','dead_t5':'Смерти T5','t4':'Убийства T4','t5':'Убийства T5',
+  'power':'Мощь','max_power':'Макс. мощь','kill':'Суммарные очки убийств'
+};
+
+function normalizeRowSchema(row){
+  const SCHEMA_MAP = {
+    'id':'id','ID':'id','ID персонажа':'id',
+    'name':'name','Имя пользователя':'name','Ник':'name','Username':'name','Nick':'name','Player':'name','Имя':'name',
+    'Смерти T4':'Смерти T4','T4 Deaths':'Смерти T4','deaths_t4':'Смерти T4','dead_t4':'Смерти T4',
+    'Смерти T5':'Смерти T5','T5 Deaths':'Смерти T5','deaths_t5':'Смерти T5','dead_t5':'Смерти T5',
+    'Убийства T4':'Убийства T4','T4 Kills':'Убийства T4','kills_t4':'Убийства T4','t4':'Убийства T4',
+    'Убийства T5':'Убийства T5','T5 Kills':'Убийства T5','kills_t5':'Убийства T5','t5':'Убийства T5',
+    'Мощь':'Мощь','Power':'Мощь','power':'Мощь',
+    'Макс. мощь':'Макс. мощь','Highest Power':'Макс. мощь','max_power':'Макс. мощь','Максимальная мощь':'Макс. мощь',
+    'Суммарные очки убийств':'Суммарные очки убийств','kill':'Суммарные очки убийств'
+  };
+  const norm = {};
+  for (const [orig, common] of Object.entries(SCHEMA_MAP)) {
+    if (orig in row) { norm[common] = row[orig]; if (common !== orig) delete row[orig]; }
+  }
+  for (const key of Object.keys(row)) { if (!(key in norm)) norm[key] = row[key]; }
+  return norm;
+}
+
+function getPlayerName(row) {
+  const names = ['Имя пользователя','Ник','Игрок','Username','Nick','Player','Name','name','Имя'];
+  for (const n of names) {
+    if (row[n] !== undefined && row[n] !== null && String(row[n]).trim() !== '') return String(row[n]).trim();
+  }
+  return 'Unknown';
+}
+
+function fmtNum(n) {
+  const v = typeof n === 'number' ? Math.round(n) : parseInt(n) || 0;
+  return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+const $ = id => document.getElementById(id);
+
+const i18nMap = {
+  ru: {
+    h1:'ДКП СПИСОК ДЛЯ 3901',subtitle:'Автоматическая сборка данных',
+    back:'← Главная',loading:'Загрузка данных...',
+    info_title:'Источники данных',filters_title:'Фильтры и поиск',
+    search:'Поиск по нику',search_placeholder:'Введите ник...',
+    from:'С (поз.)',to:'По (поз.)',min_dkp:'Мин. ДКП',max_dkp:'Макс. ДКП',
+    goal:'Множитель цели',table_title:'Таблица ДКП',
+    th_name:'Игрок',th_power:'Мощь',th_maxpower:'Макс. мощь',
+    th_kill4:'Уб. T4',th_kill5:'Уб. T5',th_death4:'См. T4',th_death5:'См. T5',
+    th_dkp:'ДКП',th_goal:'Цель',th_pct:'%',
+    merged_from:'Сборка из:','of':'из','players_filtered':'Найдено','total_players':'Всего игроков:',
+    sum_dkp:'Сумма ДКП:','loading_err':'Ошибка загрузки данных'
+  },
+  en: {
+    h1:'DKP LIST FOR 3901',subtitle:'Auto-merged data',
+    back:'← Home',loading:'Loading data...',
+    info_title:'Data Sources',filters_title:'Filters & Search',
+    search:'Search by name',search_placeholder:'Enter name...',
+    from:'From (#)',to:'To (#)',min_dkp:'Min DKP',max_dkp:'Max DKP',
+    goal:'Goal multiplier',table_title:'DKP Table',
+    th_name:'Player',th_power:'Power',th_maxpower:'Max Power',
+    th_kill4:'Kill T4',th_kill5:'Kill T5',th_death4:'Death T4',th_death5:'Death T5',
+    th_dkp:'DKP',th_goal:'Goal',th_pct:'%',
+    merged_from:'Merged from:','of':'of','players_filtered':'Found','total_players':'Total players:',
+    sum_dkp:'Total DKP:','loading_err':'Error loading data'
+  }
+};
+let lang = 'ru';
+
+function t(key){
+  return (i18nMap[lang] && i18nMap[lang][key]) || key;
+}
+
+function applyLang(){
+  document.querySelectorAll('.i18n').forEach(el => {
+    const key = el.dataset.key;
+    if (key) el.textContent = t(key);
+  });
+  document.querySelectorAll('[data-fallback]').forEach(el => {
+    if (!el.value && el.placeholder !== undefined) el.placeholder = t(el.dataset.key);
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.documentElement.lang = lang;
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    lang = btn.dataset.lang;
+    applyLang();
+    renderTable();
+  });
+});
+
+let mergedData = [];
+let currentSort = { col: 'dkp', dir: 'desc' };
+
+async function loadAndMerge(){
+  try {
+    const loadFile = async (name) => {
+      const resp = await fetch(`data/${encodeURIComponent(name)}`);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const buf = await resp.arrayBuffer();
+      const wb = XLSX.read(buf, {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(ws, {defval:''});
+      if (!json || json.length === 0) throw new Error('empty');
+      return json.map(normalizeRowSchema);
+    };
+
+    const f1 = await loadFile(FILES[0]);
+    const f2 = await loadFile(FILES[1]);
+
+    const f1Labels = [FILES[0].replace(/\.[^.]+$/,'')];
+    const f2Labels = [FILES[1].replace(/\.[^.]+$/,'')];
+
+    const merged = {};
+    [f1, f2].forEach((data, fi) => {
+      data.forEach(row => {
+        const id = String(row['id'] || '');
+        if (!id || id === 'undefined') return;
+        if (!merged[id]) {
+          merged[id] = {...row};
+        } else {
+          SUM_COLS.forEach(key => {
+            const v = parseFloat(row[key]);
+            if (!isNaN(v)) merged[id][key] = (parseFloat(merged[id][key]) || 0) + v;
+          });
+        }
+      });
+    });
+
+    mergedData = Object.values(merged);
+    if (mergedData.length === 0) throw new Error('no data after merge');
+
+    $('fileLabels').textContent = t('merged_from') + ' ' + [f1Labels, f2Labels].flat().join(' + ');
+    $('rowCountInfo').textContent = `| ${t('total_players')} ${mergedData.length}`;
+    $('toInput').value = mergedData.length;
+    $('multiplier').value = 1;
+    $('searchInput').placeholder = t('search_placeholder');
+    $('loadingMsg').classList.add('hidden');
+    $('mainContent').classList.remove('hidden');
+    applyLang();
+    renderTable();
+  } catch(err){
+    $('loadingMsg').innerHTML = `<span style="color:var(--neon-red)">${t('loading_err')}: ${err.message}</span>`;
+  }
+}
+
+function renderTable(){
+  let filtered = [...mergedData];
+  const q = $('searchInput').value.trim().toLowerCase();
+  if (q) filtered = filtered.filter(row => getPlayerName(row).toLowerCase().includes(q));
+
+  const totalRows = filtered.length;
+  let from = parseInt($('fromInput').value) || 1;
+  let to = parseInt($('toInput').value) || totalRows;
+  if (from < 1) from = 1;
+  if (to > totalRows) to = totalRows;
+  if (from > to) [from, to] = [to, from];
+
+  filtered = filtered.slice(from - 1, to);
+
+  const minV = parseFloat($('minDkp').value);
+  if ($('minDkp').value !== '' && !isNaN(minV)) filtered = filtered.filter(row => {
+    const v = calcDkp(row); return v >= minV;
+  });
+  const maxV = parseFloat($('maxDkp').value);
+  if ($('maxDkp').value !== '' && !isNaN(maxV)) filtered = filtered.filter(row => {
+    const v = calcDkp(row); return v <= maxV;
+  });
+
+  const mult = parseInt($('multiplier').value) || 1;
+
+  let displayData = filtered.map((row, idx) => {
+    const name = getPlayerName(row);
+    const dkpVal = calcDkp(row);
+    const powerVal = parseInt(row['Мощь']) || 0;
+    const maxPowerVal = parseInt(row['Макс. мощь']) || powerVal;
+    const normVal = powerVal * mult;
+    const pct = normVal > 0 ? (dkpVal / normVal * 100) : 0;
+    const killsT4 = parseInt(row['Убийства T4']) || 0;
+    const killsT5 = parseInt(row['Убийства T5']) || 0;
+    const deathsT4 = parseInt(row['Смерти T4']) || 0;
+    const deathsT5 = parseInt(row['Смерти T5']) || 0;
+    return { idx, name, dkpVal, powerVal, maxPowerVal, normVal, pct, killsT4, killsT5, deathsT4, deathsT5 };
+  });
+
+  if (currentSort.dir !== 'none' && currentSort.col) {
+    displayData.sort((a, b) => {
+      let va, vb;
+      switch (currentSort.col) {
+        case 'idx': va=a.idx; vb=b.idx; break;
+        case 'name': va=a.name.toLowerCase(); vb=b.name.toLowerCase(); break;
+        case 'power': va=a.powerVal; vb=b.powerVal; break;
+        case 'maxpower': va=a.maxPowerVal; vb=b.maxPowerVal; break;
+        case 'kill4': va=a.killsT4; vb=b.killsT4; break;
+        case 'kill5': va=a.killsT5; vb=b.killsT5; break;
+        case 'death4': va=a.deathsT4; vb=b.deathsT4; break;
+        case 'death5': va=a.deathsT5; vb=b.deathsT5; break;
+        case 'dkp': va=a.dkpVal; vb=b.dkpVal; break;
+        case 'goal': va=a.normVal; vb=b.normVal; break;
+        case 'pct': va=a.pct; vb=b.pct; break;
+        default: return 0;
+      }
+      if (typeof va === 'number') return currentSort.dir === 'asc' ? va - vb : vb - va;
+      return currentSort.dir === 'asc' ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+    });
+  }
+
+  const arrow = col => currentSort.col === col ? (currentSort.dir === 'asc' ? ' ▲' : ' ▼') : '';
+  document.querySelectorAll('#tableWrap thead th[data-sort]').forEach(th => {
+    const col = th.dataset.sort;
+    const keyMap = { name:'th_name', power:'th_power', maxpower:'th_maxpower', kill4:'th_kill4', kill5:'th_kill5', death4:'th_death4', death5:'th_death5', dkp:'th_dkp', goal:'th_goal', pct:'th_pct' };
+    const base = col === 'idx' ? '#' : t(keyMap[col] || col);
+    th.textContent = base + arrow(col);
+  });
+
+  const totalSum = displayData.reduce((s, d) => s + d.dkpVal, 0);
+  const tbody = $('tableBody');
+  tbody.innerHTML = '';
+  displayData.forEach((d, pos) => {
+    const place = pos + 1;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="center">${place}</td>
+      <td class="player">${d.name}</td>
+      <td class="num">${fmtNum(d.powerVal)}</td>
+      <td class="num">${fmtNum(d.maxPowerVal)}</td>
+      <td class="num">${fmtNum(d.killsT4)}</td>
+      <td class="num">${fmtNum(d.killsT5)}</td>
+      <td class="num">${fmtNum(d.deathsT4)}</td>
+      <td class="num">${fmtNum(d.deathsT5)}</td>
+      <td class="num">${fmtNum(d.dkpVal)}</td>
+      <td class="num">${fmtNum(d.normVal)}</td>
+      <td class="num pct">${d.pct.toFixed(2)}%</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Apply search to rendered rows
+  const sq = $('searchInput').value.trim().toLowerCase();
+  let visibleCount = 0;
+  tbody.querySelectorAll('tr').forEach(tr => {
+    const nameCell = tr.querySelector('td.player');
+    if (!nameCell) return;
+    const match = !sq || nameCell.textContent.toLowerCase().includes(sq);
+    tr.style.display = match ? '' : 'none';
+    if (match) visibleCount++;
+  });
+  const totalRendered = tbody.querySelectorAll('tr').length;
+  $('sumDisplay').textContent = `${t('sum_dkp')} ${fmtNum(totalSum)}`;
+  $('countDisplay').textContent = sq
+    ? `${t('players_filtered')} ${visibleCount} ${t('of')} ${totalRendered}`
+    : `${t('total_players')} ${totalRendered}`;
+}
+
+function calcDkp(row){
+  const d4 = parseFloat(row['Смерти T4']) || 0;
+  const d5 = parseFloat(row['Смерти T5']) || 0;
+  const k4 = parseFloat(row['Убийства T4']) || 0;
+  const k5 = parseFloat(row['Убийства T5']) || 0;
+  return d4 * 30 + d5 * 30 + k4 * 10 + k5 * 20;
+}
+
+// Event listeners
+$('searchInput').addEventListener('input', renderTable);
+$('fromInput').addEventListener('input', renderTable);
+$('toInput').addEventListener('input', renderTable);
+$('minDkp').addEventListener('input', renderTable);
+$('maxDkp').addEventListener('input', renderTable);
+$('multiplier').addEventListener('input', renderTable);
+
+document.querySelector('#tableWrap thead').addEventListener('click', e => {
+  const th = e.target.closest('th[data-sort]');
+  if (!th) return;
+  const col = th.dataset.sort;
+  if (currentSort.col === col) {
+    currentSort.dir = currentSort.dir === 'none' ? 'asc' : currentSort.dir === 'asc' ? 'desc' : 'none';
+  } else {
+    currentSort.col = col;
+    currentSort.dir = 'asc';
+  }
+  renderTable();
+});
+
+loadAndMerge();
+</script>
+</body>
+</html>
