@@ -13,9 +13,13 @@ body{background:var(--dark-bg);color:var(--text-primary);font-family:var(--font-
 body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(rgba(255,230,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,230,0,0.05) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
 body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px);pointer-events:none;z-index:1}
 .app{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:20px}
-.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:8px;z-index:10}
-.lang-btn,.cal-btn{font-family:var(--font-display);font-size:0.65rem;padding:6px 12px;border:1px solid var(--neon-yellow);background:transparent;color:var(--neon-yellow);cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all 0.2s;text-decoration:none}
-.lang-btn.active,.lang-btn:hover,.cal-btn:hover{background:rgba(255,230,0,0.1);box-shadow:0 0 20px rgba(255,230,0,0.2)}
+.lang-switch{position:fixed;top:2px;right:8px;display:flex;gap:2px;z-index:10}
+.lang-btn{font-family:var(--font-mono);font-size:0.6rem;padding:3px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.2);color:var(--text-muted);cursor:pointer;transition:all 0.2s;text-transform:uppercase;letter-spacing:1px}
+.lang-btn:first-child{border-radius:3px 0 0 3px}
+.lang-btn:last-child{border-radius:0 3px 3px 0}
+.lang-btn.active{background:var(--neon-yellow);color:#000;border-color:var(--neon-yellow)}
+.cal-btn{font-family:var(--font-display);font-size:0.6rem;padding:3px 8px;background:var(--input-bg);border:1px solid rgba(255,230,0,0.2);color:var(--text-muted);cursor:pointer;text-decoration:none;text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;margin-right:2px}
+.cal-btn:hover{border-color:var(--neon-yellow);color:var(--neon-yellow)}
 .header{text-align:center;padding:30px 0 20px}
 .header h1{font-family:var(--font-display);font-size:2.6rem;font-weight:900;text-transform:uppercase;letter-spacing:6px;background:linear-gradient(135deg,var(--neon-yellow),var(--neon-amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 30px rgba(255,230,0,0.4))}
 .header h1::after{content:'v2.0';font-size:0.7rem;letter-spacing:2px;-webkit-text-fill-color:var(--neon-yellow);vertical-align:super;margin-left:8px}
@@ -67,6 +71,7 @@ td.pct{color:var(--neon-yellow)}
 </head>
 <body>
 <div class="lang-switch">
+  <a href="calendar.html" class="cal-btn" data-i18n="calendar_btn">📅 Calendar</a>
   <button class="lang-btn active" data-lang="ru">RU</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
