@@ -10,17 +10,17 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --neon-magenta: #ff00aa;
-  --neon-coral: #ff6633;
-  --neon-pink: #ff3399;
+  --neon-yellow: #ffe600;
+  --neon-gold: #ffdd00;
+  --neon-amber: #ffb300;
   --neon-red: #ff1030;
   --neon-green: #00ff88;
-  --neon-orange: #ff4400;
+  --neon-cyan: #00f0ff;
   --dark-bg: #0a0a0f;
   --panel-bg: #12121a;
   --card-bg: #1a1a2e;
   --input-bg: #0d0d1a;
-  --border-glow: rgba(255, 0, 170, 0.3);
+  --border-glow: rgba(255, 230, 0, 0.3);
   --text-primary: #fff8dc;
   --text-dim: #e0d8b0;
   --text-muted: #c0b080;
@@ -41,8 +41,8 @@ body::before {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background:
-    linear-gradient(rgba(200, 0, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(200, 0, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(255, 230, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 230, 0, 0.05) 1px, transparent 1px);
   background-size: 40px 40px;
   pointer-events: none;
   z-index: 0;
@@ -65,10 +65,10 @@ body::after {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 4px;
-  background: linear-gradient(135deg, var(--neon-magenta), var(--neon-pink));
+  background: linear-gradient(135deg, var(--neon-yellow), var(--neon-amber));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 30px rgba(200, 0, 255, 0.4));
+  filter: drop-shadow(0 0 30px rgba(255, 230, 0, 0.4));
 }
 .header .subtitle {
   font-family: var(--font-display);
@@ -80,9 +80,9 @@ body::after {
 }
 .glitch-line {
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--neon-magenta), var(--neon-coral), transparent);
+  background: linear-gradient(90deg, transparent, var(--neon-yellow), var(--neon-gold), transparent);
   margin: 12px 0 0;
-  box-shadow: 0 0 20px rgba(200, 0, 255, 0.4);
+  box-shadow: 0 0 20px rgba(255, 230, 0, 0.4);
 }
 
 @keyframes flicker {
@@ -106,12 +106,12 @@ body::after {
 .flicker-glow-text { animation: flicker-glow-text 4s infinite; }
 
 @keyframes flicker-glow {
-  0%, 82% { box-shadow: 0 0 30px rgba(200, 0, 255, 0.2), inset 0 0 40px rgba(200, 0, 255, 0.05); }
-  86% { box-shadow: 0 0 30px rgba(200, 0, 255, 0.2), inset 0 0 40px rgba(200, 0, 255, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
-  90% { box-shadow: 0 0 30px rgba(200, 0, 255, 0.2), inset 0 0 40px rgba(200, 0, 255, 0.05); }
-  94% { box-shadow: 0 0 30px rgba(200, 0, 255, 0.2), inset 0 0 40px rgba(200, 0, 255, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
-  98% { box-shadow: 0 0 30px rgba(200, 0, 255, 0.2), inset 0 0 40px rgba(200, 0, 255, 0.05); }
-  100% { box-shadow: 0 0 30px rgba(200, 0, 255, 0.2), inset 0 0 40px rgba(200, 0, 255, 0.05); }
+  0%, 82% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  86% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
+  90% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  94% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05), 0 0 15px rgba(255, 16, 48, 0.5), 0 0 40px rgba(255, 16, 48, 0.2); }
+  98% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
+  100% { box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05); }
 }
 .flicker-glow { animation: flicker-glow 4s infinite; }
 
@@ -122,26 +122,26 @@ body::after {
 .lang-btn {
   font-family: var(--font-mono); font-size: 0.6rem;
   padding: 3px 8px; background: var(--input-bg);
-  border: 1px solid rgba(200, 0, 255, 0.2);
+  border: 1px solid rgba(255, 230, 0, 0.2);
   color: var(--text-muted); cursor: pointer;
   transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;
 }
 .lang-btn:first-child { border-radius: 3px 0 0 3px; }
 .lang-btn:last-child { border-radius: 0 3px 3px 0; }
-.lang-btn.active { background: var(--neon-magenta); color: #000; border-color: var(--neon-magenta); }
-.lang-btn:hover:not(.active) { border-color: var(--neon-magenta); }
+.lang-btn.active { background: var(--neon-yellow); color: #000; border-color: var(--neon-yellow); }
+.lang-btn:hover:not(.active) { border-color: var(--neon-yellow); }
 
 .cyber-banner-small {
   width: 100%; max-width: 120px;
   margin: 0 auto 20px; border-radius: 50%; overflow: hidden;
-  border: 2px solid rgba(200, 0, 255, 0.3);
-  box-shadow: 0 0 30px rgba(200, 0, 255, 0.2), inset 0 0 40px rgba(200, 0, 255, 0.05);
+  border: 2px solid rgba(255, 230, 0, 0.3);
+  box-shadow: 0 0 30px rgba(255, 230, 0, 0.2), inset 0 0 40px rgba(255, 230, 0, 0.05);
   position: relative; background: var(--panel-bg); padding: 8px;
 }
 .cyber-banner-small::before {
   content: ''; position: absolute;
   top: -5px; left: -5px; right: -5px; bottom: -5px; border-radius: 50%;
-  background: linear-gradient(45deg, rgba(200, 0, 255, 0.1), transparent, rgba(200, 0, 255, 0.1));
+  background: linear-gradient(45deg, rgba(255, 230, 0, 0.1), transparent, rgba(255, 230, 0, 0.1));
   animation: rotate 8s linear infinite; pointer-events: none;
 }
 .cyber-banner-small img {
@@ -151,7 +151,7 @@ body::after {
 .cyber-banner-small::after {
   content: ''; position: absolute;
   top: 8px; left: 8px; right: 8px; bottom: 8px; border-radius: 50%;
-  background: linear-gradient(135deg, rgba(200, 0, 255, 0.1), transparent 45%, transparent 55%, rgba(200, 0, 255, 0.03));
+  background: linear-gradient(135deg, rgba(255, 230, 0, 0.1), transparent 45%, transparent 55%, rgba(255, 230, 0, 0.03));
   animation: shimmer 6s linear infinite; pointer-events: none; z-index: 2;
 }
 @keyframes shimmer { to { transform: rotate(360deg); } }
@@ -163,20 +163,20 @@ body::after {
   border-radius: 4px;
   padding: 20px;
   margin-bottom: 16px;
-  box-shadow: 0 0 20px rgba(200, 0, 255, 0.06), inset 0 0 30px rgba(200, 0, 255, 0.03);
+  box-shadow: 0 0 20px rgba(255, 230, 0, 0.06), inset 0 0 30px rgba(255, 230, 0, 0.03);
 }
 .panel-title {
   font-family: var(--font-display);
   font-size: 0.7rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--neon-magenta);
+  color: var(--neon-yellow);
   margin-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.panel-title::before { content: '>'; color: var(--neon-coral); font-weight: 700; }
+.panel-title::before { content: '>'; color: var(--neon-gold); font-weight: 700; }
 
 /* NAVIGATION */
 .cal-nav {
@@ -197,7 +197,7 @@ body::after {
   font-size: 0.8rem;
   padding: 6px 12px;
   background: var(--input-bg);
-  border: 1px solid rgba(200, 0, 255, 0.2);
+  border: 1px solid rgba(255, 230, 0, 0.2);
   color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s;
@@ -205,14 +205,14 @@ body::after {
   user-select: none;
 }
 .nav-btn:hover {
-  border-color: var(--neon-magenta);
-  box-shadow: 0 0 15px rgba(200, 0, 255, 0.1);
+  border-color: var(--neon-yellow);
+  box-shadow: 0 0 15px rgba(255, 230, 0, 0.1);
 }
 .nav-label {
   font-family: var(--font-display);
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--neon-magenta);
+  color: var(--neon-yellow);
   min-width: 90px;
   text-align: center;
   letter-spacing: 2px;
@@ -227,7 +227,7 @@ body::after {
   background: var(--input-bg);
   padding: 6px 12px;
   border-radius: 3px;
-  border: 1px solid rgba(200, 0, 255, 0.1);
+  border: 1px solid rgba(255, 230, 0, 0.1);
 }
 .click-hint {
   font-family: var(--font-display);
@@ -254,12 +254,12 @@ body::after {
   color: var(--text-muted);
   text-align: center;
   padding: 8px 2px;
-  border-bottom: 1px solid rgba(200, 0, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 230, 0, 0.1);
 }
 .cal-cell {
   aspect-ratio: 1;
   background: var(--input-bg);
-  border: 1px solid rgba(200, 0, 255, 0.08);
+  border: 1px solid rgba(255, 230, 0, 0.08);
   border-radius: 3px;
   padding: 3px;
   cursor: pointer;
@@ -271,16 +271,16 @@ body::after {
   overflow: hidden;
 }
 .cal-cell:hover {
-  border-color: var(--neon-magenta);
-  box-shadow: 0 0 12px rgba(200, 0, 255, 0.1);
+  border-color: var(--neon-yellow);
+  box-shadow: 0 0 12px rgba(255, 230, 0, 0.1);
 }
 .cal-cell.other-month {
   opacity: 0.3;
   pointer-events: none;
 }
 .cal-cell.today {
-  border-color: var(--neon-magenta);
-  box-shadow: 0 0 15px rgba(200, 0, 255, 0.15);
+  border-color: var(--neon-yellow);
+  box-shadow: 0 0 15px rgba(255, 230, 0, 0.15);
 }
 .cal-cell .day-num {
   font-family: var(--font-display);
@@ -324,7 +324,7 @@ body::after {
   font-family: var(--font-display);
   font-size: 0.8rem;
   letter-spacing: 2px;
-  color: var(--neon-magenta);
+  color: var(--neon-yellow);
   margin-bottom: 10px;
 }
 .detail-panel .detail-close {
@@ -333,14 +333,14 @@ body::after {
   color: var(--text-muted);
   cursor: pointer;
   background: none;
-  border: 1px solid rgba(200, 0, 255, 0.15);
+  border: 1px solid rgba(255, 230, 0, 0.15);
   padding: 3px 10px;
   border-radius: 3px;
   margin-bottom: 10px;
   transition: all 0.2s;
 }
 .detail-panel .detail-close:hover {
-  border-color: var(--neon-magenta);
+  border-color: var(--neon-yellow);
   color: var(--text-primary);
 }
 .detail-item {
@@ -388,7 +388,7 @@ body::after {
   font-family: var(--font-display);
   font-size: 0.65rem;
   letter-spacing: 2px;
-  color: var(--neon-magenta);
+  color: var(--neon-yellow);
   margin-bottom: 12px;
   cursor: pointer;
   user-select: none;
@@ -440,7 +440,7 @@ body::after {
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--dark-bg); }
-::-webkit-scrollbar-thumb { background: var(--neon-magenta); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--neon-yellow); border-radius: 3px; }
 
 @media (max-width: 768px) {
   .header { padding-top: 36px; }
@@ -688,7 +688,7 @@ const EVENT_DEFS = [
     titleKey: 'e_mge',
     shortKey: 's_mge',
     descKey: 'd_mge',
-    color: '#3a94ee',
+    color: '#cc0000',
     patterns: [
       { start: '2024-01-01', freqWeeks: 8, duration: 6 },
       { start: '2024-01-15', freqWeeks: 8, duration: 6 },
